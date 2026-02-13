@@ -1,0 +1,81 @@
+/* Testimonials.css - Public testimonials page (cream & brown) */
+
+.testimonial-section {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 64px 24px 72px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.testimonial-section h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #7f5539;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.testimonial-section .subtitle {
+  text-align: center;
+  color: #9c6644;
+  font-size: 15px;
+  margin-bottom: 34px;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 22px;
+}
+
+.testimonial-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px 18px 18px;
+  border: 1px solid rgba(221, 184, 146, 0.4);
+  box-shadow: 0 12px 30px rgba(127, 85, 57, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #7f5539;
+}
+
+.stars {
+  font-size: 16px;
+  color: #fbbf24;
+}
+
+.message {
+  margin: 4px 0;
+  font-size: 14px;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.client-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+.client-info .name {
+  font-weight: 600;
+}
+
+.client-info .date {
+  color: #9c6644;
+  opacity: 0.9;
+}
+
+@media (max-width: 640px) {
+  .testimonial-section {
+    padding: 40px 16px 56px;
+  }
+}
+

@@ -1,0 +1,289 @@
+/* Home.css - Theme: Cream & Brown */
+.home {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(180deg, #FDF7F2 0%, #FFF7F0 50%, #EDE0D4 100%);
+}
+
+/* Hero Section */
+.hero {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 24px;
+  background: linear-gradient(200deg, #9C6644 0%, #7F5539 50%, #B08968 100%);
+  color: #FDF7F2;
+}
+
+.hero h1 {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 700;
+  max-width: 700px;
+  margin-bottom: 20px;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+}
+
+.hero p {
+  font-size: 17px;
+  opacity: 0.95;
+  max-width: 520px;
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+
+.hero .primary-btn {
+  padding: 15px 40px;
+  border-radius: 999px;
+  border: none;
+  background: #FDF7F2;
+  color: #7F5539;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.hero-cta {
+  width: 25% !important;
+}
+.hero .primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2);
+}
+
+/* Section */
+.section {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 64px 24px;
+}
+
+.section.gray {
+  background: rgba(221, 184, 146, 0.15);
+  border-radius: 0;
+}
+
+.section h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #7F5539;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.section .subtitle {
+  text-align: center;
+  color: #9C6644;
+  font-size: 16px;
+  margin-bottom: 40px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Card Grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 28px;
+  justify-items: center;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(127, 85, 57, 0.08);
+  border: 1px solid rgba(221, 184, 146, 0.4);
+  max-width: 280px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(127, 85, 57, 0.15);
+}
+
+.card-img {
+  height: 160px;
+  background: linear-gradient(135deg, #E6CCB2 0%, #DDB892 100%);
+}
+
+.card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #7F5539;
+  padding: 18px 20px 8px;
+  margin: 0;
+}
+
+.card p {
+  font-size: 14px;
+  color: #9C6644;
+  padding: 0 20px 16px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.card .price {
+  font-weight: 700;
+  color: #7F5539;
+  font-size: 18px;
+}
+
+.card .secondary-btn {
+  margin: 0 20px 20px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid #7F5539;
+  background: transparent;
+  color: #7F5539;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.14s ease, color 0.14s ease, transform 0.1s ease;
+}
+
+.card .secondary-btn:hover {
+  background: #7F5539;
+  color: #FDF7F2;
+  transform: translateY(-1px);
+}
+
+.card .secondary-btn a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Testimonial Grid */
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.testimonial {
+  background: #fff;
+  border-radius: 14px;
+  padding: 28px 24px;
+  border: 1px solid rgba(221, 184, 146, 0.4);
+  box-shadow: 0 6px 20px rgba(127, 85, 57, 0.06);
+  transition: box-shadow 0.2s ease;
+}
+
+.testimonial:hover {
+  box-shadow: 0 12px 28px rgba(127, 85, 57, 0.1);
+}
+
+.testimonial-stars {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.testimonial p {
+  font-size: 15px;
+  color: #7F5539;
+  line-height: 1.5;
+  margin: 12px 0 0;
+  font-style: italic;
+}
+
+/* Stats Section - Light card style (distinct from footer) */
+.section-stats {
+  /* background: #FFFDF9;
+  border-top: 2px solid rgba(127, 85, 57, 0.15);
+  border-bottom: 2px solid rgba(127, 85, 57, 0.15);
+  /* padding-bottom: 64px; 
+  padding-bottom: 5px;    previously 64px 
+  margin-bottom: 5px; */
+
+  background: #FFFDF9;
+  margin: 80px 45px 80px;   /* 👈 TOP & BOTTOM GAP (IMPORTANT) */
+  padding: 64px 24px;
+  max-width: 1200px;
+
+  /* border-radius: 28px;     card look */
+  border: none; 
+}
+
+.section-stats .stats-title {
+  color: #7F5539;
+}
+
+.section-stats .stats-description {
+  font-size: 16px;
+  color: #9C6644;
+  max-width: 620px;
+  margin: 0 auto 48px;
+  line-height: 1.6;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.stat-item {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 24px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(127, 85, 57, 0.08);
+  border: 1px solid rgba(221, 184, 146, 0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(127, 85, 57, 0.12);
+}
+
+.stat-item h3 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #7F5539;
+  margin: 0 0 8px;
+  line-height: 1;
+}
+
+.stat-item p {
+  font-size: 14px;
+  color: #9C6644;
+  margin: 0;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    min-height: 60vh;
+    padding: 40px 16px;
+  }
+
+  .section {
+    padding: 40px 16px;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+}

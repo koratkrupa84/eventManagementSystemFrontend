@@ -1,0 +1,154 @@
+/* AdminDecorations.css - Cream & Brown product cards */
+
+.decor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.decor-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #7f5539;
+}
+
+.sub-title {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #9c6644;
+  opacity: 0.9;
+}
+
+.add-btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  background: #7f5539;
+  color: #fdf7f2;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 10px 20px rgba(127, 85, 57, 0.28);
+  transition: background 0.16s ease, color 0.16s ease,
+    transform 0.08s ease, box-shadow 0.1s ease;
+}
+
+.add-btn:hover {
+  background: #fdf7f2;
+  color: #7f5539;
+  box-shadow: 0 12px 26px rgba(127, 85, 57, 0.4);
+  transform: translateY(-1px);
+}
+
+.decor-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.decor-card {
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(176, 137, 104, 0.22);
+  display: flex;
+  flex-direction: column;
+}
+
+.decor-card img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+}
+
+.decor-content {
+  padding: 14px 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #7f5539;
+}
+
+.decor-content h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.decor-content p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.price {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #9c6644;
+}
+
+.decor-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease,
+    transform 0.08s ease, box-shadow 0.1s ease;
+}
+
+.btn.edit {
+  background: #7f5539;
+  color: #fdf7f2;
+}
+
+.btn.edit:hover {
+  background: #9c6644;
+  box-shadow: 0 8px 18px rgba(127, 85, 57, 0.32);
+  transform: translateY(-1px);
+}
+
+.btn.delete {
+  background: #ffffff;
+  color: #a8071a;
+  border: 1px solid rgba(245, 34, 45, 0.36);
+}
+
+.btn.delete:hover {
+  background: rgba(245, 34, 45, 0.06);
+}
+
+@media (max-width: 960px) {
+  .decor-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .decor-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .decor-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

@@ -1,0 +1,113 @@
+/* AdminGallery.css - Cream & Brown gallery */
+
+.gallery-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.gallery-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #7f5539;
+}
+
+.sub-title {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #9c6644;
+  opacity: 0.9;
+}
+
+.upload-btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  background: #7f5539;
+  color: #fdf7f2;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 10px 20px rgba(127, 85, 57, 0.28);
+  transition: background 0.16s ease, color 0.16s ease,
+    transform 0.08s ease, box-shadow 0.1s ease;
+}
+
+.upload-btn:hover {
+  background: #fdf7f2;
+  color: #7f5539;
+  box-shadow: 0 12px 26px rgba(127, 85, 57, 0.4);
+  transform: translateY(-1px);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.gallery-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.14);
+  border: 1px solid rgba(176, 137, 104, 0.22);
+  background: #fdf7f2;
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+.gallery-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.4),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.gallery-card:hover img {
+  transform: scale(1.05);
+}
+
+.gallery-card:hover::after {
+  opacity: 1;
+}
+
+@media (max-width: 960px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .gallery-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
