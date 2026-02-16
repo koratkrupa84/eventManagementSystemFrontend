@@ -1,31 +1,116 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/AdminInquiries.css";
-
-const initialInquiries = [
-  {
-    id: 1,
-    name: "Jennifer Lee",
-    email: "jennifer@email.com",
-    subject: "Wedding Decoration Quote",
-    date: "2023-10-01",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    name: "Mark Taylor",
-    email: "mark@email.com",
-    subject: "Corporate Event Inquiry",
-    date: "2023-09-28",
-    status: "Replied",
-  },
-];
+import { API } from "../services/apiConfig";
 
 const AdminInquiries = () => {
-  const [inquiries, setInquiries] = useState(initialInquiries);
+  const [inquiries, setInquiries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [selectedInquiry, setSelectedInquiry] = useState(null);
 
-  const handleDelete = (id) => {
-    setInquiries(inquiries.filter((item) => item.id !== id));
+  useEffect(() => {
+    fetchInquiries();
+  }, []);
+
+  const fetchInquiries = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const res = await fetch(API.GET_INQUIRIES, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Failed to load inquiries");
+
+      setInquiries(data.data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const res = await fetch(`${API.UPDATE_INQUIRY_STATUS}/${id}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Failed to update status");
+
+      setInquiries(
+        inquiries.map((item) =>
+          item._id === id ? { ...item, status: newStatus } : item
+        )
+      );
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this inquiry?")) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const res = await fetch(`${API.DELETE_INQUIRY}/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Failed to delete inquiry");
+
+      setInquiries(inquiries.filter((item) => item._id !== id));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleView = async (id) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const res = await fetch(`${API.GET_INQUIRY}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Failed to load inquiry");
+
+      setSelectedInquiry(data.data);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+
+  if (loading) {
+    return <div>Loading inquiries...</div>;
+  }
 
   return (
     <div>
@@ -36,6 +121,8 @@ const AdminInquiries = () => {
           <p className="sub-title">Contact Form Submissions</p>
         </div>
       </div>
+
+      {error && <div className="error-text">{error}</div>}
 
       {/* Table */}
       <div className="table-wrapper">
@@ -53,40 +140,72 @@ const AdminInquiries = () => {
           </thead>
 
           <tbody>
-            {inquiries.map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.name}</td>
-                <td>{item.email}</td>
-                <td>{item.subject}</td>
-                <td>{item.date}</td>
-
-                <td>
-                  <span
-                    className={`status-badge ${
-                      item.status === "Pending"
-                        ? "pending"
-                        : "replied"
-                    }`}
-                  >
-                    {item.status}
-                  </span>
-                </td>
-
-                <td className="action-btns">
-                  <button className="view-btn">View</button>
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleDelete(item.id)}
-                  >
-                    Delete
-                  </button>
+            {inquiries.length === 0 ? (
+              <tr>
+                <td colSpan="7" style={{ textAlign: "center" }}>
+                  No inquiries found
                 </td>
               </tr>
-            ))}
+            ) : (
+              inquiries.map((item) => (
+                <tr key={item._id}>
+                  <td>{item._id.slice(-6)}</td>
+                  <td>{item.name}</td>
+                  <td>{item.email}</td>
+                  <td>{item.subject}</td>
+                  <td>{formatDate(item.createdAt)}</td>
+
+                  <td>
+                    <select
+                      value={item.status}
+                      onChange={(e) =>
+                        handleStatusChange(item._id, e.target.value)
+                      }
+                      className="status-select"
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Replied">Replied</option>
+                      <option value="Resolved">Resolved</option>
+                    </select>
+                  </td>
+
+                  <td className="action-btns">
+                    <button
+                      className="view-btn"
+                      onClick={() => handleView(item._id)}
+                    >
+                      View
+                    </button>
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDelete(item._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
+
+      {selectedInquiry && (
+        <div className="modal-overlay" onClick={() => setSelectedInquiry(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <span className="close-btn" onClick={() => setSelectedInquiry(null)}>
+              ×
+            </span>
+            <h3>Inquiry Details</h3>
+            <p><strong>Name:</strong> {selectedInquiry.name}</p>
+            <p><strong>Email:</strong> {selectedInquiry.email}</p>
+            <p><strong>Subject:</strong> {selectedInquiry.subject}</p>
+            <p><strong>Message:</strong> {selectedInquiry.message}</p>
+            <p><strong>Status:</strong> {selectedInquiry.status}</p>
+            <p><strong>Date:</strong> {formatDate(selectedInquiry.createdAt)}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

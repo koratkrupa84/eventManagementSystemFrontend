@@ -10,12 +10,12 @@ import Testimonials from "../pages/Testimonials";
 
 // Admin routes
 import AdminLogin from "../pages/AdminLogin";
-import AdminLayout from "../component/AdminLayout";
+import AdminLayout from "../component/admin/AdminLayout";
 import AdminDashboard from "../pages/AdminDashboard";
 import AdminCategories from "../pages/AdminCategories";
-import AdminDecorations from "../pages/AdminDecorations";
+import AdminPackages from "../pages/AdminPackages";
 import AdminGallery from "../pages/AdminGallery";
-import AdminTestimonials from "../pages/AdminTestimonials";
+import AdminReview from "../pages/AdminReview";
 import AdminAppointments from "../pages/AdminAppointments";
 import AdminInquiries from "../pages/AdminInquiries";
 
@@ -37,9 +37,9 @@ const AppRouter = () => {
                     <Route path="/admin" element={<AdminLayout />}>
                          <Route path="dashboard" element={<AdminDashboard />} />
                          <Route path="categories" element={<AdminCategories />} />
-                         <Route path="decorations" element={<AdminDecorations />} />
+                         <Route path="packages" element={<AdminPackages />} />
                          <Route path="gallery" element={<AdminGallery />} />
-                         <Route path="testimonials" element={<AdminTestimonials />} />
+                         <Route path="review" element={<AdminReview />} />
                          <Route path="appointments" element={<AdminAppointments />} />
                          <Route path="inquiries" element={<AdminInquiries />} />
                     </Route>

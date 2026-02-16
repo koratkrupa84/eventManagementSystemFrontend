@@ -54,11 +54,10 @@ function LoginPage() {
       // ✅ Store ONLY your app JWT
       if (data.token) {
         localStorage.setItem('authToken', data.token);
-        navigate('/');        // OR '/home'
       }
 
       setMessage('Login successful!');
-      navigate('/');        // OR '/home'
+      navigate('/');
     } catch (err) {
       setError(err.message || 'Something went wrong.');
     } finally {
@@ -89,11 +88,10 @@ function LoginPage() {
       // ✅ Save ONLY backend JWT
       if (data.token) {
         localStorage.setItem('authToken', data.token);
-        navigate('/');        // OR '/home'
       }
 
       setMessage('Login successful!');
-      navigate('/');        // OR '/home'
+      navigate('/');
     } catch (err) {
       setError(err.message || 'Google login failed.');
     } finally {

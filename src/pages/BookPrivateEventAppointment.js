@@ -33,7 +33,25 @@ const BookPrivateEventAppointment = () => {
 
     try {
       setLoading(true);
-      const res = await axios.post(API.PRIVATE_EVENT_BOOKING, formData);
+      
+      // Get token from localStorage
+      const token = localStorage.getItem("authToken");
+      
+      if (!token) {
+        setError("Please login to book an appointment");
+        return;
+      }
+
+      const res = await axios.post(
+        API.PRIVATE_EVENT_BOOKING, 
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      
       if (res.data.success) {
         setSuccess(true);
         setFormData({

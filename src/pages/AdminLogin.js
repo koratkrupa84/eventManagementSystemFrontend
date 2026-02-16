@@ -52,11 +52,10 @@ function AdminLogin() {
         // ✅ Store ONLY your app JWT
         if (data.token) {
           localStorage.setItem('authToken', data.token);
-          navigate('/admin/dashboard');        // OR '/admin/dashboard'
         }
-  
+
         setMessage('Login successful!');
-        navigate('/admin/dashboard');        // OR '/admin/dashboard'
+        navigate('/admin/dashboard');
       } catch (err) {
         setError(err.message || 'Something went wrong.');
       } finally {

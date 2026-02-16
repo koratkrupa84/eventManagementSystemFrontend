@@ -1,17 +1,66 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../css/AdminDashboard.css";
+import { API } from "../services/apiConfig";
 
 const AdminDashboard = () => {
+  const [stats, setStats] = useState({
+    totalAppointments: 0,
+    totalPackages: 0,
+    totalCategories: 0,
+    totalReviews: 0
+  });
+  const [recentAppointments, setRecentAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const res = await fetch(API.DASHBOARD_STATS, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Failed to load dashboard data");
+
+      setStats(data.data.stats);
+      setRecentAppointments(data.data.recentAppointments);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+
+  if (loading) {
+    return <div>Loading dashboard...</div>;
+  }
+
   return (
     <div>
       <h2 className="dashboard-title">Admin Dashboard</h2>
 
+      {error && <div className="error-text">{error}</div>}
+
       {/* 🔢 Stats Cards */}
       <div className="stats-grid">
-        <StatCard count="5" label="Total Appointments" />
-        <StatCard count="6" label="Decoration Categories" />
-        <StatCard count="6" label="Decoration Packages" />
-        <StatCard count="4" label="Customer Testimonials" />
+        <StatCard count={stats.totalAppointments} label="Total Appointments" />
+        <StatCard count={stats.totalCategories} label="Decoration Categories" />
+        <StatCard count={stats.totalPackages} label="Decoration Packages" />
+        <StatCard count={stats.totalReviews} label="Customer Testimonials" />
       </div>
 
       {/* 📋 Recent Appointments */}
@@ -27,29 +76,32 @@ const AdminDashboard = () => {
               <th>Date</th>
               <th>Decoration</th>
               <th>Status</th>
-              <th>Actions</th>
             </tr>
           </thead>
 
           <tbody>
-            {appointments.map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.client}</td>
-                <td>{item.event}</td>
-                <td>{item.date}</td>
-                <td>{item.decoration}</td>
-                <td>
-                  <span className={`status ${item.status}`}>
-                    {item.status}
-                  </span>
-                </td>
-                <td>
-                  <button className="btn edit">Edit</button>
-                  <button className="btn delete">Delete</button>
+            {recentAppointments.length === 0 ? (
+              <tr>
+                <td colSpan="6" style={{ textAlign: "center" }}>
+                  No appointments found
                 </td>
               </tr>
-            ))}
+            ) : (
+              recentAppointments.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{item.client}</td>
+                  <td>{item.event}</td>
+                  <td>{formatDate(item.date)}</td>
+                  <td>{item.decoration}</td>
+                  <td>
+                    <span className={`status ${item.status}`}>
+                      {item.status}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

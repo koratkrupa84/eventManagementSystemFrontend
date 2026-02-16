@@ -48,18 +48,18 @@ function RegistrationPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || 'Registration failed.');
-      } else {
-        setMessage('Registered successfully! You can now log in.');
-        setForm((prev) => ({
-          ...prev,
-          password: '',
-          confirmPassword: '',
-        }));
-        setTimeout(() => {
-          navigate('/');        // OR '/home'
-        }, 1000);
+        throw new Error(data.message || 'Registration failed.');
       }
+
+      setMessage('Registered successfully! You can now log in.');
+      setForm((prev) => ({
+        ...prev,
+        password: '',
+        confirmPassword: '',
+      }));
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
     } catch (err) {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -91,14 +91,12 @@ function RegistrationPage() {
       }
 
       if (data.token) {
-        setMessage('Account created successfully with Google!');
         localStorage.setItem('authToken', data.token);
-        navigate('/');        // OR '/home'
       }
 
       setMessage('Account created successfully with Google!');
       setTimeout(() => {
-        navigate('/');        // OR '/home'
+        navigate('/');
       }, 1000);
     } catch (err) {
       setError(err.message || 'Google signup failed.');

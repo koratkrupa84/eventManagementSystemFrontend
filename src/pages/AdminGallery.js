@@ -1,18 +1,97 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../css/AdminGallery.css";
-
-const galleryImages = [
-  "https://images.unsplash.com/photo-1527529482837-4698179dc6ce",
-  "https://images.unsplash.com/photo-1515165562835-c4c5b49d3c40",
-  "https://images.unsplash.com/photo-1505691938895-1758d7feb511",
-  "https://images.unsplash.com/photo-1519710164239-da123dc03ef4",
-  "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
-  "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-  "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70",
-  "https://images.unsplash.com/photo-1514516870926-205c1f0b2f8a",
-];
+import { API } from "../services/apiConfig";
 
 const AdminGallery = () => {
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [showUploadForm, setShowUploadForm] = useState(false);
+  const [selectedImages, setSelectedImages] = useState([]);
+
+  useEffect(() => {
+    fetchGallery();
+  }, []);
+
+  const fetchGallery = async () => {
+    try {
+      const res = await fetch(API.GET_GALLERY);
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Failed to load gallery");
+
+      setImages(data.data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (selectedImages.length === 0) {
+      setError("Please select at least one image");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const formData = new FormData();
+      selectedImages.forEach((img) => {
+        formData.append("images", img);
+      });
+
+      const res = await fetch(API.ADD_GALLERY, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Failed to upload images");
+
+      setShowUploadForm(false);
+      setSelectedImages([]);
+      fetchGallery();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this image?")) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const res = await fetch(`${API.DELETE_GALLERY}/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Failed to delete image");
+
+      fetchGallery();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  if (loading) {
+    return <div>Loading gallery...</div>;
+  }
+
   return (
     <div>
       {/* Header */}
@@ -22,16 +101,59 @@ const AdminGallery = () => {
           <p className="sub-title">Gallery Images</p>
         </div>
 
-        <button className="upload-btn">+ Upload Images</button>
+        <button
+          className="upload-btn"
+          onClick={() => setShowUploadForm(true)}
+        >
+          + Upload Images
+        </button>
       </div>
+
+      {error && <div className="error-text">{error}</div>}
+
+      {showUploadForm && (
+        <div className="modal-overlay" onClick={() => setShowUploadForm(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <span className="close-btn" onClick={() => setShowUploadForm(false)}>
+              ×
+            </span>
+            <form onSubmit={handleUpload}>
+              <h3>Upload Images</h3>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) =>
+                  setSelectedImages(Array.from(e.target.files))
+                }
+                required
+              />
+              <button type="submit">Upload</button>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Gallery Grid */}
       <div className="gallery-grid">
-        {galleryImages.map((img, index) => (
-          <div className="gallery-card" key={index}>
-            <img src={img} alt={`Gallery ${index}`} />
-          </div>
-        ))}
+        {images.length === 0 ? (
+          <p>No images found</p>
+        ) : (
+          images.map((img) => (
+            <div className="gallery-card" key={img._id}>
+              <img
+                src={`http://localhost:5000/${img.image}`}
+                alt={img.title || "Gallery"}
+              />
+              <button
+                className="delete-btn"
+                onClick={() => handleDelete(img._id)}
+              >
+                Delete
+              </button>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
