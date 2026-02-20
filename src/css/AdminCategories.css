@@ -9,6 +9,39 @@
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-container {
+  position: relative;
+}
+
+.search-input {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(127, 85, 57, 0.3);
+  background: #ffffff;
+  color: #7f5539;
+  font-size: 13px;
+  font-weight: 500;
+  outline: none;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+  width: 250px;
+}
+
+.search-input::placeholder {
+  color: #9c6644;
+  opacity: 0.7;
+}
+
+.search-input:focus {
+  border-color: #7f5539;
+  box-shadow: 0 0 0 3px rgba(127, 85, 57, 0.1);
+}
+
 .category-header h2 {
   margin: 0;
   font-size: 22px;
@@ -107,6 +140,17 @@
     transform 0.08s ease, box-shadow 0.1s ease;
 }
 
+.btn.view {
+  background: #7f5539;
+  color: #fdf7f2;
+}
+
+.btn.view:hover {
+  background: #9c6644;
+  box-shadow: 0 8px 18px rgba(127, 85, 57, 0.32);
+  transform: translateY(-1px);
+}
+
 .btn.edit {
   background: #7f5539;
   color: #fdf7f2;
@@ -128,9 +172,55 @@
   background: rgba(245, 34, 45, 0.06);
 }
 
+.btn.update {
+  background: #7f5539;
+  color: #fdf7f2;
+  margin-right: 8px;
+}
+
+.btn.update:hover {
+  background: #9c6644;
+  box-shadow: 0 8px 18px rgba(127, 85, 57, 0.32);
+  transform: translateY(-1px);
+}
+
+.btn.cancel {
+  background: #ffffff;
+  color: #7f5539;
+  border: 1px solid rgba(127, 85, 57, 0.36);
+}
+
+.btn.cancel:hover {
+  background: rgba(127, 85, 57, 0.06);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.current-image {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
 @media (max-width: 960px) {
   .category-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .search-input {
+    width: 100%;
   }
 }
 

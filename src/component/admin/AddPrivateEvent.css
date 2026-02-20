@@ -19,6 +19,46 @@
   gap: 15px;
 }
 
+.client-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.client-mode-select,
+.client-select {
+  padding: 10px 12px;
+  border: 1px solid rgba(127, 85, 57, 0.3);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #7f5539;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.16s ease;
+}
+
+.client-mode-select:focus,
+.client-select:focus {
+  border-color: #7f5539;
+  box-shadow: 0 0 0 3px rgba(127, 85, 57, 0.1);
+}
+
+.client-input {
+  padding: 10px 12px;
+  border: 1px solid rgba(127, 85, 57, 0.3);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #7f5539;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.16s ease;
+}
+
+.client-input:focus {
+  border-color: #7f5539;
+  box-shadow: 0 0 0 3px rgba(127, 85, 57, 0.1);
+}
+
 .form-group {
   display: flex;
   flex-direction: column;

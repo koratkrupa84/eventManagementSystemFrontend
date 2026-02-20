@@ -23,22 +23,12 @@ function Header() {
           </a>
           <div className="nav-link nav-dropdown">
             <span>Services</span>
-            <div className="dropdown-menu">
-              <span className="dropdown-title">Event Services</span>
-              <ul>
-                <li>Birthday Decorations</li>
-                <li>Wedding Planning</li>
-                <li>Corporate Events</li>
-                <li>Baby Shower</li>
-                <li>Festive Theme Parties</li>
-              </ul>
-            </div>
           </div>
           <a href="/gallery" className="nav-link">
             Gallery
           </a>
-          <a href="/testimonials" className="nav-link">
-            Testimonials
+          <a href="/reviews" className="nav-link">
+            Reviews
           </a>
           <a href="/contact" className="nav-link">
             Contact

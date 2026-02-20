@@ -164,16 +164,6 @@ function LoginPage() {
                 text="continue_with"
               />
             </div>
-
-            <button
-              type="button"
-              className="social-btn linkedin-btn"
-              disabled
-              title="Coming soon"
-            >
-              <span className="social-icon">in</span>
-              <span>Continue with LinkedIn</span>
-            </button>
           </div>
 
           <p className="auth-footer-text">

@@ -41,6 +41,18 @@ function AdminSidebar() {
           <span>Manage Appointments</span>
         </NavLink>
 
+        <NavLink to="/admin/clients" className="menu-item">
+          <span>Manage Clients</span>
+        </NavLink>
+
+        <NavLink to="/admin/organizers" className="menu-item">
+          <span>Manage Organizers</span>
+        </NavLink>
+
+        <NavLink to="/admin/private-events" className="menu-item">
+          <span>Private Events</span>
+        </NavLink>
+
         <NavLink to="/admin/inquiries" className="menu-item">
           <span>Manage Inquiries</span>
         </NavLink>

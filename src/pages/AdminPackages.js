@@ -5,9 +5,13 @@ import AddPackage from "../component/admin/AddPackage";
 
 const AdminPackages = () => {
   const [packages, setPackages] = useState([]);
+  const [filteredPackages, setFilteredPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [error, setError] = useState("");
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [editPackage, setEditPackage] = useState(null);
 
 
@@ -20,6 +24,7 @@ const AdminPackages = () => {
       if (!res.ok) throw new Error("Failed to load packages");
 
       setPackages(data.data);
+      setFilteredPackages(data.data);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -31,10 +36,24 @@ const AdminPackages = () => {
     fetchPackages();
   }, []);
 
+  useEffect(() => {
+    const filtered = packages.filter((pkg) =>
+      pkg.package_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      pkg.services.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredPackages(filtered);
+  }, [packages, searchTerm]);
+
   // ---------- AFTER ADD SUCCESS ----------
   const handlePackageAdded = () => {
     setShowAddForm(false);
     fetchPackages(); // refresh list
+  };
+
+  // ---------- VIEW PACKAGE ----------
+  const handleView = (pkg) => {
+    setSelectedPackage(pkg);
+    setShowViewModal(true);
   };
 
   return (
@@ -46,12 +65,23 @@ const AdminPackages = () => {
           <p className="sub-title">All Decoration Packages</p>
         </div>
 
-        <button
-          className="add-btn"
-          onClick={() => setShowAddForm(true)}
-        >
-          + Add New Package
-        </button>
+        <div className="header-actions">
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search packages..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
+          <button
+            className="add-btn"
+            onClick={() => setShowAddForm(true)}
+          >
+            + Add New Package
+          </button>
+        </div>
       </div>
 
       {/* ---------- ADD PACKAGE FORM (POPUP) ---------- */}
@@ -90,7 +120,10 @@ const AdminPackages = () => {
 
       {/* ---------- PACKAGE GRID ---------- */}
       <div className="decor-grid">
-        {packages.map((item) => (
+        {filteredPackages.length === 0 ? (
+          <p>{searchTerm ? "No packages found matching your search" : "No packages found"}</p>
+        ) : (
+          filteredPackages.map((item) => (
           <div className="decor-card" key={item._id}>
             <img
               src={
@@ -107,13 +140,71 @@ const AdminPackages = () => {
               <span className="price">₹{item.price}</span>
 
               <div className="decor-actions">
-                <button className="btn edit" onClick={() => setEditPackage(item)}>Edit</button>
+                <button className="btn view" onClick={() => handleView(item)}>View</button>
                 <button className="btn delete">Delete</button>
               </div>
             </div>
           </div>
-        ))}
+        ))
+        )}
       </div>
+
+      {/* ---------- VIEW PACKAGE MODAL ---------- */}
+      {showViewModal && selectedPackage && (
+        <div className="modal-overlay" onClick={() => setShowViewModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <span className="close-btn" onClick={() => setShowViewModal(false)}>
+              ×
+            </span>
+            <div className="package-details">
+              <h3>Package Details</h3>
+              
+              {selectedPackage.images && selectedPackage.images.length > 0 && (
+                <div className="package-images">
+                  {selectedPackage.images.map((image, index) => (
+                    <img
+                      key={index}
+                      src={`http://localhost:5000/${image}`}
+                      alt={`${selectedPackage.package_name} ${index + 1}`}
+                      style={{ 
+                        width: "100%", 
+                        maxHeight: "200px", 
+                        objectFit: "cover", 
+                        marginBottom: "15px" 
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+              
+              <div className="package-info">
+                <h4>{selectedPackage.package_name}</h4>
+                <p><strong>Services:</strong> {selectedPackage.services}</p>
+                <p><strong>Price:</strong> ₹{selectedPackage.price}</p>
+                <p><strong>Description:</strong> {selectedPackage.description || 'No description available'}</p>
+              </div>
+              
+              <div className="modal-actions">
+                <button 
+                  className="btn update"
+                  onClick={() => {
+                    setEditPackage(selectedPackage);
+                    setShowViewModal(false);
+                  }}
+                >
+                  Edit Package
+                </button>
+                <button 
+                  className="btn cancel"
+                  onClick={() => setShowViewModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

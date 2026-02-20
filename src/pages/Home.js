@@ -83,7 +83,7 @@ const Home = () => {
                               ].map((text, index) => (
                                    <div className="testimonial" key={index}>
                                         <span className="testimonial-stars">⭐⭐⭐⭐⭐</span>
-                                        <p>{"\u201C"}{text}{"\u201D"}</p>
+                                        <p>"{text}"</p>
                                    </div>
                               ))}
                          </div>

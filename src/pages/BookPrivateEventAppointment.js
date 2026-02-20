@@ -7,12 +7,9 @@ import Footer from "../component/Footer";
 
 const BookPrivateEventAppointment = () => {
   const [formData, setFormData] = useState({
-    fullName: "",
-    mobile: "",
     eventType: "",
     packageId: "",
     eventDate: "",
-    eventTime: "",
     location: "",
     guests: "",
     budget: "",
@@ -55,12 +52,9 @@ const BookPrivateEventAppointment = () => {
       if (res.data.success) {
         setSuccess(true);
         setFormData({
-          fullName: "",
-          mobile: "",
           eventType: "",
           packageId: "",
           eventDate: "",
-          eventTime: "",
           location: "",
           guests: "",
           budget: "",
@@ -86,12 +80,6 @@ const BookPrivateEventAppointment = () => {
       {success && <div className="booking-alert booking-alert-success">Booking request submitted successfully! We'll contact you soon.</div>}
 
       <form onSubmit={handleSubmit}>
-        <label>Full Name</label>
-        <input name="fullName" placeholder="Full Name" required onChange={handleChange} />
-
-        <label>Mobile Number</label>
-        <input name="mobile" placeholder="Mobile Number" required onChange={handleChange} />
-
         <label>Event Type</label>
         <select name="eventType" required onChange={handleChange}>
           <option value="">Select Event Type</option>
@@ -110,9 +98,6 @@ const BookPrivateEventAppointment = () => {
 
         <label>Event Date</label>
         <input type="date" name="eventDate" required onChange={handleChange} />
-
-        <label>Event Time</label>
-        <input type="time" name="eventTime" required onChange={handleChange} />
 
         <label>Event Location</label>
         <input name="location" placeholder="Event Location" required onChange={handleChange} />

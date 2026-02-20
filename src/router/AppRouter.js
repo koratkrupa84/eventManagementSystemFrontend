@@ -6,7 +6,7 @@ import RegistrationPage from "../pages/RegistrationPage";
 import BookPrivateEventAppointment from "../pages/BookPrivateEventAppointment";
 import Gallery from "../pages/Gallery";
 import Contact from "../pages/Contact";
-import Testimonials from "../pages/Testimonials";
+import Reviews from "../pages/Review";
 
 // Admin routes
 import AdminLogin from "../pages/AdminLogin";
@@ -18,6 +18,9 @@ import AdminGallery from "../pages/AdminGallery";
 import AdminReview from "../pages/AdminReview";
 import AdminAppointments from "../pages/AdminAppointments";
 import AdminInquiries from "../pages/AdminInquiries";
+import AdminPrivateEvents from "../pages/AdminPrivateEvents";
+import AdminClients from "../pages/AdminClients";
+import AdminOrganizers from "../pages/AdminOrganizers";
 
 const AppRouter = () => {
      return (
@@ -30,7 +33,7 @@ const AppRouter = () => {
                     <Route path="/book-private-event" element={<BookPrivateEventAppointment />} />
                     <Route path="/gallery" element={<Gallery />} />
                     <Route path="/contact" element={<Contact />} />
-                    <Route path="/testimonials" element={<Testimonials />} />
+                    <Route path="/reviews" element={<Reviews />} />
 
                     // Admin route
                     <Route path="/admin/login" element={<AdminLogin />} />
@@ -41,7 +44,10 @@ const AppRouter = () => {
                          <Route path="gallery" element={<AdminGallery />} />
                          <Route path="review" element={<AdminReview />} />
                          <Route path="appointments" element={<AdminAppointments />} />
+                         <Route path="private-events" element={<AdminPrivateEvents />} />
                          <Route path="inquiries" element={<AdminInquiries />} />
+                         <Route path="clients" element={<AdminClients />} />
+                         <Route path="organizers" element={<AdminOrganizers />} />
                     </Route>
                </Routes>
           </BrowserRouter>

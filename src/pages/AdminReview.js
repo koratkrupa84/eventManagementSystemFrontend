@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../css/AdminTestimonials.css";
+import "../css/AdminCommon.css";
 import { API } from "../services/apiConfig";
 
 const AdminReview = () => {

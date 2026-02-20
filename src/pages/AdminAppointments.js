@@ -1,17 +1,35 @@
 import React, { useState, useEffect } from "react";
 import "../css/AdminAppointments.css";
+import "../css/AdminCommon.css";
 import AddPrivateEvent from "../component/admin/AddPrivateEvent.js";
 import { API } from "../services/apiConfig";
 
 const AdminAppointments = () => {
   const [appointments, setAppointments] = useState([]);
+  const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchAppointments();
   }, []);
+
+  useEffect(() => {
+    const filtered = appointments.filter((appointment) => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        appointment.full_name?.toLowerCase().includes(searchLower) ||
+        appointment.event_type?.toLowerCase().includes(searchLower) ||
+        appointment.location?.toLowerCase().includes(searchLower) ||
+        appointment.status?.toLowerCase().includes(searchLower)
+      );
+    });
+    setFilteredAppointments(filtered);
+  }, [appointments, searchTerm]);
 
   const fetchAppointments = async () => {
     try {
@@ -27,6 +45,7 @@ const AdminAppointments = () => {
       if (!res.ok) throw new Error(data.message || "Failed to load appointments");
 
       setAppointments(data.data);
+      setFilteredAppointments(data.data);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -56,6 +75,11 @@ const AdminAppointments = () => {
           item._id === id ? { ...item, status: newStatus.toLowerCase() } : item
         )
       );
+      setFilteredAppointments(
+        filteredAppointments.map((item) =>
+          item._id === id ? { ...item, status: newStatus.toLowerCase() } : item
+        )
+      );
     } catch (err) {
       setError(err.message);
     }
@@ -80,9 +104,15 @@ const AdminAppointments = () => {
       if (!res.ok) throw new Error(data.message || "Failed to delete appointment");
 
       setAppointments(appointments.filter((item) => item._id !== id));
+      setFilteredAppointments(filteredAppointments.filter((item) => item._id !== id));
     } catch (err) {
       setError(err.message);
     }
+  };
+
+  const handleView = (appointment) => {
+    setSelectedAppointment(appointment);
+    setShowViewModal(true);
   };
 
   const formatDate = (dateString) => {
@@ -108,12 +138,23 @@ const AdminAppointments = () => {
           <p className="sub-title">All Appointments</p>
         </div>
 
-        <button
-          className="add-btn"
-          onClick={() => setShowModal(true)}
-        >
-          + Add New
-        </button>
+        <div className="header-actions">
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search appointments..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
+          <button
+            className="add-btn"
+            onClick={() => setShowModal(true)}
+          >
+            + Add New
+          </button>
+        </div>
       </div>
 
       {error && <div className="error-text">{error}</div>}
@@ -134,17 +175,17 @@ const AdminAppointments = () => {
           </thead>
 
           <tbody>
-            {appointments.length === 0 ? (
+            {filteredAppointments.length === 0 ? (
               <tr>
                 <td colSpan="7" style={{ textAlign: "center" }}>
                   No appointments found
                 </td>
               </tr>
             ) : (
-              appointments.map((item) => (
+              filteredAppointments.map((item) => (
                 <tr key={item._id}>
                   <td>{item._id.slice(-6)}</td>
-                  <td>{item.full_name}</td>
+                  <td>{item.client_id?.name || 'Backend Entry'}</td>
                   <td>{item.event_type}</td>
                   <td>{formatDate(item.event_date)}</td>
                   <td>{item.location}</td>
@@ -165,6 +206,12 @@ const AdminAppointments = () => {
                   </td>
 
                   <td className="action-btns">
+                    <button
+                      className="view-btn"
+                      onClick={() => handleView(item)}
+                    >
+                      View
+                    </button>
                     <button
                       className="delete-btn"
                       onClick={() => handleDelete(item._id)}
@@ -192,12 +239,84 @@ const AdminAppointments = () => {
               </span>
 
               {/* 🔥 Your Existing Form Component */}
-              <AddPrivateEvent />
+              <AddPrivateEvent 
+                onSuccess={() => {
+                  setShowModal(false);
+                  fetchAppointments();
+                }}
+              />
 
             </div>
           </div>
         )}
       </div>
+
+      {/* View Appointment Modal */}
+      {showViewModal && selectedAppointment && (
+        <div className="modal-overlay" onClick={() => setShowViewModal(false)}>
+          <div className="modal-content appointment-view-modal" onClick={(e) => e.stopPropagation()}>
+            <span className="close-btn" onClick={() => setShowViewModal(false)}>
+              ×
+            </span>
+            <div className="appointment-details">
+              <h3>Appointment Details</h3>
+              
+              <div className="detail-grid">
+                <div className="detail-item">
+                  <label>Client Name:</label>
+                  <p>{selectedAppointment.full_name}</p>
+                </div>
+                
+                <div className="detail-item">
+                  <label>Event Type:</label>
+                  <p>{selectedAppointment.event_type}</p>
+                </div>
+                
+                <div className="detail-item">
+                  <label>Event Date:</label>
+                  <p>{formatDate(selectedAppointment.event_date)}</p>
+                </div>
+                
+                <div className="detail-item">
+                  <label>Location:</label>
+                  <p>{selectedAppointment.location}</p>
+                </div>
+                
+                <div className="detail-item">
+                  <label>Guests:</label>
+                  <p>{selectedAppointment.guests || 'N/A'}</p>
+                </div>
+                
+                <div className="detail-item">
+                  <label>Budget:</label>
+                  <p>₹{selectedAppointment.budget || 'N/A'}</p>
+                </div>
+                
+                <div className="detail-item">
+                  <label>Special Requirements:</label>
+                  <p>{selectedAppointment.special_requirements || 'None'}</p>
+                </div>
+                
+                <div className="detail-item">
+                  <label>Status:</label>
+                  <span className={`status-badge ${selectedAppointment.status}`}>
+                    {capitalizeStatus(selectedAppointment.status)}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="modal-actions">
+                <button 
+                  className="cancel-btn"
+                  onClick={() => setShowViewModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
