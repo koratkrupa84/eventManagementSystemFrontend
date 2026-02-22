@@ -1,8 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Header.css';
 import colors from '../css/themeColors';
 
 function Header() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState('');
+
+  useEffect(() => {
+    // Check if user is logged in
+    const token = localStorage.getItem('token');  // Changed from 'authToken' to 'token'
+    const role = localStorage.getItem('userRole');
+    const userName = localStorage.getItem('userName');
+    
+    if (token) {
+      setIsLoggedIn(true);
+      setUserRole(role || 'client');
+      console.log("Header: User logged in as", role, userName);
+    } else {
+      console.log("Header: No token found, user not logged in");
+    }
+  }, []);
+
+  const handleLoginClick = () => {
+    if (isLoggedIn && userRole === 'client') {
+      // Client dashboard removed - redirect to home
+      window.location.href = '/';
+    } else {
+      // Redirect to login page
+      window.location.href = '/login';
+    }
+  };
+
   return (
     <header
       className="main-header"
@@ -39,11 +67,16 @@ function Header() {
           <button
             type="button"
             className="login-btn"
-            onClick={() => {
-              window.location.href = '/login';
-            }}
+            onClick={handleLoginClick}
           >
-            Login
+            {isLoggedIn && userRole === 'client' ? (
+              <>
+                <span className="dashboard-icon">👤</span>
+                <span>Dashboard</span>
+              </>
+            ) : (
+              <span>Login</span>
+            )}
           </button>
         </div>
       </div>

@@ -65,7 +65,7 @@ function AddPackage({ onSuccess = () => { }, onClose = () => { }, editData = nul
           try {
                setLoading(true);
 
-               const token = localStorage.getItem("authToken");
+               const token = localStorage.getItem("token");
 
                const formData = new FormData();
                formData.append("package_name", form.package_name);

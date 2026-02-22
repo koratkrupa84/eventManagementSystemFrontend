@@ -51,7 +51,7 @@ function AdminLogin() {
   
         // ✅ Store ONLY your app JWT
         if (data.token) {
-          localStorage.setItem('authToken', data.token);
+          localStorage.setItem('token', data.token);
         }
 
         setMessage('Login successful!');

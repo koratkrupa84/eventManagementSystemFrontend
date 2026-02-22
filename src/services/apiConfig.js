@@ -31,6 +31,7 @@ export const API = {
   // Appointments
   GET_APPOINTMENTS: `${BASE_URL}/admin/appointments`,
   CREATE_APPOINTMENT: `${BASE_URL}/admin/appointments`,
+  UPDATE_APPOINTMENT: `${BASE_URL}/admin/appointments`,
   UPDATE_APPOINTMENT_STATUS: `${BASE_URL}/admin/appointments`,
   DELETE_APPOINTMENT: `${BASE_URL}/admin/appointments`,
   
@@ -58,7 +59,10 @@ export const API = {
   DELETE_INQUIRY: `${BASE_URL}/admin/inquiries`,
   
   // Client Profile
-  GET_PROFILE: `${BASE_URL}/profile`,
+  GET_CLIENT_PROFILE: `${BASE_URL}/profile`,
+  GET_CLIENT_APPOINTMENTS: `${BASE_URL}/profile/appointments`,
+  BOOK_PRIVATE_EVENT: `${BASE_URL}/profile/private-event-booking`,
+  UPDATE_CLIENT_PROFILE: `${BASE_URL}/profile/update`,
   UPDATE_PROFILE: `${BASE_URL}/profile`,
   GET_USERS: `${BASE_URL}/auth/users`,
   CREATE_USER: `${BASE_URL}/auth/users`,
@@ -86,6 +90,13 @@ export const API = {
   GET_PRIVATE_EVENTS: `${BASE_URL}/privateEvents/events`,
   GET_PRIVATE_EVENT: `${BASE_URL}/privateEvents/events`,
   UPDATE_PRIVATE_EVENT: `${BASE_URL}/privateEvents/events`,
-  DELETE_PRIVATE_EVENT: `${BASE_URL}/privateEvents/events`
+  DELETE_PRIVATE_EVENT: `${BASE_URL}/privateEvents/events`,
+  
+  // Organizer endpoints
+  ORGANIZER_REGISTER: `${BASE_URL}/organizer/register`,
+  ORGANIZER_LOGIN: `${BASE_URL}/organizer/login`,
+  ORGANIZER_GOOGLE_AUTH: `${BASE_URL}/organizer/google`,
+  ORGANIZER_PROFILE: `${BASE_URL}/organizer/profile`,
+  ORGANIZER_UPLOAD_PHOTO: `${BASE_URL}/organizer/upload-photo`
 };
 

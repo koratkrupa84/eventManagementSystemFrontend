@@ -48,7 +48,7 @@ const AdminCategories = () => {
     setError("");
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);
@@ -83,7 +83,7 @@ const AdminCategories = () => {
     }
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const res = await fetch(`${API.DELETE_CATEGORY}/${id}`, {
         method: "DELETE",
         headers: {
@@ -116,7 +116,7 @@ const AdminCategories = () => {
     setError("");
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);

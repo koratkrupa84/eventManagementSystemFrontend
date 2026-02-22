@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../css/AdminAppointments.css";
 import "../css/AdminCommon.css";
 import AddPrivateEvent from "../component/admin/AddPrivateEvent.js";
@@ -33,21 +34,24 @@ const AdminAppointments = () => {
 
   const fetchAppointments = async () => {
     try {
-      const token = localStorage.getItem("authToken");
-      const res = await fetch(API.GET_APPOINTMENTS, {
+      const token = localStorage.getItem("token");
+      console.log("=== FETCH APPOINTMENTS DEBUG START ===");
+      console.log("Token:", token);
+      
+      const res = await axios.get(API.GET_APPOINTMENTS, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
-      const data = await res.json();
+      console.log("API Response:", res.data);
+      console.log("Appointments data:", res.data.data);
 
-      if (!res.ok) throw new Error(data.message || "Failed to load appointments");
-
-      setAppointments(data.data);
-      setFilteredAppointments(data.data);
+      setAppointments(res.data.data);
+      setFilteredAppointments(res.data.data);
     } catch (err) {
-      setError(err.message);
+      console.error("Error fetching appointments:", err);
+      setError(err.response?.data?.message || err.message);
     } finally {
       setLoading(false);
     }
@@ -55,19 +59,26 @@ const AdminAppointments = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const token = localStorage.getItem("authToken");
-      const res = await fetch(`${API.UPDATE_APPOINTMENT_STATUS}/${id}/status`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ status: newStatus.toLowerCase() })
-      });
+      const token = localStorage.getItem("token");
+      console.log("=== STATUS CHANGE DEBUG START ===");
+      console.log("Appointment ID:", id);
+      console.log("New Status:", newStatus);
+      
+      const res = await axios.put(`${API.UPDATE_APPOINTMENT}/${id}`, 
+        { status: newStatus.toLowerCase() },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
 
-      const data = await res.json();
+      console.log("Status update response:", res.data);
 
-      if (!res.ok) throw new Error(data.message || "Failed to update status");
+      if (!res.data.success) {
+        throw new Error(res.data.message || "Failed to update status");
+      }
 
       // Update local state
       setAppointments(
@@ -80,8 +91,11 @@ const AdminAppointments = () => {
           item._id === id ? { ...item, status: newStatus.toLowerCase() } : item
         )
       );
+      
+      console.log("=== STATUS CHANGE DEBUG END ===");
     } catch (err) {
-      setError(err.message);
+      console.error("Error updating status:", err);
+      setError(err.response?.data?.message || err.message);
     }
   };
 
@@ -91,22 +105,30 @@ const AdminAppointments = () => {
     }
 
     try {
-      const token = localStorage.getItem("authToken");
-      const res = await fetch(`${API.DELETE_APPOINTMENT}/${id}`, {
-        method: "DELETE",
+      const token = localStorage.getItem("token");
+      console.log("=== DELETE APPOINTMENT DEBUG START ===");
+      console.log("Appointment ID:", id);
+      
+      const res = await axios.delete(`${API.DELETE_APPOINTMENT}/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
-      const data = await res.json();
+      console.log("Delete response:", res.data);
 
-      if (!res.ok) throw new Error(data.message || "Failed to delete appointment");
+      if (!res.data.success) {
+        throw new Error(res.data.message || "Failed to delete appointment");
+      }
 
+      // Update local state
       setAppointments(appointments.filter((item) => item._id !== id));
       setFilteredAppointments(filteredAppointments.filter((item) => item._id !== id));
+      
+      console.log("=== DELETE APPOINTMENT DEBUG END ===");
     } catch (err) {
-      setError(err.message);
+      console.error("Error deleting appointment:", err);
+      setError(err.response?.data?.message || err.message);
     }
   };
 
@@ -200,6 +222,7 @@ const AdminAppointments = () => {
                     >
                       <option value="Pending">Pending</option>
                       <option value="Approved">Approved</option>
+                      <option value="Confirmed">Confirmed</option>
                       <option value="Completed">Completed</option>
                       <option value="Rejected">Rejected</option>
                     </select>
@@ -264,7 +287,7 @@ const AdminAppointments = () => {
               <div className="detail-grid">
                 <div className="detail-item">
                   <label>Client Name:</label>
-                  <p>{selectedAppointment.full_name}</p>
+                  <p>{selectedAppointment.client_id?.name || selectedAppointment.full_name || 'N/A'}</p>
                 </div>
                 
                 <div className="detail-item">

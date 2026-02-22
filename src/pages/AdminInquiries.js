@@ -15,7 +15,7 @@ const AdminInquiries = () => {
 
   const fetchInquiries = async () => {
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const res = await fetch(API.GET_INQUIRIES, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -36,7 +36,7 @@ const AdminInquiries = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const res = await fetch(`${API.UPDATE_INQUIRY_STATUS}/${id}/status`, {
         method: "PUT",
         headers: {
@@ -66,7 +66,7 @@ const AdminInquiries = () => {
     }
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const res = await fetch(`${API.DELETE_INQUIRY}/${id}`, {
         method: "DELETE",
         headers: {
@@ -86,7 +86,7 @@ const AdminInquiries = () => {
 
   const handleView = async (id) => {
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const res = await fetch(`${API.GET_INQUIRY}/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`

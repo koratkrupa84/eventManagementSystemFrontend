@@ -21,6 +21,13 @@ import AdminInquiries from "../pages/AdminInquiries";
 import AdminPrivateEvents from "../pages/AdminPrivateEvents";
 import AdminClients from "../pages/AdminClients";
 import AdminOrganizers from "../pages/AdminOrganizers";
+import ClientDashboard from "../pages/ClientDashboard";
+
+// Organizer routes
+import OrganizerLogin from "../pages/OrganizerLogin";
+import OrganizerRegister from "../pages/OrganizerRegister";
+import OrganizerProfile from "../pages/OrganizerProfile";
+import OrganizerDashboard from "../pages/OrganizerDashboard";
 
 const AppRouter = () => {
      return (
@@ -49,6 +56,15 @@ const AppRouter = () => {
                          <Route path="clients" element={<AdminClients />} />
                          <Route path="organizers" element={<AdminOrganizers />} />
                     </Route>
+                    
+                    // Client route
+                    <Route path="/client/dashboard" element={<ClientDashboard />} />
+                    
+                    // Organizer routes
+                    <Route path="/organizer/login" element={<OrganizerLogin />} />
+                    <Route path="/organizer/register" element={<OrganizerRegister />} />
+                    <Route path="/organizer/profile" element={<OrganizerProfile />} />
+                    <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
                </Routes>
           </BrowserRouter>
      );

@@ -5,7 +5,7 @@ import '../css/LoginPage.css';
 import colors from '../css/themeColors';
 import { API } from '../services/apiConfig';
 
-function LoginPage() {
+function OrganizerLogin() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -41,21 +41,22 @@ function LoginPage() {
 
   // ================= SAVE AUTH DATA =================
   const saveAuthData = (data, fallbackEmail = '') => {
-    if (!data?.token || !data?.user) {
+    if (!data?.token || !data?.organizer) {
       throw new Error('Invalid server response');
     }
 
-    const user = data.user;
+    const organizer = data.organizer;
 
-    const email = user.email || fallbackEmail || '';
+    const email = organizer.email || fallbackEmail || '';
     const name =
-      user.name ||
-      (email ? email.split('@')[0] : 'User');
+      organizer.name ||
+      (email ? email.split('@')[0] : 'Organizer');
 
     localStorage.setItem('token', data.token);
-    localStorage.setItem('userRole', user.role || 'client');
+    localStorage.setItem('userRole', 'organizer');
     localStorage.setItem('userEmail', email);
     localStorage.setItem('userName', name);
+    localStorage.setItem('organizerData', JSON.stringify(organizer));
   };
 
   // ================= EMAIL LOGIN =================
@@ -72,7 +73,7 @@ function LoginPage() {
     try {
       setLoading(true);
 
-      const res = await fetch(API.LOGIN, {
+      const res = await fetch(API.ORGANIZER_LOGIN, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -87,14 +88,7 @@ function LoginPage() {
       saveAuthData(data, form.email);
 
       setMessage('Login successful!');
-
-     if (data.user.role === "client") {
-        navigate("/client/dashboard");
-      } else if (data.user.role === "organizer") {
-        navigate("/organizer/dashboard");
-      } else {
-        navigate("/");
-      }
+      navigate("/organizer/dashboard");
 
     } catch (err) {
       setError(err.message || 'Something went wrong.');
@@ -116,7 +110,7 @@ function LoginPage() {
     try {
       setLoading(true);
 
-      const res = await fetch(API.GOOGLE_AUTH, {
+      const res = await fetch(API.ORGANIZER_GOOGLE_AUTH, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -133,14 +127,7 @@ function LoginPage() {
       saveAuthData(data);
 
       setMessage('Login successful!');
-
-      if (data.user.role === "client") {
-        navigate("/client/dashboard");
-      } else if (data.user.role === "organizer") {
-        navigate("/organizer/dashboard");
-      } else {
-        navigate("/");
-      }
+      navigate("/organizer/dashboard");
 
     } catch (err) {
       setError(err.message || 'Google login failed.');
@@ -163,16 +150,16 @@ function LoginPage() {
             background: `linear-gradient(135deg, ${colors.brown}, ${colors.brownDark})`,
           }}
         >
-          <h1 className="auth-brand">Welcome back</h1>
+          <h1 className="auth-brand">Welcome Organizer</h1>
           <p className="auth-tagline">
-            Pick up where you left off and keep your events on track.
+            Manage your events and grow your business with our powerful tools.
           </p>
         </div>
 
         <div className="auth-form-wrapper">
-          <h2 className="auth-title">Log in</h2>
+          <h2 className="auth-title">Organizer Log in</h2>
           <p className="auth-subtitle">
-            Sign in with your email or continue with social login.
+            Sign in to your organizer account to manage events.
           </p>
 
           {error && (
@@ -190,7 +177,7 @@ function LoginPage() {
                 type="email"
                 value={form.email}
                 onChange={handleChange}
-                placeholder="you@example.com"
+                placeholder="organizer@example.com"
               />
             </div>
 
@@ -211,7 +198,7 @@ function LoginPage() {
               style={{ backgroundColor: colors.brown }}
               disabled={loading}
             >
-              {loading ? 'Logging in...' : 'Log in'}
+              {loading ? 'Logging in...' : 'Log in as Organizer'}
             </button>
           </form>
 
@@ -233,7 +220,11 @@ function LoginPage() {
           </div>
 
           <p className="auth-footer-text">
-            New here? <a href="/register">Create an account</a>
+            New organizer? <a href="/organizer/register">Create an organizer account</a>
+          </p>
+          
+          <p className="auth-footer-text">
+            <a href="/login">Client Login</a> | <a href="/admin/login">Admin Login</a>
           </p>
         </div>
       </div>
@@ -241,4 +232,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default OrganizerLogin;

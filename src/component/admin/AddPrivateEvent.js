@@ -34,7 +34,7 @@ const AddPrivateEvent = ({ onSuccess, onClose }) => {
 
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const response = await axios.get(API.GET_USERS, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -46,7 +46,7 @@ const AddPrivateEvent = ({ onSuccess, onClose }) => {
 
   const fetchRequests = async () => {
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const response = await axios.get(API.GET_REQUESTS, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -58,7 +58,7 @@ const AddPrivateEvent = ({ onSuccess, onClose }) => {
 
   const fetchOrganizers = async () => {
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const response = await axios.get(API.GET_ORGANIZERS, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -81,7 +81,7 @@ const AddPrivateEvent = ({ onSuccess, onClose }) => {
     setError("");
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
 
       let submissionData = {
         event_type: formData.event_type,

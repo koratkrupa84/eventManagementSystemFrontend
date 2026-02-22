@@ -28,7 +28,7 @@ const AdminOrganizers = () => {
 
   const fetchOrganizers = async () => {
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const res = await axios.get(API.GET_USERS, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -56,7 +56,7 @@ const AdminOrganizers = () => {
     }
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       
       await axios.delete(`${API.DELETE_USER}/${organizerId}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -77,7 +77,7 @@ const AdminOrganizers = () => {
     }
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       
       await axios.post(API.CREATE_USER, formData, {
         headers: { Authorization: `Bearer ${token}` }

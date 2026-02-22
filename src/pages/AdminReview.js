@@ -39,7 +39,7 @@ const AdminReview = () => {
     setError("");
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const res = await fetch(API.ADD_REVIEW, {
         method: "POST",
         headers: {
@@ -72,7 +72,7 @@ const AdminReview = () => {
     }
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const res = await fetch(`${API.DELETE_REVIEW}/${id}`, {
         method: "DELETE",
         headers: {

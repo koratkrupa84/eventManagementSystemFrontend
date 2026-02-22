@@ -68,7 +68,7 @@ const AdminGallery = () => {
 
   const fetchEvents = async () => {
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       
       // Fetch public events
       const publicRes = await fetch(API.GET_PUBLIC_EVENTS, {
@@ -130,7 +130,7 @@ const AdminGallery = () => {
     }
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const uploadFormData = new FormData();
       
       // Add images
@@ -171,7 +171,7 @@ const AdminGallery = () => {
     }
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const res = await fetch(`${API.DELETE_GALLERY}/${id}`, {
         method: "DELETE",
         headers: {
@@ -213,7 +213,7 @@ const AdminGallery = () => {
     }
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
       const updateFormData = new FormData();
       updateFormData.append("event_type", editFormData.event_type);
       updateFormData.append("event_id", editFormData.event_id);
