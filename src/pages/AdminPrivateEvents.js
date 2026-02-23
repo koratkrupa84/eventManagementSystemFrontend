@@ -6,6 +6,7 @@ import { API } from "../services/apiConfig";
 const AdminPrivateEvents = () => {
   const [requests, setRequests] = useState([]);
   const [events, setEvents] = useState([]);
+  const [organizers, setOrganizers] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -26,7 +27,21 @@ const AdminPrivateEvents = () => {
   useEffect(() => {
     fetchRequests();
     fetchEvents();
+    fetchOrganizers();
   }, []);
+
+  // Fetch organizers
+  const fetchOrganizers = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(API.ADMIN_GET_ORGANIZERS, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setOrganizers(res.data.data || []);
+    } catch (err) {
+      console.error("Failed to fetch organizers:", err);
+    }
+  };
 
   // Fetch approved requests only
   const fetchRequests = async () => {
@@ -203,127 +218,217 @@ const AdminPrivateEvents = () => {
 
   return (
     <div className="private-events-container">
-      <h2 className="private-events-header">Private Events Management</h2>
+      <div className="page-header">
+        <h2 className="private-events-header">
+          <span className="header-icon">📅</span>
+          Private Events Management
+        </h2>
+        <p className="header-subtitle">Create and manage private events from approved requests</p>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="stats-container">
+        <div className="stat-card">
+          <div className="stat-number">{requests.length}</div>
+          <div className="stat-label">Approved Requests</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{addedEvents.length}</div>
+          <div className="stat-label">Created Events</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{organizers.length}</div>
+          <div className="stat-label">Available Organizers</div>
+        </div>
+      </div>
 
       {/* Add Event Button */}
       <button
         onClick={() => setShowAddForm(!showAddForm)}
         className="primary-btn"
       >
+        <span className="btn-icon">➕</span>
         Create Event from Approved Request
       </button>
 
       {/* Add Event Form */}
       {showAddForm && (
         <div className="form-container">
-          <h3 className="form-header">Select Approved Request</h3>
+          <div className="form-header">
+            <span className="form-icon">🎉</span>
+            Create New Private Event
+          </div>
           
-          <select
-            value={selectedRequest?._id || ""}
-            onChange={(e) =>
-              handleSelectRequest(
-                requests.find((r) => r._id === e.target.value)
-              )
-            }
-            className="form-select"
-          >
-            <option value="">Select Approved Request</option>
-            {requests.map((r) => (
-              <option key={r._id} value={r._id}>
-                {r.event_type} - {formatDate(r.event_date)}
-              </option>
-            ))}
-          </select>
+          <div className="form-section">
+            <label className="section-label">Select Approved Request</label>
+            <select
+              value={selectedRequest?._id || ""}
+              onChange={(e) =>
+                handleSelectRequest(
+                  requests.find((r) => r._id === e.target.value)
+                )
+              }
+              className="form-select"
+            >
+              <option value="">📋 Select Approved Request</option>
+              {requests.map((r) => (
+                <option key={r._id} value={r._id}>
+                  🎯 {r.event_type} - {formatDate(r.event_date)}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {selectedRequest && (
-            <div>
+            <div className="request-details-section">
+              <div className="section-title">
+                <span className="section-icon">📋</span>
+                Request Details
+              </div>
+              
               <div className="request-preview">
-                <p><strong>Event Type:</strong> {selectedRequest.event_type}</p>
-                <p><strong>Date:</strong> {formatDate(selectedRequest.event_date)}</p>
-                <p><strong>Location:</strong> {selectedRequest.location}</p>
-                {selectedRequest.guests && (
-                  <p><strong>Guests:</strong> {selectedRequest.guests}</p>
-                )}
-                {selectedRequest.budget && (
-                  <p><strong>Budget:</strong> ₹{selectedRequest.budget}</p>
-                )}
+                <div className="preview-grid">
+                  <div className="preview-item">
+                    <span className="preview-label">Event Type:</span>
+                    <span className="preview-value">{selectedRequest.event_type}</span>
+                  </div>
+                  <div className="preview-item">
+                    <span className="preview-label">Date:</span>
+                    <span className="preview-value">{formatDate(selectedRequest.event_date)}</span>
+                  </div>
+                  <div className="preview-item">
+                    <span className="preview-label">Location:</span>
+                    <span className="preview-value">{selectedRequest.location}</span>
+                  </div>
+                  {selectedRequest.guests && (
+                    <div className="preview-item">
+                      <span className="preview-label">Guests:</span>
+                      <span className="preview-value">{selectedRequest.guests}</span>
+                    </div>
+                  )}
+                  {selectedRequest.budget && (
+                    <div className="preview-item">
+                      <span className="preview-label">Budget:</span>
+                      <span className="preview-value">₹{selectedRequest.budget}</span>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="form-grid">
+              <div className="form-section">
+                <div className="section-title">
+                  <span className="section-icon">👤</span>
+                  Assign Organizer
+                </div>
                 <div className="form-group">
-                  <label className="form-label">Organizer ID:</label>
-                  <input
-                    type="text"
+                  <label className="form-label">
+                    <span className="label-icon">🎯</span>
+                    Select Organizer
+                  </label>
+                  <select
                     name="organizer_id"
                     value={formData.organizer_id}
                     onChange={handleFormChange}
-                    placeholder="Organizer ID"
-                    className="form-input"
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Event Date:</label>
-                  <input
-                    type="date"
-                    name="event_date"
-                    value={formData.event_date?.slice(0, 10)}
-                    onChange={handleFormChange}
-                    className="form-input"
-                  />
+                    className="form-select"
+                  >
+                    <option value="">Choose an organizer...</option>
+                    {organizers.map((org) => (
+                      <option key={org._id} value={org._id}>
+                        🎪 {org.name} - {org.specialization} ({org.experience})
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
-              <div className="form-group">
-                <label className="form-label">Event Details:</label>
-                <input
-                  type="text"
-                  name="details"
-                  value={formData.details}
-                  onChange={handleFormChange}
-                  placeholder="Event Details"
-                  className="form-input"
-                />
-              </div>
+              <div className="form-section">
+                <div className="section-title">
+                  <span className="section-icon">📝</span>
+                  Event Information
+                </div>
+                
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label className="form-label">
+                      <span className="label-icon">📅</span>
+                      Event Date
+                    </label>
+                    <input
+                      type="date"
+                      name="event_date"
+                      value={formData.event_date?.slice(0, 10)}
+                      onChange={handleFormChange}
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">
+                      <span className="label-icon">👥</span>
+                      Number of Guests
+                    </label>
+                    <input
+                      type="number"
+                      name="guests"
+                      value={formData.guests}
+                      onChange={handleFormChange}
+                      placeholder="Enter number of guests"
+                      className="form-input"
+                    />
+                  </div>
+                </div>
 
-              <div className="form-grid">
                 <div className="form-group">
-                  <label className="form-label">Number of Guests:</label>
+                  <label className="form-label">
+                    <span className="label-icon">📄</span>
+                    Event Details
+                  </label>
                   <input
                     type="text"
-                    name="guests"
-                    value={formData.guests}
+                    name="details"
+                    value={formData.details}
                     onChange={handleFormChange}
-                    placeholder="Number of Guests"
+                    placeholder="Enter event details"
                     className="form-input"
                   />
                 </div>
-                <div className="form-group">
-                  <label className="form-label">Budget (₹):</label>
-                  <input
-                    type="text"
-                    name="budget"
-                    value={formData.budget}
-                    onChange={handleFormChange}
-                    placeholder="Budget (₹)"
-                    className="form-input"
-                  />
-                </div>
-              </div>
 
-              <div className="form-group">
-                <label className="form-label">Event Location:</label>
-                <input
-                  type="text"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleFormChange}
-                  placeholder="Event Location"
-                  className="form-input"
-                />
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label className="form-label">
+                      <span className="label-icon">💰</span>
+                      Budget (₹)
+                    </label>
+                    <input
+                      type="number"
+                      name="budget"
+                      value={formData.budget}
+                      onChange={handleFormChange}
+                      placeholder="Enter budget"
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">
+                      <span className="label-icon">📍</span>
+                      Event Location
+                    </label>
+                    <input
+                      type="text"
+                      name="location"
+                      value={formData.location}
+                      onChange={handleFormChange}
+                      placeholder="Enter event location"
+                      className="form-input"
+                    />
+                  </div>
+                </div>
               </div>
 
               {error && (
-                <div className="error-message">{error}</div>
+                <div className="error-message">
+                  <span className="error-icon">⚠️</span>
+                  {error}
+                </div>
               )}
 
               <div className="btn-group">
@@ -331,6 +436,7 @@ const AdminPrivateEvents = () => {
                   onClick={handleAddEvent}
                   className="success-btn"
                 >
+                  <span className="btn-icon">✅</span>
                   Create Event
                 </button>
                 <button
@@ -341,6 +447,7 @@ const AdminPrivateEvents = () => {
                   }}
                   className="cancel-btn"
                 >
+                  <span className="btn-icon">❌</span>
                   Cancel
                 </button>
               </div>

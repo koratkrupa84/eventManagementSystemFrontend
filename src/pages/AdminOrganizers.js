@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API } from "../services/apiConfig";
-import "../css/AdminAppointments.css";
+import "../css/AdminOrganizers.css";
 import "../css/AdminCommon.css";
 
 const AdminOrganizers = () => {
@@ -17,9 +17,14 @@ const AdminOrganizers = () => {
     email: "",
     phone: "",
     password: "",
-    role: "organizer",
+    confirmPassword: "",
+    company: "",
     specialization: "",
-    experience: ""
+    experience: "",
+    bio: "",
+    website: "",
+    licenseNumber: "",
+    services: []
   });
 
   useEffect(() => {
@@ -29,15 +34,11 @@ const AdminOrganizers = () => {
   const fetchOrganizers = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(API.GET_USERS, {
+      const res = await axios.get(API.ADMIN_GET_ORGANIZERS, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      // Filter only organizers
-      const organizerList = (res.data.data || res.data || [])
-        .filter(user => user.role === "organizer");
-      
-      setOrganizers(organizerList);
+      setOrganizers(res.data.data || []);
       setLoading(false);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch organizers");
@@ -58,7 +59,7 @@ const AdminOrganizers = () => {
     try {
       const token = localStorage.getItem("token");
       
-      await axios.delete(`${API.DELETE_USER}/${organizerId}`, {
+      await axios.delete(`${API.ADMIN_DELETE_ORGANIZER}/${organizerId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -71,15 +72,25 @@ const AdminOrganizers = () => {
   };
 
   const handleAddOrganizer = async () => {
-    if (!formData.name || !formData.email || !formData.password) {
-      setError("Name, email, and password are required");
+    if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
+      setError("Name, email, password, and confirm password are required");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long");
       return;
     }
 
     try {
       const token = localStorage.getItem("token");
       
-      await axios.post(API.CREATE_USER, formData, {
+      await axios.post(API.ORGANIZER_REGISTER, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -90,9 +101,14 @@ const AdminOrganizers = () => {
         email: "",
         phone: "",
         password: "",
-        role: "organizer",
+        confirmPassword: "",
+        company: "",
         specialization: "",
-        experience: ""
+        experience: "",
+        bio: "",
+        website: "",
+        licenseNumber: "",
+        services: []
       });
       fetchOrganizers();
 
@@ -175,7 +191,6 @@ const AdminOrganizers = () => {
               <th>Phone</th>
               <th>Specialization</th>
               <th>Experience</th>
-              <th>Registration Date</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -197,7 +212,6 @@ const AdminOrganizers = () => {
                   <td>{organizer.phone || 'N/A'}</td>
                   <td>{organizer.specialization || 'N/A'}</td>
                   <td>{organizer.experience || 'N/A'}</td>
-                  <td>{new Date(organizer.createdAt).toLocaleDateString()}</td>
                   <td>
                     <span className={`status ${organizer.isActive !== false ? 'approved' : 'rejected'}`}>
                       {organizer.isActive !== false ? 'Active' : 'Inactive'}
@@ -251,10 +265,20 @@ const AdminOrganizers = () => {
                 <p><strong>Name:</strong> {selectedOrganizer.name}</p>
                 <p style={{ marginTop: '10px' }}><strong>Email:</strong> {selectedOrganizer.email}</p>
                 <p style={{ marginTop: '10px' }}><strong>Phone:</strong> {selectedOrganizer.phone || 'N/A'}</p>
-                <p style={{ marginTop: '10px' }}><strong>Role:</strong> {selectedOrganizer.role}</p>
+                <p style={{ marginTop: '10px' }}><strong>Company:</strong> {selectedOrganizer.company || 'N/A'}</p>
+                <p style={{ marginTop: '10px' }}><strong>Website:</strong> {selectedOrganizer.website ? (
+                  <a href={selectedOrganizer.website} target="_blank" rel="noopener noreferrer" style={{ color: '#6C5CE7' }}>
+                    {selectedOrganizer.website}
+                  </a>
+                ) : 'N/A'}</p>
                 <p style={{ marginTop: '10px' }}><strong>Status:</strong> 
                   <span className={`status ${selectedOrganizer.isActive !== false ? 'approved' : 'rejected'}`} style={{ marginLeft: '8px' }}>
                     {selectedOrganizer.isActive !== false ? 'Active' : 'Inactive'}
+                  </span>
+                </p>
+                <p style={{ marginTop: '10px' }}><strong>Verified:</strong> 
+                  <span className={`status ${selectedOrganizer.isVerified ? 'approved' : 'rejected'}`} style={{ marginLeft: '8px' }}>
+                    {selectedOrganizer.isVerified ? 'Verified' : 'Not Verified'}
                   </span>
                 </p>
                 <p style={{ marginTop: '10px' }}><strong>Registration Date:</strong> {new Date(selectedOrganizer.createdAt).toLocaleDateString()}</p>
@@ -272,8 +296,46 @@ const AdminOrganizers = () => {
               }}>
                 <p><strong>Specialization:</strong> {selectedOrganizer.specialization || 'N/A'}</p>
                 <p style={{ marginTop: '10px' }}><strong>Experience:</strong> {selectedOrganizer.experience || 'N/A'}</p>
+                <p style={{ marginTop: '10px' }}><strong>Rating:</strong> {selectedOrganizer.rating ? `${selectedOrganizer.rating}⭐` : 'N/A'}</p>
+                <p style={{ marginTop: '10px' }}><strong>Total Events:</strong> {selectedOrganizer.totalEvents || 0}</p>
+                <p style={{ marginTop: '10px' }}><strong>License Number:</strong> {selectedOrganizer.licenseNumber || 'N/A'}</p>
+                <p style={{ marginTop: '10px' }}><strong>Services:</strong> {selectedOrganizer.services && selectedOrganizer.services.length > 0 ? selectedOrganizer.services.join(', ') : 'N/A'}</p>
               </div>
             </div>
+
+            {selectedOrganizer.bio && (
+              <div style={{ marginBottom: '20px' }}>
+                <h4 style={{ color: '#7F5539', marginBottom: '12px' }}>Bio</h4>
+                <div style={{ 
+                  background: '#FDF7F2', 
+                  padding: '16px', 
+                  borderRadius: '12px',
+                  fontSize: '14px',
+                  color: '#7F5539'
+                }}>
+                  <p>{selectedOrganizer.bio}</p>
+                </div>
+              </div>
+            )}
+
+            {selectedOrganizer.address && Object.keys(selectedOrganizer.address).length > 0 && (
+              <div style={{ marginBottom: '20px' }}>
+                <h4 style={{ color: '#7F5539', marginBottom: '12px' }}>Address</h4>
+                <div style={{ 
+                  background: '#FDF7F2', 
+                  padding: '16px', 
+                  borderRadius: '12px',
+                  fontSize: '14px',
+                  color: '#7F5539'
+                }}>
+                  <p><strong>Street:</strong> {selectedOrganizer.address.street || 'N/A'}</p>
+                  <p style={{ marginTop: '10px' }}><strong>City:</strong> {selectedOrganizer.address.city || 'N/A'}</p>
+                  <p style={{ marginTop: '10px' }}><strong>State:</strong> {selectedOrganizer.address.state || 'N/A'}</p>
+                  <p style={{ marginTop: '10px' }}><strong>Zip Code:</strong> {selectedOrganizer.address.zipCode || 'N/A'}</p>
+                  <p style={{ marginTop: '10px' }}><strong>Country:</strong> {selectedOrganizer.address.country || 'N/A'}</p>
+                </div>
+              </div>
+            )}
 
             <div className="form-actions" style={{ marginTop: '24px' }}>
               <button
@@ -381,12 +443,28 @@ const AdminOrganizers = () => {
               </div>
 
               <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', color: '#7F5539' }}>Specialization</label>
+                <label style={{ display: 'block', marginBottom: '5px', color: '#7F5539' }}>Confirm Password *</label>
+                <input
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    border: '1px solid #ddd',
+                    borderRadius: '6px',
+                    background: '#fff'
+                  }}
+                  required
+                />
+              </div>
+
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', color: '#7F5539' }}>Company</label>
                 <input
                   type="text"
-                  value={formData.specialization}
-                  onChange={(e) => setFormData({...formData, specialization: e.target.value})}
-                  placeholder="e.g., Wedding, Corporate, Birthday"
+                  value={formData.company}
+                  onChange={(e) => setFormData({...formData, company: e.target.value})}
                   style={{
                     width: '100%',
                     padding: '8px',
@@ -398,12 +476,91 @@ const AdminOrganizers = () => {
               </div>
 
               <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', color: '#7F5539' }}>Specialization</label>
+                <select
+                  value={formData.specialization}
+                  onChange={(e) => setFormData({...formData, specialization: e.target.value})}
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    border: '1px solid #ddd',
+                    borderRadius: '6px',
+                    background: '#fff'
+                  }}
+                >
+                  <option value="">Select Specialization</option>
+                  <option value="wedding">Wedding</option>
+                  <option value="corporate">Corporate</option>
+                  <option value="birthday">Birthday</option>
+                  <option value="concert">Concert</option>
+                  <option value="conference">Conference</option>
+                  <option value="sports">Sports</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div style={{ marginBottom: '15px' }}>
                 <label style={{ display: 'block', marginBottom: '5px', color: '#7F5539' }}>Experience</label>
-                <input
-                  type="text"
+                <select
                   value={formData.experience}
                   onChange={(e) => setFormData({...formData, experience: e.target.value})}
-                  placeholder="e.g., 5 years, 10+ years"
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    border: '1px solid #ddd',
+                    borderRadius: '6px',
+                    background: '#fff'
+                  }}
+                >
+                  <option value="">Select Experience</option>
+                  <option value="0-2">0-2 years</option>
+                  <option value="2-5">2-5 years</option>
+                  <option value="5-10">5-10 years</option>
+                  <option value="10+">10+ years</option>
+                </select>
+              </div>
+
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', color: '#7F5539' }}>Bio</label>
+                <textarea
+                  value={formData.bio}
+                  onChange={(e) => setFormData({...formData, bio: e.target.value})}
+                  placeholder="Brief description about the organizer..."
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    border: '1px solid #ddd',
+                    borderRadius: '6px',
+                    background: '#fff',
+                    minHeight: '80px',
+                    resize: 'vertical'
+                  }}
+                />
+              </div>
+
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', color: '#7F5539' }}>Website</label>
+                <input
+                  type="url"
+                  value={formData.website}
+                  onChange={(e) => setFormData({...formData, website: e.target.value})}
+                  placeholder="https://example.com"
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    border: '1px solid #ddd',
+                    borderRadius: '6px',
+                    background: '#fff'
+                  }}
+                />
+              </div>
+
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', color: '#7F5539' }}>License Number</label>
+                <input
+                  type="text"
+                  value={formData.licenseNumber}
+                  onChange={(e) => setFormData({...formData, licenseNumber: e.target.value})}
                   style={{
                     width: '100%',
                     padding: '8px',
@@ -442,9 +599,14 @@ const AdminOrganizers = () => {
                     email: "",
                     phone: "",
                     password: "",
-                    role: "organizer",
+                    confirmPassword: "",
+                    company: "",
                     specialization: "",
-                    experience: ""
+                    experience: "",
+                    bio: "",
+                    website: "",
+                    licenseNumber: "",
+                    services: []
                   });
                   setError("");
                 }}

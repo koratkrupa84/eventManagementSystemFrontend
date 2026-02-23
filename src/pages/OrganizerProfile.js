@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/RegistrationPage.css';
-import colors from '../css/themeColors';
 import { API } from '../services/apiConfig';
 
 function OrganizerProfile() {
@@ -200,7 +199,7 @@ function OrganizerProfile() {
     <div
       className="auth-root"
       style={{
-        background: `linear-gradient(135deg, ${colors.creamLight}, ${colors.cream})`,
+        background: `linear-gradient(135deg, var(--creamLight), var(--cream))`,
       }}
     >
       <div className="auth-card">
@@ -255,7 +254,7 @@ function OrganizerProfile() {
                   style={{
                     padding: '8px 16px',
                     marginRight: '10px',
-                    backgroundColor: colors.brown,
+                    backgroundColor: 'var(--brown)',
                     color: 'white',
                     border: 'none',
                     borderRadius: '4px',
@@ -271,7 +270,7 @@ function OrganizerProfile() {
                     disabled={uploading}
                     style={{
                       padding: '8px 16px',
-                      backgroundColor: uploading ? '#ccc' : colors.brown,
+                      backgroundColor: uploading ? '#ccc' : 'var(--brown)',
                       color: 'white',
                       border: 'none',
                       borderRadius: '4px',
@@ -418,7 +417,7 @@ function OrganizerProfile() {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
                 {form.services.map((service, index) => (
                   <span key={index} style={{
-                    background: colors.brown,
+                    background: 'var(--brown)',
                     color: 'white',
                     padding: '4px 8px',
                     borderRadius: '12px',

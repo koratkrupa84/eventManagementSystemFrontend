@@ -1,10 +1,18 @@
-/* AdminDashboard.css - Cream & Brown theme */
+/* AdminDashboard.css - Using CSS Variables */
+
+:root {
+  --brown: #7f5539;
+  --cream: #e6ccb2;
+  --sand: #ddb892;
+  --creamLight: #fdf7f2;
+  --brownDark: #5c3c2a;
+}
 
 .dashboard-title {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 26px;
   font-weight: 700;
-  color: #7f5539;
+  color: var(--brown);
   margin: 0 0 18px;
 }
 
@@ -12,7 +20,7 @@
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 18px;
   font-weight: 600;
-  color: #7f5539;
+  color: var(--brown);
   margin: 26px 0 12px;
 }
 
@@ -23,11 +31,11 @@
 }
 
 .stat-card {
-  background: linear-gradient(145deg, #e6ccb2, #ddb892);
+  background: linear-gradient(145deg, var(--cream), var(--sand));
   border-radius: 18px;
   padding: 18px 20px;
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
-  color: #7f5539;
+  color: var(--brown);
   display: flex;
   flex-direction: column;
   gap: 4px;

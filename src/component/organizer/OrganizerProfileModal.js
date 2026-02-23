@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import '../../css/RegistrationPage.css';
-import colors from '../../css/themeColors';
 import { API } from '../../services/apiConfig';
 
 function OrganizerProfileModal({ isOpen, onClose, onUpdate }) {
@@ -226,7 +225,7 @@ function OrganizerProfileModal({ isOpen, onClose, onUpdate }) {
       }}>
         {/* Header */}
         <div style={{
-          background: `linear-gradient(135deg, ${colors.brown}, ${colors.brownDark})`,
+          background: `linear-gradient(135deg, var(--brown), var(--brownDark))`,
           color: 'white',
           padding: '20px',
           borderRadius: '12px 12px 0 0',
@@ -321,7 +320,7 @@ function OrganizerProfileModal({ isOpen, onClose, onUpdate }) {
                   style={{
                     padding: '8px 16px',
                     marginRight: '10px',
-                    backgroundColor: colors.brown,
+                    backgroundColor: 'var(--brown)',
                     color: 'white',
                     border: 'none',
                     borderRadius: '4px',
@@ -337,7 +336,7 @@ function OrganizerProfileModal({ isOpen, onClose, onUpdate }) {
                     disabled={uploading}
                     style={{
                       padding: '8px 16px',
-                      backgroundColor: uploading ? '#ccc' : colors.brown,
+                      backgroundColor: uploading ? '#ccc' : 'var(--brown)',
                       color: 'white',
                       border: 'none',
                       borderRadius: '4px',
@@ -579,7 +578,7 @@ function OrganizerProfileModal({ isOpen, onClose, onUpdate }) {
                     onClick={handleServiceAdd}
                     style={{
                       padding: '10px 20px',
-                      backgroundColor: colors.brown,
+                      backgroundColor: 'var(--brown)',
                       color: 'white',
                       border: 'none',
                       borderRadius: '6px',
@@ -592,7 +591,7 @@ function OrganizerProfileModal({ isOpen, onClose, onUpdate }) {
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
                   {form.services.map((service, index) => (
                     <span key={index} style={{
-                      background: colors.brown,
+                      background: 'var(--brown)',
                       color: 'white',
                       padding: '4px 8px',
                       borderRadius: '12px',
@@ -641,7 +640,7 @@ function OrganizerProfileModal({ isOpen, onClose, onUpdate }) {
                   disabled={loading}
                   style={{
                     padding: '12px 24px',
-                    backgroundColor: loading ? '#ccc' : colors.brown,
+                    backgroundColor: loading ? '#ccc' : 'var(--brown)',
                     color: 'white',
                     border: 'none',
                     borderRadius: '6px',

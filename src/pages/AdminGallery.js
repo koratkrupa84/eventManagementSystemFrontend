@@ -99,10 +99,13 @@ const AdminGallery = () => {
   const fetchGallery = async () => {
     try {
       const res = await fetch(API.GET_GALLERY);
+      
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Failed to load gallery");
+      }
+      
       const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message || "Failed to load gallery");
-
       setImages(data.data);
       setFilteredImages(data.data);
     } catch (err) {
@@ -150,9 +153,12 @@ const AdminGallery = () => {
         body: uploadFormData
       });
 
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Failed to upload images");
+      }
+      
       const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message || "Failed to upload images");
 
       setShowUploadForm(false);
       setSelectedImages([]);
@@ -179,9 +185,12 @@ const AdminGallery = () => {
         }
       });
 
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Failed to delete image");
+      }
+      
       const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message || "Failed to delete image");
 
       fetchGallery();
     } catch (err) {
@@ -214,26 +223,33 @@ const AdminGallery = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const updateFormData = new FormData();
-      updateFormData.append("event_type", editFormData.event_type);
-      updateFormData.append("event_id", editFormData.event_id);
-
+      
       const res = await fetch(`${API.UPDATE_GALLERY}/${selectedImage._id}`, {
         method: "PUT",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        body: updateFormData
+        body: JSON.stringify({
+          event_type: editFormData.event_type,
+          event_id: editFormData.event_id
+        })
       });
 
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message || "Failed to update image");
-
-      setShowEditModal(false);
-      setSelectedImage(null);
-      setEditFormData({ event_type: "", event_id: "" });
-      fetchGallery();
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Failed to update image");
+      }
+      
+      try {
+        const data = await res.json();
+        setShowEditModal(false);
+        setSelectedImage(null);
+        setEditFormData({ event_type: "", event_id: "" });
+        fetchGallery();
+      } catch (err) {
+        setError("Failed to parse JSON response");
+      }
     } catch (err) {
       setError(err.message);
     }

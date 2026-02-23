@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './Header.css';
-import colors from '../css/themeColors';
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,7 +33,7 @@ function Header() {
   return (
     <header
       className="main-header"
-      style={{ background: `linear-gradient(90deg, ${colors.creamLight}, ${colors.cream})` }}
+      style={{ background: `linear-gradient(90deg, var(--creamLight), var(--cream))` }}
     >
       <div className="header-inner">
         <div className="brand">
@@ -71,8 +70,10 @@ function Header() {
           >
             {isLoggedIn && userRole === 'client' ? (
               <>
-                <span className="dashboard-icon">👤</span>
-                <span>Dashboard</span>
+                <a href="/client/dashboard">
+                  <span className="dashboard-icon">👤</span>
+                  <span>Dashboard</span>
+                </a>
               </>
             ) : (
               <span>Login</span>

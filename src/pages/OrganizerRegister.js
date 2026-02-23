@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import '../css/RegistrationPage.css';
-import colors from '../css/themeColors';
 import { API } from '../services/apiConfig';
 
 function OrganizerRegister() {
@@ -153,7 +152,7 @@ function OrganizerRegister() {
     <div
       className="auth-root"
       style={{
-        background: `linear-gradient(135deg, ${colors.creamLight}, ${colors.cream})`,
+        background: `linear-gradient(135deg, var(--creamLight), var(--cream))`,
       }}
     >
       <div className="auth-card">
@@ -304,7 +303,7 @@ function OrganizerRegister() {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
                 {form.services.map((service, index) => (
                   <span key={index} style={{
-                    background: colors.brown,
+                    background: 'var(--brown)',
                     color: 'white',
                     padding: '4px 8px',
                     borderRadius: '12px',

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/ClientDashboard.css';
-import colors from '../css/themeColors';
 import { API } from '../services/apiConfig';
 import OrganizerProfileModal from '../component/organizer/OrganizerProfileModal';
 
@@ -26,7 +25,7 @@ function OrganizerDashboard() {
     fetchAppointments();
     fetchClients();
     fetchEventPhotos();
-  }, []);
+  }, [fetchOrganizerData, fetchAppointments, fetchClients, fetchEventPhotos]);
 
   const fetchEventPhotos = async () => {
     try {
@@ -135,8 +134,8 @@ function OrganizerDashboard() {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'pending': return colors.sand;
-      case 'confirmed': return colors.brown;
+      case 'pending': return 'var(--sand)';
+      case 'confirmed': return 'var(--brown)';
       case 'completed': return '#4CAF50';
       case 'cancelled': return '#f44336';
       default: return '#ccc';
@@ -232,7 +231,7 @@ function OrganizerDashboard() {
         justifyContent: 'center', 
         alignItems: 'center', 
         height: '100vh',
-        background: `linear-gradient(135deg, ${colors.cream}, ${colors.sand})`
+        background: `linear-gradient(135deg, var(--cream), var(--sand))`
       }}>
         <div>Loading organizer dashboard...</div>
       </div>
@@ -241,7 +240,7 @@ function OrganizerDashboard() {
 
   return (
     <div style={{ 
-      background: `linear-gradient(135deg, ${colors.cream}, ${colors.sand})`,
+      background: `linear-gradient(135deg, var(--cream), var(--sand))`,
       minHeight: '100vh',
       padding: '20px'
     }}>
@@ -273,7 +272,7 @@ function OrganizerDashboard() {
               />
             </div>
             <div>
-              <h2 style={{ margin: 0, color: colors.brown }}>
+              <h2 style={{ margin: 0, color: 'var(--brown)' }}>
                 Welcome, {organizerData?.name || 'Organizer'}
               </h2>
               <p style={{ margin: '5px 0 0 0', color: '#666' }}>
@@ -286,7 +285,7 @@ function OrganizerDashboard() {
               onClick={() => setShowProfileModal(true)}
               style={{
                 padding: '10px 20px',
-                backgroundColor: colors.brown,
+                backgroundColor: 'var(--brown)',
                 color: 'white',
                 border: 'none',
                 borderRadius: '6px',
@@ -354,7 +353,7 @@ function OrganizerDashboard() {
           padding: '20px',
           boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
         }}>
-          <h3 style={{ margin: '0 0 10px 0', color: colors.brown }}>Total Appointments</h3>
+          <h3 style={{ margin: '0 0 10px 0', color: 'var(--brown)' }}>Total Appointments</h3>
           <p style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>
             {appointments.length}
           </p>
@@ -365,7 +364,7 @@ function OrganizerDashboard() {
           padding: '20px',
           boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
         }}>
-          <h3 style={{ margin: '0 0 10px 0', color: colors.brown }}>Total Clients</h3>
+          <h3 style={{ margin: '0 0 10px 0', color: 'var(--brown)' }}>Total Clients</h3>
           <p style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>
             {clients.length}
           </p>
@@ -376,7 +375,7 @@ function OrganizerDashboard() {
           padding: '20px',
           boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
         }}>
-          <h3 style={{ margin: '0 0 10px 0', color: colors.brown }}>Event Photos</h3>
+          <h3 style={{ margin: '0 0 10px 0', color: 'var(--brown)' }}>Event Photos</h3>
           <p style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>
             {eventPhotos.length}
           </p>
@@ -396,8 +395,8 @@ function OrganizerDashboard() {
             style={{
               padding: '12px 24px',
               border: 'none',
-              background: activeTab === 'appointments' ? colors.brown : 'transparent',
-              color: activeTab === 'appointments' ? 'white' : colors.brown,
+              background: activeTab === 'appointments' ? 'var(--brown)' : 'transparent',
+              color: activeTab === 'appointments' ? 'white' : 'var(--brown)',
               cursor: 'pointer',
               borderRadius: '6px 6px 0 0',
               fontWeight: 'bold'
@@ -410,8 +409,8 @@ function OrganizerDashboard() {
             style={{
               padding: '12px 24px',
               border: 'none',
-              background: activeTab === 'clients' ? colors.brown : 'transparent',
-              color: activeTab === 'clients' ? 'white' : colors.brown,
+              background: activeTab === 'clients' ? 'var(--brown)' : 'transparent',
+              color: activeTab === 'clients' ? 'white' : 'var(--brown)',
               cursor: 'pointer',
               borderRadius: '6px 6px 0 0',
               fontWeight: 'bold',
@@ -425,8 +424,8 @@ function OrganizerDashboard() {
             style={{
               padding: '12px 24px',
               border: 'none',
-              background: activeTab === 'gallery' ? colors.brown : 'transparent',
-              color: activeTab === 'gallery' ? 'white' : colors.brown,
+              background: activeTab === 'gallery' ? 'var(--brown)' : 'transparent',
+              color: activeTab === 'gallery' ? 'white' : 'var(--brown)',
               cursor: 'pointer',
               borderRadius: '6px 6px 0 0',
               fontWeight: 'bold',
@@ -440,7 +439,7 @@ function OrganizerDashboard() {
         {/* Appointments Tab */}
         {activeTab === 'appointments' && (
           <div>
-            <h3 style={{ color: colors.brown, marginBottom: '20px' }}>Your Appointments</h3>
+            <h3 style={{ color: 'var(--brown)', marginBottom: '20px' }}>Your Appointments</h3>
             {appointments.length === 0 ? (
               <p style={{ textAlign: 'center', color: '#666', padding: '40px' }}>
                 No appointments found
@@ -522,7 +521,7 @@ function OrganizerDashboard() {
                               onClick={() => updateAppointmentStatus(appointment._id, 'completed')}
                               style={{
                                 padding: '4px 8px',
-                                backgroundColor: colors.brown,
+                                backgroundColor: 'var(--brown)',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: '4px',
@@ -546,7 +545,7 @@ function OrganizerDashboard() {
         {/* Clients Tab */}
         {activeTab === 'clients' && (
           <div>
-            <h3 style={{ color: colors.brown, marginBottom: '20px' }}>Your Clients</h3>
+            <h3 style={{ color: 'var(--brown)', marginBottom: '20px' }}>Your Clients</h3>
             {clients.length === 0 ? (
               <p style={{ textAlign: 'center', color: '#666', padding: '40px' }}>
                 No clients found
@@ -591,7 +590,7 @@ function OrganizerDashboard() {
         {activeTab === 'gallery' && (
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h3 style={{ color: colors.brown, margin: 0 }}>Event Gallery</h3>
+              <h3 style={{ color: 'var(--brown)', margin: 0 }}>Event Gallery</h3>
               <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <input
                   id="eventPhotoInput"
@@ -605,7 +604,7 @@ function OrganizerDashboard() {
                   onClick={() => document.getElementById('eventPhotoInput').click()}
                   style={{
                     padding: '8px 16px',
-                    backgroundColor: colors.brown,
+                    backgroundColor: 'var(--brown)',
                     color: 'white',
                     border: 'none',
                     borderRadius: '6px',
@@ -657,7 +656,7 @@ function OrganizerDashboard() {
             {/* Photo Preview Section */}
             {newEventPhotos.length > 0 && (
               <div style={{ marginBottom: '20px' }}>
-                <h4 style={{ color: colors.brown, marginBottom: '10px' }}>Photo Preview:</h4>
+                <h4 style={{ color: 'var(--brown)', marginBottom: '10px' }}>Photo Preview:</h4>
                 <div style={{ 
                   display: 'flex', 
                   gap: '10px', 

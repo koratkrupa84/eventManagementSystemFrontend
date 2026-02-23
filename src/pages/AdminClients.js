@@ -27,15 +27,11 @@ const AdminClients = () => {
   const fetchClients = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(API.GET_USERS, {
+      const res = await axios.get(API.ADMIN_GET_CLIENTS, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      // Filter only clients
-      const clientList = (res.data.data || res.data || [])
-        .filter(user => user.role === "client");
-      
-      setClients(clientList);
+      setClients(res.data.data || []);
       setLoading(false);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch clients");
@@ -56,7 +52,7 @@ const AdminClients = () => {
     try {
       const token = localStorage.getItem("token");
       
-      await axios.delete(`${API.DELETE_USER}/${clientId}`, {
+      await axios.delete(`${API.ADMIN_DELETE_CLIENT}/${clientId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -187,7 +183,7 @@ const AdminClients = () => {
                   <td>{client._id.slice(-6)}</td>
                   <td>{client.name}</td>
                   <td>{client.email}</td>
-                  <td>{client.phone || 'N/A'}</td>
+                  <td>{client.clientProfile?.phone || client.phone || 'N/A'}</td>
                   <td>{new Date(client.createdAt).toLocaleDateString()}</td>
                   <td>
                     <span className={`status ${client.isActive !== false ? 'approved' : 'rejected'}`}>
@@ -241,7 +237,7 @@ const AdminClients = () => {
               }}>
                 <p><strong>Name:</strong> {selectedClient.name}</p>
                 <p style={{ marginTop: '10px' }}><strong>Email:</strong> {selectedClient.email}</p>
-                <p style={{ marginTop: '10px' }}><strong>Phone:</strong> {selectedClient.phone || 'N/A'}</p>
+                <p style={{ marginTop: '10px' }}><strong>Phone:</strong> {selectedClient.clientProfile?.phone || selectedClient.phone || 'N/A'}</p>
                 <p style={{ marginTop: '10px' }}><strong>Role:</strong> {selectedClient.role}</p>
                 <p style={{ marginTop: '10px' }}><strong>Status:</strong> 
                   <span className={`status ${selectedClient.isActive !== false ? 'approved' : 'rejected'}`} style={{ marginLeft: '8px' }}>
@@ -251,6 +247,21 @@ const AdminClients = () => {
                 <p style={{ marginTop: '10px' }}><strong>Registration Date:</strong> {new Date(selectedClient.createdAt).toLocaleDateString()}</p>
               </div>
             </div>
+
+            {selectedClient.clientProfile?.address && (
+              <div style={{ marginBottom: '20px' }}>
+                <h4 style={{ color: '#7F5539', marginBottom: '12px' }}>Address Information</h4>
+                <div style={{ 
+                  background: '#FDF7F2', 
+                  padding: '16px', 
+                  borderRadius: '12px',
+                  fontSize: '14px',
+                  color: '#7F5539'
+                }}>
+                  <p><strong>Address:</strong> {selectedClient.clientProfile.address}</p>
+                </div>
+              </div>
+            )}
 
             <div className="form-actions" style={{ marginTop: '24px' }}>
               <button

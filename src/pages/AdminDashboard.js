@@ -8,7 +8,9 @@ const AdminDashboard = () => {
     totalAppointments: 0,
     totalPackages: 0,
     totalCategories: 0,
-    totalReviews: 0
+    totalReviews: 0,
+    totalOrganizers: 0,
+    activeOrganizers: 0
   });
   const [recentAppointments, setRecentAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -62,6 +64,8 @@ const AdminDashboard = () => {
         <StatCard count={stats.totalCategories} label="Decoration Categories" />
         <StatCard count={stats.totalPackages} label="Decoration Packages" />
         <StatCard count={stats.totalReviews} label="Customer Testimonials" />
+        <StatCard count={stats.totalOrganizers} label="Total Organizers" />
+        <StatCard count={stats.activeOrganizers} label="Active Organizers" />
       </div>
 
       {/* 📋 Recent Appointments */}

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import '../css/LoginPage.css';
-import colors from '../css/themeColors';
 import { API } from '../services/apiConfig';
 
 function LoginPage() {
@@ -153,14 +152,14 @@ function LoginPage() {
     <div
       className="auth-root"
       style={{
-        background: `linear-gradient(135deg, ${colors.cream}, ${colors.sand})`,
+        background: `linear-gradient(135deg, var(--cream), var(--sand))`,
       }}
     >
       <div className="auth-card">
         <div
           className="auth-side-banner login-banner"
           style={{
-            background: `linear-gradient(135deg, ${colors.brown}, ${colors.brownDark})`,
+            background: `linear-gradient(135deg, var(--brown), var(--brownDark))`,
           }}
         >
           <h1 className="auth-brand">Welcome back</h1>
@@ -208,7 +207,7 @@ function LoginPage() {
             <button
               type="submit"
               className="primary-btn"
-              style={{ backgroundColor: colors.brown }}
+              style={{ backgroundColor: 'var(--brown)' }}
               disabled={loading}
             >
               {loading ? 'Logging in...' : 'Log in'}

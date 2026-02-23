@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import '../css/RegistrationPage.css';
-import colors from '../css/themeColors';
 import { API } from '../services/apiConfig';
 
 function RegistrationPage() {
@@ -109,7 +108,7 @@ function RegistrationPage() {
     <div
       className="auth-root"
       style={{
-        background: `linear-gradient(135deg, ${colors.creamLight}, ${colors.cream})`,
+        background: `linear-gradient(135deg, var(--creamLight), var(--cream))`,
       }}
     >
       <div className="auth-card">

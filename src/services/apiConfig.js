@@ -44,6 +44,7 @@ export const API = {
   // Gallery
   GET_GALLERY: `${BASE_URL}/admin/gallery`,
   ADD_GALLERY: `${BASE_URL}/admin/gallery`,
+  UPDATE_GALLERY: `${BASE_URL}/admin/gallery`,
   DELETE_GALLERY: `${BASE_URL}/admin/gallery`,
   
   // Reviews
@@ -97,6 +98,16 @@ export const API = {
   ORGANIZER_LOGIN: `${BASE_URL}/organizer/login`,
   ORGANIZER_GOOGLE_AUTH: `${BASE_URL}/organizer/google`,
   ORGANIZER_PROFILE: `${BASE_URL}/organizer/profile`,
-  ORGANIZER_UPLOAD_PHOTO: `${BASE_URL}/organizer/upload-photo`
+  ORGANIZER_UPLOAD_PHOTO: `${BASE_URL}/organizer/upload-photo`,
+  
+  // Admin Organizer endpoints
+  ADMIN_GET_ORGANIZERS: `${BASE_URL}/admin/organizers`,
+  ADMIN_DELETE_ORGANIZER: `${BASE_URL}/admin/organizers`,
+  ADMIN_UPDATE_ORGANIZER_STATUS: `${BASE_URL}/admin/organizers`,
+  
+  // Admin Client endpoints
+  ADMIN_GET_CLIENTS: `${BASE_URL}/admin/clients`,
+  ADMIN_DELETE_CLIENT: `${BASE_URL}/admin/clients`,
+  ADMIN_UPDATE_CLIENT_STATUS: `${BASE_URL}/admin/clients`
 };
 

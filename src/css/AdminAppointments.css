@@ -1,4 +1,4 @@
-/* AdminAppointments.css - Cream & Brown tables */
+/* AdminAppointments.css - Using CSS Variables */
 
 .appointment-header {
   display: flex;
@@ -22,9 +22,9 @@
 .search-input {
   padding: 8px 12px;
   border-radius: 999px;
-  border: 1px solid rgba(127, 85, 57, 0.3);
+  border: 1px solid var(--cream);
   background: #ffffff;
-  color: #7f5539;
+  color: var(--brown);
   font-size: 13px;
   font-weight: 500;
   outline: none;
@@ -33,12 +33,12 @@
 }
 
 .search-input::placeholder {
-  color: #9c6644;
+  color: var(--brownDark);
   opacity: 0.7;
 }
 
 .search-input:focus {
-  border-color: #7f5539;
+  border-color: var(--brown);
   box-shadow: 0 0 0 3px rgba(127, 85, 57, 0.1);
 }
 
@@ -46,7 +46,7 @@
   margin: 0;
   font-size: 22px;
   font-weight: 700;
-  color: #7f5539;
+  color: var(--brown);
 }
 
 .sub-title {
