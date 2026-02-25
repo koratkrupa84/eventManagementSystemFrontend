@@ -8,13 +8,14 @@ import {
   FaStar,
   FaSignOutAlt,
   FaBox,
-  FaImages
+  FaImages,
+  FaNewspaper
 } from "react-icons/fa";
 import "./AdminSidebar.css";
 
 function AdminSidebar() {
   const navigate = useNavigate();
-  const [openMenu, setOpenMenu] = useState("management");
+  const [openMenu, setOpenMenu] = useState("blogs");
 
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? "" : menu);
@@ -61,9 +62,15 @@ function AdminSidebar() {
                 <FaImages className="icon" />
                 Manage Gallery
               </NavLink>
+
+              <NavLink to="/admin/blogs" className="menu-item">
+                <FaNewspaper className="icon" />
+                Manage Blogs
+              </NavLink>
             </div>
           )}
         </div>
+
 
         {/* USERS */}
         <div className="menu">

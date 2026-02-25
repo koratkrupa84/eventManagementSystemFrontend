@@ -7,6 +7,9 @@ import BookPrivateEventAppointment from "../pages/BookPrivateEventAppointment";
 import Gallery from "../pages/Gallery";
 import Contact from "../pages/Contact";
 import Reviews from "../pages/Review";
+import Services from "../pages/Services";
+import Blog from "../pages/Blog";
+import BlogDetail from "../pages/BlogDetail";
 
 // Admin routes
 import AdminLogin from "../pages/AdminLogin";
@@ -22,6 +25,8 @@ import AdminPrivateEvents from "../pages/AdminPrivateEvents";
 import AdminClients from "../pages/AdminClients";
 import AdminOrganizers from "../pages/AdminOrganizers";
 import ClientDashboard from "../pages/ClientDashboard";
+import AdminBlog from "../pages/AdminBlog";
+import AdminBlogView from "../pages/AdminBlogView";
 
 // Organizer routes
 import OrganizerLogin from "../pages/OrganizerLogin";
@@ -41,6 +46,9 @@ const AppRouter = () => {
                     <Route path="/gallery" element={<Gallery />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/reviews" element={<Reviews />} />
+                    <Route path="/services" element={<Services />} />
+                    <Route path="/blog" element={<Blog />} />
+                    <Route path="/blog/:id" element={<BlogDetail />} />
 
                     // Admin route
                     <Route path="/admin/login" element={<AdminLogin />} />
@@ -55,6 +63,8 @@ const AppRouter = () => {
                          <Route path="inquiries" element={<AdminInquiries />} />
                          <Route path="clients" element={<AdminClients />} />
                          <Route path="organizers" element={<AdminOrganizers />} />
+                         <Route path="blogs" element={<AdminBlog />} />
+                         <Route path="blogs/:id" element={<AdminBlogView />} />
                     </Route>
                     
                     // Client route

@@ -140,6 +140,14 @@
   align-items: center;
 }
 
+.login-btn a {
+  text-decoration: none;
+  color: var(--textLight);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .login-btn {
   padding: 6px 16px;
   border-radius: 999px;

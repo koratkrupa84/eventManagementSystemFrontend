@@ -89,8 +89,30 @@ const AdminPrivateEvents = () => {
       const privateEvents = (res.data.data || res.data || [])
         .filter(event => event.type === 'private_event');
 
-      setEvents(privateEvents);
-      setAddedEvents(privateEvents);
+      console.log("Raw private events:", privateEvents);
+
+      // Use the data as-is since backend should now populate client properly
+      const eventsWithClients = privateEvents.map(event => {
+        let clientName = 'Unknown Client';
+        
+        // Try to get client name from various sources
+        if (event.request_id?.client_id?.name) {
+          clientName = event.request_id.client_id.name;
+        } else if (event.client_id?.name) {
+          clientName = event.client_id.name;
+        } else if (event.full_name && event.full_name !== 'Unknown Client') {
+          clientName = event.full_name;
+        }
+        
+        return {
+          ...event,
+          client_name: clientName
+        };
+      });
+
+      console.log("Events with clients:", eventsWithClients);
+      setEvents(eventsWithClients);
+      setAddedEvents(eventsWithClients);
     } catch (err) {
       console.error("Error fetching events:", err);
     }
@@ -172,7 +194,7 @@ const AdminPrivateEvents = () => {
     setSelectedEvent(event);
     setShowViewModal(true);
     setFormData({
-      organizer_id: event.organizer_id?._id || event.client_id?._id || "",
+      organizer_id: event.organizer_id?._id || event.organizer_id || "",
       details: event.details || "",
       guests: event.guests || "",
       budget: event.budget || "",
@@ -461,7 +483,7 @@ const AdminPrivateEvents = () => {
         <table className="appointment-table">
           <thead>
             <tr>
-              <th>Event ID</th>
+              <th>ID</th>
               <th>Event Type</th>
               <th>Date</th>
               <th>Location</th>
@@ -486,7 +508,7 @@ const AdminPrivateEvents = () => {
                   <td>{e.event_type || "Private Event"}</td>
                   <td>{formatDate(e.event_date)}</td>
                   <td>{e.location}</td>
-                  <td>{e.client_id?.name || e.full_name || "N/A"}</td>
+                  <td>{e.client_name || e.client_id?.name || e.full_name || "N/A"}</td>
                   <td>{e.guests || "N/A"}</td>
                   <td>{e.budget ? `₹${e.budget}` : "N/A"}</td>
                   <td>
@@ -522,14 +544,20 @@ const AdminPrivateEvents = () => {
             <h3 className="modal-header">Edit Event</h3>
             
             <div className="form-group">
-              <label className="form-label">Organizer ID:</label>
-              <input
-                type="text"
+              <label className="form-label">Organizer Name:</label>
+              <select
                 name="organizer_id"
                 value={formData.organizer_id}
                 onChange={handleFormChange}
-                className="form-input"
-              />
+                className="form-select"
+              >
+                <option value="">Select Organizer...</option>
+                {organizers.map((org) => (
+                  <option key={org._id} value={org._id}>
+                    {org.name} - {org.specialization} ({org.experience})
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="form-group">
@@ -550,8 +578,8 @@ const AdminPrivateEvents = () => {
                   type="text"
                   name="guests"
                   value={formData.guests}
-                  onChange={handleFormChange}
                   className="form-input"
+                  readOnly
                 />
               </div>
               <div className="form-group">
@@ -560,8 +588,8 @@ const AdminPrivateEvents = () => {
                   type="text"
                   name="budget"
                   value={formData.budget}
-                  onChange={handleFormChange}
                   className="form-input"
+                  readOnly
                 />
               </div>
             </div>
@@ -572,8 +600,8 @@ const AdminPrivateEvents = () => {
                 type="text"
                 name="location"
                 value={formData.location}
-                onChange={handleFormChange}
                 className="form-input"
+                readOnly
               />
             </div>
 
@@ -583,8 +611,8 @@ const AdminPrivateEvents = () => {
                 type="date"
                 name="event_date"
                 value={formData.event_date?.slice(0, 10)}
-                onChange={handleFormChange}
                 className="form-input"
+                readOnly
               />
             </div>
 

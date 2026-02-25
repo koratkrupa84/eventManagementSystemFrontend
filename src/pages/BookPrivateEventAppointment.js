@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/BookPrivateEventAppointment.css";
 import { API } from "../services/apiConfig";
@@ -18,6 +18,39 @@ const BookPrivateEventAppointment = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [packages, setPackages] = useState([]);
+
+  useEffect(() => {
+    fetchCategories();
+    fetchPackages();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch(API.GET_CATEGORIES);
+      const result = await res.json();
+      
+      if (res.ok && result?.success) {
+        setCategories(result.data || []);
+      }
+    } catch (error) {
+      console.log("Failed to fetch categories:", error);
+    }
+  };
+
+  const fetchPackages = async () => {
+    try {
+      const res = await fetch(API.GET_PACKAGES);
+      const result = await res.json();
+      
+      if (res.ok && result?.success) {
+        setPackages(result.data || []);
+      }
+    } catch (error) {
+      console.log("Failed to fetch packages:", error);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -83,17 +116,21 @@ const BookPrivateEventAppointment = () => {
         <label>Event Type</label>
         <select name="eventType" required onChange={handleChange}>
           <option value="">Select Event Type</option>
-          <option>Wedding</option>
-          <option>Birthday</option>
-          <option>Baby Shower</option>
-          <option>Corporate</option>
+          {categories.map((category) => (
+            <option key={category._id} value={category.title}>
+              {category.title}
+            </option>
+          ))}
         </select>
 
         <label>Package (Optional)</label>
         <select name="packageId" onChange={handleChange}>
           <option value="">Select a Package (Optional)</option>
-          <option value="1">Basic Package</option>
-          <option value="2">Premium Package</option>
+          {packages.map((pkg) => (
+            <option key={pkg._id} value={pkg._id}>
+              {pkg.package_name} - ₹{pkg.price}
+            </option>
+          ))}
         </select>
 
         <label>Event Date</label>

@@ -58,6 +58,7 @@ export const API = {
   GET_INQUIRY: `${BASE_URL}/admin/inquiries`,
   UPDATE_INQUIRY_STATUS: `${BASE_URL}/admin/inquiries`,
   DELETE_INQUIRY: `${BASE_URL}/admin/inquiries`,
+  CREATE_INQUIRY: `${BASE_URL}/admin/inquiries`,
   
   // Client Profile
   GET_CLIENT_PROFILE: `${BASE_URL}/profile`,
@@ -85,6 +86,15 @@ export const API = {
   GET_MY_REGISTRATIONS: `${BASE_URL}/registrations/user/my-registrations`,
   CANCEL_REGISTRATION: `${BASE_URL}/registrations`,
   GET_EVENT_REGISTRATIONS: `${BASE_URL}/registrations/event`,
+  
+  // Blogs
+  GET_BLOGS: `${BASE_URL}/blogs`,
+  GET_BLOG: `${BASE_URL}/blogs`,
+  GET_BLOG_BY_SLUG: `${BASE_URL}/blogs/slug`,
+  CREATE_BLOG: `${BASE_URL}/admin/blogs`,
+  UPDATE_BLOG: `${BASE_URL}/admin/blogs`,
+  DELETE_BLOG: `${BASE_URL}/admin/blogs`,
+  GET_BLOG_STATS: `${BASE_URL}/blogs/stats`,
   
   // Private Events
   CREATE_PRIVATE_EVENT: `${BASE_URL}/privateEvents/create-event`,

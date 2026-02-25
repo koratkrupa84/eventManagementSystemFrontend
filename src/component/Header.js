@@ -48,9 +48,9 @@ function Header() {
           <a href="/" className="nav-link">
             Home
           </a>
-          <div className="nav-link nav-dropdown">
-            <span>Services</span>
-          </div>
+          <a href="/services" className="nav-link">
+            Services
+          </a>
           <a href="/gallery" className="nav-link">
             Gallery
           </a>

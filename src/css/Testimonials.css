@@ -7,7 +7,12 @@
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-.testimonial-section h2 {
+.testimonial-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.testimonial-header h2 {
   font-size: 32px;
   font-weight: 700;
   color: #7f5539;
@@ -15,14 +20,333 @@
   margin-bottom: 10px;
 }
 
-.testimonial-section .subtitle {
+.testimonial-header .subtitle {
   text-align: center;
   color: #9c6644;
   font-size: 15px;
-  margin-bottom: 34px;
+  margin-bottom: 24px;
   max-width: 520px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.add-review-btn {
+  padding: 12px 24px;
+  background: linear-gradient(145deg, #9C6644, #7F5539);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(127, 85, 57, 0.3);
+}
+
+.add-review-btn:hover {
+  background: linear-gradient(145deg, #7F5539, #6B4423);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(127, 85, 57, 0.4);
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 18px;
+  padding: 0;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 50px rgba(127, 85, 57, 0.2);
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px 20px;
+  border-bottom: 1px solid #E6CCB2;
+}
+
+.modal-header h3 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #7F5539;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #9C6644;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: #E6CCB2;
+  color: #7F5539;
+}
+
+.review-form {
+  padding: 32px;
+}
+
+/* Add Review Section */
+.add-review-section {
+  text-align: center;
+  padding: 60px 24px 40px;
+  border-top: 1px solid rgba(221, 184, 146, 0.3);
+  margin-top: 40px;
+}
+
+.review-invitation {
+  font-size: 18px;
+  color: #9C6644;
+  margin-bottom: 24px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.add-review-btn {
+  padding: 16px 32px;
+  background: linear-gradient(145deg, #9C6644, #7F5539);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(127, 85, 57, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-review-btn:hover {
+  background: linear-gradient(145deg, #7F5539, #6B4423);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(127, 85, 57, 0.4);
+}
+
+.btn-icon {
+  font-size: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .testimonial-section {
+    padding: 40px 16px 48px;
+  }
+
+  .testimonial-header h2 {
+    font-size: 28px;
+  }
+
+  .testimonial-header .subtitle {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .modal-content {
+    width: 95%;
+    margin: 1rem;
+  }
+
+  .modal-header {
+    padding: 20px 24px 16px;
+  }
+
+  .modal-header h3 {
+    font-size: 20px;
+  }
+
+  .review-form {
+    padding: 24px;
+  }
+
+  .add-review-section {
+    padding: 40px 16px 32px;
+  }
+
+  .review-invitation {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .add-review-btn {
+    padding: 14px 24px;
+    font-size: 16px;
+  }
+
+  .testimonial-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #7F5539;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #E6CCB2;
+  border-radius: 12px;
+  font-size: 15px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #9C6644;
+  box-shadow: 0 0 0 3px rgba(156, 102, 68, 0.1);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #B08968;
+  opacity: 0.7;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.stars {
+  font-size: 16px;
+  color: #fbbf24;
+}
+
+.stars .star.filled {
+  color: #fbbf24;
+}
+
+.stars .star.empty {
+  color: #d1d5db;
+}
+
+.interactive-stars {
+  display: flex;
+  gap: 8px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.interactive-stars .star {
+  transition: all 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.interactive-stars .star:hover {
+  transform: scale(1.1);
+  color: #fbbf24;
+}
+
+.interactive-stars .star.filled {
+  color: #fbbf24;
+}
+
+.interactive-stars .star.empty {
+  color: #d1d5db;
+}
+
+.submit-review-btn {
+  padding: 14px 24px;
+  background: linear-gradient(145deg, #9C6644, #7F5539);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(127, 85, 57, 0.3);
+}
+
+.submit-review-btn:hover:not(:disabled) {
+  background: linear-gradient(145deg, #7F5539, #6B4423);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(127, 85, 57, 0.4);
+}
+
+.submit-review-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.submit-message {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.submit-message.success {
+  background: #f6ffed;
+  color: #52c41a;
+  border: 1px solid #b7eb8f;
+}
+
+.submit-message.error {
+  background: #fff2f0;
+  color: #ff4d4f;
+  border: 1px solid #ffccc7;
 }
 
 .testimonial-grid {
@@ -41,11 +365,6 @@
   flex-direction: column;
   gap: 8px;
   color: #7f5539;
-}
-
-.stars {
-  font-size: 16px;
-  color: #fbbf24;
 }
 
 .message {

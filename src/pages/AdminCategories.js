@@ -12,7 +12,17 @@ const AdminCategories = () => {
   const [showViewModal, setShowViewModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [formData, setFormData] = useState({ title: "", description: "" });
+  const [formData, setFormData] = useState({ 
+    title: "", 
+    description: "", 
+    features: [], 
+    priceRange: { min: 0, max: 0 }, 
+    duration: "", 
+    capacity: { min: 0, max: 0 }, 
+    includedServices: [], 
+    additionalInfo: "",
+    isActive: true 
+  });
   const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
@@ -52,6 +62,14 @@ const AdminCategories = () => {
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);
+      formDataToSend.append("features", JSON.stringify(formData.features));
+      formDataToSend.append("priceRange", JSON.stringify(formData.priceRange));
+      formDataToSend.append("duration", formData.duration);
+      formDataToSend.append("capacity", JSON.stringify(formData.capacity));
+      formDataToSend.append("includedServices", JSON.stringify(formData.includedServices));
+      formDataToSend.append("additionalInfo", formData.additionalInfo);
+      formDataToSend.append("isActive", formData.isActive);
+      
       if (selectedImage) {
         formDataToSend.append("image", selectedImage);
       }
@@ -69,8 +87,18 @@ const AdminCategories = () => {
       if (!res.ok) throw new Error(data.message || "Failed to add category");
 
       setShowAddForm(false);
-      setFormData({ title: "", description: "" });
       setSelectedImage(null);
+      setFormData({ 
+        title: "", 
+        description: "", 
+        features: [], 
+        priceRange: { min: 0, max: 0 }, 
+        duration: "", 
+        capacity: { min: 0, max: 0 }, 
+        includedServices: [], 
+        additionalInfo: "",
+        isActive: true 
+      });
       fetchCategories();
     } catch (err) {
       setError(err.message);
@@ -104,8 +132,15 @@ const AdminCategories = () => {
   const handleView = (category) => {
     setSelectedCategory(category);
     setFormData({
-      title: category.title,
-      description: category.description
+      title: category.title || '',
+      description: category.description || '',
+      features: category.features || [],
+      priceRange: category.priceRange || { min: 0, max: 0 },
+      duration: category.duration || '',
+      capacity: category.capacity || { min: 0, max: 0 },
+      includedServices: category.includedServices || [],
+      additionalInfo: category.additionalInfo || '',
+      isActive: category.isActive !== undefined ? category.isActive : true
     });
     setSelectedImage(null);
     setShowViewModal(true);
@@ -120,6 +155,14 @@ const AdminCategories = () => {
       const formDataToSend = new FormData();
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);
+      formDataToSend.append("features", JSON.stringify(formData.features));
+      formDataToSend.append("priceRange", JSON.stringify(formData.priceRange));
+      formDataToSend.append("duration", formData.duration);
+      formDataToSend.append("capacity", JSON.stringify(formData.capacity));
+      formDataToSend.append("includedServices", JSON.stringify(formData.includedServices));
+      formDataToSend.append("additionalInfo", formData.additionalInfo);
+      formDataToSend.append("isActive", formData.isActive);
+      
       if (selectedImage) {
         formDataToSend.append("image", selectedImage);
       }
@@ -138,7 +181,17 @@ const AdminCategories = () => {
 
       setShowViewModal(false);
       setSelectedCategory(null);
-      setFormData({ title: "", description: "" });
+      setFormData({ 
+        title: "", 
+        description: "", 
+        features: [], 
+        priceRange: { min: 0, max: 0 }, 
+        duration: "", 
+        capacity: { min: 0, max: 0 }, 
+        includedServices: [], 
+        additionalInfo: "",
+        isActive: true 
+      });
       setSelectedImage(null);
       fetchCategories();
     } catch (err) {
@@ -184,27 +237,203 @@ const AdminCategories = () => {
             </span>
             <form onSubmit={handleSubmit}>
               <h3>Add Category</h3>
-              <input
-                type="text"
-                placeholder="Category Title"
-                value={formData.title}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
-                required
-              />
-              <textarea
-                placeholder="Description"
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
-              />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setSelectedImage(e.target.files[0])}
-              />
+              
+              {/* Basic Information */}
+              <div className="form-section">
+                <h4>Basic Information</h4>
+                <input
+                  type="text"
+                  placeholder="Category Title"
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
+                  required
+                />
+                <textarea
+                  placeholder="Description"
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setSelectedImage(e.target.files[0])}
+                />
+              </div>
+
+              {/* Pricing Information */}
+              <div className="form-section">
+                <h4>Pricing Information</h4>
+                <div className="price-inputs">
+                  <input
+                    type="number"
+                    placeholder="Min Price"
+                    value={formData.priceRange.min}
+                    onChange={(e) =>
+                      setFormData({ 
+                        ...formData, 
+                        priceRange: { ...formData.priceRange, min: parseInt(e.target.value) || 0 }
+                      })
+                    }
+                  />
+                  <input
+                    type="number"
+                    placeholder="Max Price"
+                    value={formData.priceRange.max}
+                    onChange={(e) =>
+                      setFormData({ 
+                        ...formData, 
+                        priceRange: { ...formData.priceRange, max: parseInt(e.target.value) || 0 }
+                      })
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* Event Details */}
+              <div className="form-section">
+                <h4>Event Details</h4>
+                <input
+                  type="text"
+                  placeholder="Duration (e.g., 4-6 hours, Full day)"
+                  value={formData.duration}
+                  onChange={(e) =>
+                    setFormData({ ...formData, duration: e.target.value })
+                  }
+                />
+                <div className="capacity-inputs">
+                  <input
+                    type="number"
+                    placeholder="Min Guests"
+                    value={formData.capacity.min}
+                    onChange={(e) =>
+                      setFormData({ 
+                        ...formData, 
+                        capacity: { ...formData.capacity, min: parseInt(e.target.value) || 0 }
+                      })
+                    }
+                  />
+                  <input
+                    type="number"
+                    placeholder="Max Guests"
+                    value={formData.capacity.max}
+                    onChange={(e) =>
+                      setFormData({ 
+                        ...formData, 
+                        capacity: { ...formData.capacity, max: parseInt(e.target.value) || 0 }
+                      })
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* Features */}
+              <div className="form-section">
+                <h4>Features</h4>
+                <div className="array-input">
+                  <input
+                    type="text"
+                    placeholder="Add feature and press Enter"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' && e.target.value.trim()) {
+                        e.preventDefault();
+                        setFormData({
+                          ...formData,
+                          features: [...formData.features, e.target.value.trim()]
+                        });
+                        e.target.value = '';
+                      }
+                    }}
+                  />
+                  <div className="array-items">
+                    {formData.features.map((feature, index) => (
+                      <div key={index} className="array-item">
+                        <span>{feature}</span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setFormData({
+                              ...formData,
+                              features: formData.features.filter((_, i) => i !== index)
+                            })
+                          }
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Included Services */}
+              <div className="form-section">
+                <h4>Included Services</h4>
+                <div className="array-input">
+                  <input
+                    type="text"
+                    placeholder="Add service and press Enter"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' && e.target.value.trim()) {
+                        e.preventDefault();
+                        setFormData({
+                          ...formData,
+                          includedServices: [...formData.includedServices, e.target.value.trim()]
+                        });
+                        e.target.value = '';
+                      }
+                    }}
+                  />
+                  <div className="array-items">
+                    {formData.includedServices.map((service, index) => (
+                      <div key={index} className="array-item">
+                        <span>{service}</span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setFormData({
+                              ...formData,
+                              includedServices: formData.includedServices.filter((_, i) => i !== index)
+                            })
+                          }
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Additional Information */}
+              <div className="form-section">
+                <h4>Additional Information</h4>
+                <textarea
+                  placeholder="Additional details about this category"
+                  value={formData.additionalInfo}
+                  onChange={(e) =>
+                    setFormData({ ...formData, additionalInfo: e.target.value })
+                  }
+                />
+              </div>
+
+              {/* Status */}
+              <div className="form-section">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={formData.isActive}
+                    onChange={(e) =>
+                      setFormData({ ...formData, isActive: e.target.checked })
+                    }
+                  />
+                  Active Category
+                </label>
+              </div>
+
               <button type="submit">Add Category</button>
             </form>
           </div>
@@ -230,32 +459,207 @@ const AdminCategories = () => {
                 </div>
               )}
               
-              <input
-                type="text"
-                placeholder="Category Title"
-                value={formData.title}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
-                required
-              />
-              <textarea
-                placeholder="Description"
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
-              />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setSelectedImage(e.target.files[0])}
-              />
-              {selectedImage && (
-                <p style={{ fontSize: "12px", color: "#666", marginTop: "5px" }}>
-                  New image selected: {selectedImage.name}
-                </p>
-              )}
+              {/* Basic Information */}
+              <div className="form-section">
+                <h4>Basic Information</h4>
+                <input
+                  type="text"
+                  placeholder="Category Title"
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
+                  required
+                />
+                <textarea
+                  placeholder="Description"
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setSelectedImage(e.target.files[0])}
+                />
+                {selectedImage && (
+                  <p style={{ fontSize: "12px", color: "#666", marginTop: "5px" }}>
+                    New image selected: {selectedImage.name}
+                  </p>
+                )}
+              </div>
+
+              {/* Pricing Information */}
+              <div className="form-section">
+                <h4>Pricing Information</h4>
+                <div className="price-inputs">
+                  <input
+                    type="number"
+                    placeholder="Min Price"
+                    value={formData.priceRange.min}
+                    onChange={(e) =>
+                      setFormData({ 
+                        ...formData, 
+                        priceRange: { ...formData.priceRange, min: parseInt(e.target.value) || 0 }
+                      })
+                    }
+                  />
+                  <input
+                    type="number"
+                    placeholder="Max Price"
+                    value={formData.priceRange.max}
+                    onChange={(e) =>
+                      setFormData({ 
+                        ...formData, 
+                        priceRange: { ...formData.priceRange, max: parseInt(e.target.value) || 0 }
+                      })
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* Event Details */}
+              <div className="form-section">
+                <h4>Event Details</h4>
+                <input
+                  type="text"
+                  placeholder="Duration (e.g., 4-6 hours, Full day)"
+                  value={formData.duration}
+                  onChange={(e) =>
+                    setFormData({ ...formData, duration: e.target.value })
+                  }
+                />
+                <div className="capacity-inputs">
+                  <input
+                    type="number"
+                    placeholder="Min Guests"
+                    value={formData.capacity.min}
+                    onChange={(e) =>
+                      setFormData({ 
+                        ...formData, 
+                        capacity: { ...formData.capacity, min: parseInt(e.target.value) || 0 }
+                      })
+                    }
+                  />
+                  <input
+                    type="number"
+                    placeholder="Max Guests"
+                    value={formData.capacity.max}
+                    onChange={(e) =>
+                      setFormData({ 
+                        ...formData, 
+                        capacity: { ...formData.capacity, max: parseInt(e.target.value) || 0 }
+                      })
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* Features */}
+              <div className="form-section">
+                <h4>Features</h4>
+                <div className="array-input">
+                  <input
+                    type="text"
+                    placeholder="Add feature and press Enter"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' && e.target.value.trim()) {
+                        e.preventDefault();
+                        setFormData({
+                          ...formData,
+                          features: [...formData.features, e.target.value.trim()]
+                        });
+                        e.target.value = '';
+                      }
+                    }}
+                  />
+                  <div className="array-items">
+                    {formData.features.map((feature, index) => (
+                      <div key={index} className="array-item">
+                        <span>{feature}</span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setFormData({
+                              ...formData,
+                              features: formData.features.filter((_, i) => i !== index)
+                            })
+                          }
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Included Services */}
+              <div className="form-section">
+                <h4>Included Services</h4>
+                <div className="array-input">
+                  <input
+                    type="text"
+                    placeholder="Add service and press Enter"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' && e.target.value.trim()) {
+                        e.preventDefault();
+                        setFormData({
+                          ...formData,
+                          includedServices: [...formData.includedServices, e.target.value.trim()]
+                        });
+                        e.target.value = '';
+                      }
+                    }}
+                  />
+                  <div className="array-items">
+                    {formData.includedServices.map((service, index) => (
+                      <div key={index} className="array-item">
+                        <span>{service}</span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setFormData({
+                              ...formData,
+                              includedServices: formData.includedServices.filter((_, i) => i !== index)
+                            })
+                          }
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Additional Information */}
+              <div className="form-section">
+                <h4>Additional Information</h4>
+                <textarea
+                  placeholder="Additional details about this category"
+                  value={formData.additionalInfo}
+                  onChange={(e) =>
+                    setFormData({ ...formData, additionalInfo: e.target.value })
+                  }
+                />
+              </div>
+
+              {/* Status */}
+              <div className="form-section">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={formData.isActive}
+                    onChange={(e) =>
+                      setFormData({ ...formData, isActive: e.target.checked })
+                    }
+                  />
+                  Active Category
+                </label>
+              </div>
+
               <div className="modal-actions">
                 <button type="submit" className="btn update">
                   Update Category

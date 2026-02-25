@@ -9,9 +9,12 @@ const ClientDashboard = () => {
   const [userData, setUserData] = useState(null);
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
   const [showAppointmentForm, setShowAppointmentForm] = useState(false);
+  const [showAppointmentViewModal, setShowAppointmentViewModal] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [formData, setFormData] = useState({
     event_type: "",
     event_date: "",
@@ -20,6 +23,16 @@ const ClientDashboard = () => {
     budget: "",
     special_requirements: ""
   });
+
+  const handleViewAppointment = (appointment) => {
+    console.log("=== VIEW APPOINTMENT DEBUG ===");
+    console.log("Selected appointment:", appointment);
+    console.log("Appointment status:", appointment.status);
+    console.log("Has organizer:", !!appointment.organizer);
+    console.log("Organizer data:", appointment.organizer);
+    setSelectedAppointment(appointment);
+    setShowAppointmentViewModal(true);
+  };
 
   // handle profile update
   const handleProfileUpdate = async (e) => {
@@ -102,21 +115,33 @@ const ClientDashboard = () => {
   // ===============================
   const fetchAppointments = async () => {
     try {
+      console.log("=== FRONTEND FETCH APPOINTMENTS START ===");
       const token = localStorage.getItem("token");
+      console.log("Token exists:", !!token);
 
       const response = await fetch(API.GET_CLIENT_APPOINTMENTS, {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
 
+      console.log("Response status:", response.status);
+      console.log("Response ok:", response.ok);
+
       const result = await response.json().catch(() => null);
+      console.log("API result:", result);
 
       if (response.ok && result?.success) {
+        console.log("Appointments data:", result.data); // Debug log
         setAppointments(result.data || []);
+      } else {
+        console.log("API response error:", result); // Debug log
+        setError(result?.message || "Failed to fetch appointments");
       }
     } catch (error) {
       console.log("Appointment fetch error:", error);
+      setError("Failed to fetch appointments");
     } finally {
       setLoading(false);
+      console.log("=== FRONTEND FETCH APPOINTMENTS END ===");
     }
   };
 
@@ -251,23 +276,23 @@ const ClientDashboard = () => {
                 <h2>Welcome back, {userData?.name}!</h2>
 
                 <div className="stats-grid">
-                  <div className="stat-card">
+                  <div className="statCard">
                     <h3>Total Appointments</h3>
                     <p className="stat-number">{appointments.length}</p>
                   </div>
-                  <div className="stat-card">
+                  <div className="statCard">
                     <h3>Pending</h3>
                     <p className="stat-number">
                       {appointments.filter(apt => apt.status === "pending").length}
                     </p>
                   </div>
-                  <div className="stat-card">
+                  <div className="statCard">
                     <h3>Approved</h3>
                     <p className="stat-number">
                       {appointments.filter(apt => apt.status === "approved").length}
                     </p>
                   </div>
-                  <div className="stat-card">
+                  <div className="statCard">
                     <h3>Completed</h3>
                     <p className="stat-number">
                       {appointments.filter(apt => apt.status === "completed").length}
@@ -301,15 +326,24 @@ const ClientDashboard = () => {
             {activeTab === "appointments" && (
               <div className="appointments-content">
                 <h2>My Appointments</h2>
-                <button
-                  className="book-btn"
-                  onClick={() => setShowAppointmentForm(true)}
-                >
-                  + Book New Appointment
-                </button>
 
-                <div className="appointments-grid">
-                  {appointments.map((appointment) => (
+                {loading ? (
+                  <div className="loading-state">
+                    <p>Loading appointments...</p>
+                  </div>
+                ) : error ? (
+                  <div className="error-state">
+                    <p>{error}</p>
+                  </div>
+                ) : appointments.length === 0 ? (
+                  <div className="empty-state">
+                    <p>No appointments found</p>
+                  </div>
+                ) : (
+                  <div className="appointments-grid">
+                    {appointments.map((appointment) => {
+                      console.log("Appointment:", appointment); // Debug log
+                      return (
                     <div key={appointment._id} className="appointment-card">
                       <div className="appointment-header">
                         <h3>{appointment.event_type}</h3>
@@ -328,10 +362,40 @@ const ClientDashboard = () => {
                         {appointment.special_requirements && (
                           <p><strong>Requirements:</strong> {appointment.special_requirements}</p>
                         )}
+                        
+                        {/* Show organizer details only for confirmed appointments */}
+                        {appointment.status === "approved" && (
+                          <div className="organizer-details">
+                            <h4>Organizer Details:</h4>
+                            {appointment.organizer ? (
+                              <>
+                                <p><strong>Name:</strong> {appointment.organizer.name || "N/A"}</p>
+                                <p><strong>Email:</strong> {appointment.organizer.email || "N/A"}</p>
+                                <p><strong>Phone:</strong> {appointment.organizer.phone || "N/A"}</p>
+                                {appointment.organizer.company && (
+                                  <p><strong>Company:</strong> {appointment.organizer.company}</p>
+                                )}
+                              </>
+                            ) : (
+                              <p><strong>Organizer information not available</strong></p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="appointment-actions">
+                        <button 
+                          className="view-btn"
+                          onClick={() => handleViewAppointment(appointment)}
+                        >
+                          View Details
+                        </button>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
+                )}
               </div>
             )}
 
@@ -419,12 +483,12 @@ const ClientDashboard = () => {
                   </div>
 
                   <div className="form-actions">
-                    <button type="submit" className="submit-btn">
+                    <button type="submit" className="submitBtn">
                       Book Appointment
                     </button>
                     <button
                       type="button"
-                      className="cancel-btn"
+                      className="cancelBtn"
                       onClick={() => setFormData({
                         event_type: "",
                         event_date: "",
@@ -469,7 +533,7 @@ const ClientDashboard = () => {
                   <div className="profile-details">
                     {isEditing ? (
                       <form onSubmit={handleProfileUpdate}>
-                        <div className="detail-item">
+                        <div className="detailItem">
                           <label>Full Name:</label>
                           <input
                             type="text"
@@ -479,7 +543,7 @@ const ClientDashboard = () => {
                             required
                           />
                         </div>
-                        <div className="detail-item">
+                        <div className="detailItem">
                           <label>Phone:</label>
                           <input
                             type="text"
@@ -488,7 +552,7 @@ const ClientDashboard = () => {
                             onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
                           />
                         </div>
-                        <div className="detail-item">
+                        <div className="detailItem">
                           <label>Address:</label>
                           <input
                             type="text"
@@ -498,37 +562,37 @@ const ClientDashboard = () => {
                           />
                         </div>
                         <div className="form-actions">
-                          <button type="submit" className="submit-btn">Save</button>
-                          <button type="button" className="cancel-btn" onClick={() => setIsEditing(false)}>Cancel</button>
+                          <button type="submit" className="submitBtn">Save</button>
+                          <button type="button" className="cancelBtn" onClick={() => setIsEditing(false)}>Cancel</button>
                         </div>
                       </form>
                     ) : (
                       <>
-                        <div className="detail-item">
+                        <div className="detailItem">
                           <label>Full Name:</label>
                           <p>{userData?.name}</p>
                         </div>
-                        <div className="detail-item">
+                        <div className="detailItem">
                           <label>Email:</label>
                           <p>{userData?.email}</p>
                         </div>
-                        <div className="detail-item">
+                        <div className="detailItem">
                           <label>Phone:</label>
                           <p>{userData?.phone || "Not provided"}</p>
                         </div>
-                        <div className="detail-item">
+                        <div className="detailItem">
                           <label>Address:</label>
                           <p>{userData?.address || "Not provided"}</p>
                         </div>
-                        <div className="detail-item">
+                        <div className="detailItem">
                           <label>Member Since:</label>
                           <p>{userData?.createdAt ? formatDate(userData.createdAt) : "N/A"}</p>
                         </div>
-                        <div className="detail-item">
+                        <div className="detailItem">
                           <label>User ID:</label>
                           <p>{userData?._id || "N/A"}</p>
                         </div>
-                        <div className="detail-item">
+                        <div className="detailItem">
                           <label>Account Status:</label>
                           <p className="status-active">Active</p>
                         </div>
@@ -540,6 +604,78 @@ const ClientDashboard = () => {
             )}
           </div>
         </div>
+
+        {/* Appointment View Modal */}
+        {showAppointmentViewModal && selectedAppointment && (
+          <div className="modal-overlay" onClick={() => setShowAppointmentViewModal(false)}>
+            <div className="modal-content appointment-view-modal" onClick={(e) => e.stopPropagation()}>
+              <span className="close-btn" onClick={() => setShowAppointmentViewModal(false)}>×</span>
+              <h3>Appointment Details</h3>
+              
+              <div className="appointment-view-details">
+                <div className="detail-section">
+                  <h4>Event Information</h4>
+                  <p><strong>Event Type:</strong> {selectedAppointment.event_type}</p>
+                  <p><strong>Date:</strong> {formatDate(selectedAppointment.event_date)}</p>
+                  <p><strong>Location:</strong> {selectedAppointment.location}</p>
+                  <p><strong>Guests:</strong> {selectedAppointment.guests || "N/A"}</p>
+                  <p><strong>Budget:</strong> ₹{selectedAppointment.budget || "N/A"}</p>
+                  {selectedAppointment.special_requirements && (
+                    <p><strong>Special Requirements:</strong> {selectedAppointment.special_requirements}</p>
+                  )}
+                  <p><strong>Status:</strong> 
+                    <span 
+                      className="status-badge" 
+                      style={{ backgroundColor: getStatusColor(selectedAppointment.status) }}
+                    >
+                      {selectedAppointment.status}
+                    </span>
+                  </p>
+                </div>
+
+                {/* Show organizer details only for confirmed appointments */}
+                {selectedAppointment.status === "approved" && (
+                  <div className="detail-section">
+                    <h4>Organizer Information</h4>
+                    {selectedAppointment.organizer ? (
+                      <>
+                        <p><strong>Name:</strong> {selectedAppointment.organizer.name || "N/A"}</p>
+                        <p><strong>Email:</strong> {selectedAppointment.organizer.email || "N/A"}</p>
+                        <p><strong>Phone:</strong> {selectedAppointment.organizer.phone || "N/A"}</p>
+                        {selectedAppointment.organizer.company && (
+                          <p><strong>Company:</strong> {selectedAppointment.organizer.company}</p>
+                        )}
+                        {selectedAppointment.organizer.specialization && (
+                          <p><strong>Specialization:</strong> {selectedAppointment.organizer.specialization}</p>
+                        )}
+                        {selectedAppointment.organizer.experience && (
+                          <p><strong>Experience:</strong> {selectedAppointment.organizer.experience}</p>
+                        )}
+                      </>
+                    ) : (
+                      <p><strong>Organizer information not available</strong></p>
+                    )}
+                  </div>
+                )}
+
+                <div className="detail-section">
+                  <h4>Booking Information</h4>
+                  <p><strong>Booking ID:</strong> {selectedAppointment._id}</p>
+                  <p><strong>Booked on:</strong> {formatDate(selectedAppointment.createdAt)}</p>
+                </div>
+              </div>
+
+              <div className="modal-actions">
+                <button 
+                  className="close-modal-btn"
+                  onClick={() => setShowAppointmentViewModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       <Footer />
     </>

@@ -133,7 +133,6 @@ const AdminInquiries = () => {
               <th>ID</th>
               <th>Name</th>
               <th>Email</th>
-              <th>Subject</th>
               <th>Date</th>
               <th>Status</th>
               <th>Actions</th>
@@ -143,7 +142,7 @@ const AdminInquiries = () => {
           <tbody>
             {inquiries.length === 0 ? (
               <tr>
-                <td colSpan="7" style={{ textAlign: "center" }}>
+                <td colSpan="6" style={{ textAlign: "center" }}>
                   No inquiries found
                 </td>
               </tr>
@@ -153,7 +152,6 @@ const AdminInquiries = () => {
                   <td>{item._id.slice(-6)}</td>
                   <td>{item.name}</td>
                   <td>{item.email}</td>
-                  <td>{item.subject}</td>
                   <td>{formatDate(item.createdAt)}</td>
 
                   <td>
@@ -200,7 +198,6 @@ const AdminInquiries = () => {
             <h3>Inquiry Details</h3>
             <p><strong>Name:</strong> {selectedInquiry.name}</p>
             <p><strong>Email:</strong> {selectedInquiry.email}</p>
-            <p><strong>Subject:</strong> {selectedInquiry.subject}</p>
             <p><strong>Message:</strong> {selectedInquiry.message}</p>
             <p><strong>Status:</strong> {selectedInquiry.status}</p>
             <p><strong>Date:</strong> {formatDate(selectedInquiry.createdAt)}</p>
