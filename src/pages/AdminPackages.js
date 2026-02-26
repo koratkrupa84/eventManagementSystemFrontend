@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../css/AdminDecorations.css";
+import "../css/AdminPackages.css";
 import { API } from "../services/apiConfig";
 import AddPackage from "../component/admin/AddPackage";
 
@@ -52,6 +52,7 @@ const AdminPackages = () => {
 
   // ---------- VIEW PACKAGE ----------
   const handleView = (pkg) => {
+    console.log("Package data:", pkg); // Debug: Log package data
     setSelectedPackage(pkg);
     setShowViewModal(true);
   };
@@ -62,7 +63,7 @@ const AdminPackages = () => {
       <div className="decor-header">
         <div>
           <h2>Manage Decorations Packages</h2>
-          <p className="sub-title">All Decoration Packages</p>
+          <p className="package-sub-title">All Decoration Packages</p>
         </div>
 
         <div className="header-actions">
@@ -181,7 +182,15 @@ const AdminPackages = () => {
                 <h4>{selectedPackage.package_name}</h4>
                 <p><strong>Services:</strong> {selectedPackage.services}</p>
                 <p><strong>Price:</strong> ₹{selectedPackage.price}</p>
-                <p><strong>Description:</strong> {selectedPackage.description || 'No description available'}</p>
+                <div className="description-section">
+                  <strong>Description:</strong>
+                  <p className="description-text">
+                    {selectedPackage.description 
+                      ? selectedPackage.description 
+                      : `This ${selectedPackage.package_name} package includes: ${selectedPackage.services}`
+                    }
+                  </p>
+                </div>
               </div>
               
               <div className="modal-actions">

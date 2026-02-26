@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import {
   FaTachometerAlt,
   FaFolder,
@@ -12,10 +12,39 @@ import {
   FaNewspaper
 } from "react-icons/fa";
 import "./AdminSidebar.css";
+import "../../css/variables.css";
 
 function AdminSidebar() {
   const navigate = useNavigate();
-  const [openMenu, setOpenMenu] = useState("blogs");
+  const location = useLocation();
+  const [openMenu, setOpenMenu] = useState(() => {
+    // Get initial menu state from localStorage or default to "management"
+    const savedState = localStorage.getItem('adminSidebarMenuState');
+    return savedState || "management";
+  });
+
+  // Save menu state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('adminSidebarMenuState', openMenu);
+  }, [openMenu]);
+
+  // Auto-expand menu based on current URL
+  useEffect(() => {
+    const currentPath = location.pathname;
+    
+    // Auto-expand the menu section that contains the current page
+    if (currentPath.includes('/admin/categories') || currentPath.includes('/admin/packages') || 
+        currentPath.includes('/admin/gallery') || currentPath.includes('/admin/blogs')) {
+      setOpenMenu("management");
+    } else if (currentPath.includes('/admin/clients') || currentPath.includes('/admin/organizers')) {
+      setOpenMenu("users");
+    } else if (currentPath.includes('/admin/appointments') || currentPath.includes('/admin/private-events') || 
+              currentPath.includes('/admin/inquiries')) {
+      setOpenMenu("bookings");
+    } else if (currentPath.includes('/admin/review')) {
+      setOpenMenu("feedback");
+    }
+  }, [location.pathname]);
 
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? "" : menu);

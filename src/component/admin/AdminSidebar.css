@@ -1,93 +1,384 @@
-.admin-sidebar {
-  width: 260px;
-  height: 100vh;
-  background: #7F5539; /* brown */
-  color: #EDE0D4; /* creamLight */
-  display: flex;
-  flex-direction: column;
-  padding: 20px 0;
-  position: relative;
+/* AdminSidebar Component Styles - Using Variables.css Colors */
+
+/* ==========================================================================
+   CSS VARIABLES - Using variables.css
+   ========================================================================== */
+:root {
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --border-radius: 0.5rem;
+  --border-radius-lg: 0.75rem;
+  --border-radius-xl: 1rem;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.sidebar-header {
-  padding: 0 20px 20px;
-  border-bottom: 1px solid rgba(237,224,212,0.2);
+/* ==========================================================================
+   MAIN SIDEBAR - High specificity
+   ========================================================================== */
+body .admin-sidebar {
+  width: 260px !important;
+  height: 100vh !important;
+  background: linear-gradient(180deg, var(--brown) 0%, var(--brownDark) 100%) !important;
+  color: var(--creamLight) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 20px 0 !important;
+  position: relative !important;
+  box-shadow: var(--shadow-xl) !important;
+  z-index: 1000 !important;
+  transition: var(--transition) !important;
+  /* Prevent sidebar from disappearing on refresh */
+  animation: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-.sidebar-header h2 {
-  margin: 0;
-  font-size: 22px;
-  color: #EDE0D4;
+/* ==========================================================================
+   SIDEBAR HEADER - High specificity
+   ========================================================================== */
+body .admin-sidebar .sidebar-header {
+  padding: 0 20px 20px !important;
+  border-bottom: 1px solid rgba(237, 224, 212, 0.2) !important;
+  background: rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
 }
 
-.sidebar-header p {
-  font-size: 14px;
-  color: #DDB892; /* sand */
-  margin-top: 5px;
+body .admin-sidebar .sidebar-header h2 {
+  margin: 0 !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: var(--creamLight) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  letter-spacing: 0.5px !important;
 }
 
-.sidebar-menu {
-  flex: 1;
-  padding: 15px 0;
-  overflow-y: auto;
+body .admin-sidebar .sidebar-header p {
+  font-size: 14px !important;
+  color: var(--sand) !important;
+  margin-top: 5px !important;
+  font-weight: 500 !important;
+  opacity: 0.9 !important;
 }
 
-.menu-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 20px;
-  color: #E6CCB2; /* cream */
-  text-decoration: none;
-  transition: 0.3s;
+/* ==========================================================================
+   SIDEBAR MENU - High specificity
+   ========================================================================== */
+body .admin-sidebar .sidebar-menu {
+  flex: 1 !important;
+  padding: 15px 0 !important;
+  overflow-y: auto !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: var(--brownLight) transparent !important;
 }
 
-.menu-item:hover {
-  background: #9C6644; /* brownDark */
-  color: #fff;
+body .admin-sidebar .sidebar-menu::-webkit-scrollbar {
+  width: 6px !important;
 }
 
-.menu-item.active {
-  background: #B08968; /* brownLight */
-  border-left: 4px solid #EDE0D4;
-  color: #fff;
+body .admin-sidebar .sidebar-menu::-webkit-scrollbar-track {
+  background: transparent !important;
 }
 
-.icon {
-  font-size: 16px;
+body .admin-sidebar .sidebar-menu::-webkit-scrollbar-thumb {
+  background: var(--brownLight) !important;
+  border-radius: 3px !important;
 }
 
-.menu {
-  margin-top: 10px;
+/* ==========================================================================
+   MENU SECTIONS - High specificity
+   ========================================================================== */
+body .admin-sidebar .menu {
+  margin-top: 10px !important;
   color: var(--creamLight) !important;
 }
 
-.section {
-  padding: 10px 20px;
-  font-size: 13px;
+body .admin-sidebar .section {
+  padding: 12px 20px !important;
+  font-size: 12px !important;
   color: var(--creamLight) !important;
-  cursor: pointer;
-  letter-spacing: 1px;
+  cursor: pointer !important;
+  letter-spacing: 1.5px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  opacity: 0.8 !important;
+  transition: var(--transition) !important;
+  position: relative !important;
 }
 
-.submenu {
-  display: flex;
-  flex-direction: column;
+body .admin-sidebar .section:hover {
+  opacity: 1 !important;
+  color: var(--white) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
 }
 
-.logout-btn {
-  margin: 15px 20px;
-  padding: 10px;
-  border: none;
-  background: #9C6644; /* brownDark */
-  color: #EDE0D4;
-  cursor: pointer;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+body .admin-sidebar .section::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 3px !important;
+  height: 0 !important;
+  background: var(--sand) !important;
+  transition: var(--transition) !important;
 }
 
-.logout-btn:hover {
-  background: #B08968;
+body .admin-sidebar .section:hover::before {
+  height: 20px !important;
+}
+
+/* ==========================================================================
+   MENU ITEMS - High specificity
+   ========================================================================== */
+body .admin-sidebar .menu-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 12px 20px !important;
+  color: var(--cream) !important;
+  text-decoration: none !important;
+  transition: var(--transition) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border-radius: var(--border-radius) !important;
+  margin: 2px 10px !important;
+}
+
+body .admin-sidebar .menu-item::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 0 !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, var(--brownLight), transparent) !important;
+  transition: var(--transition) !important;
+  opacity: 0 !important;
+}
+
+body .admin-sidebar .menu-item:hover::before {
+  width: 100% !important;
+  opacity: 0.1 !important;
+}
+
+body .admin-sidebar .menu-item:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: var(--white) !important;
+  transform: translateX(5px) !important;
+}
+
+body .admin-sidebar .menu-item.active,
+body .admin-sidebar .menu-item[aria-current="page"] {
+  background: linear-gradient(90deg, var(--brownLight) 0%, var(--brownDark) 100%) !important;
+  border-left: 4px solid var(--sand) !important;
+  color: var(--white) !important;
+  font-weight: 600 !important;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transform: translateX(2px) !important;
+}
+
+body .admin-sidebar .menu-item.active::after,
+body .admin-sidebar .menu-item[aria-current="page"]::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 4px !important;
+  height: 100% !important;
+  background: var(--sand) !important;
+  box-shadow: 0 0 10px var(--sand) !important;
+  animation: pulse 2s infinite !important;
+}
+
+body .admin-sidebar .menu-item.active::before,
+body .admin-sidebar .menu-item[aria-current="page"]::before {
+  width: 100% !important;
+  opacity: 0.2 !important;
+  background: linear-gradient(90deg, var(--sand), transparent) !important;
+}
+
+/* ==========================================================================
+   ICONS - High specificity
+   ========================================================================== */
+body .admin-sidebar .icon {
+  font-size: 16px !important;
+  min-width: 16px !important;
+  text-align: center !important;
+  transition: var(--transition) !important;
+}
+
+body .admin-sidebar .menu-item:hover .icon {
+  transform: scale(1.1) !important;
+  color: var(--sand) !important;
+}
+
+body .admin-sidebar .menu-item.active .icon,
+body .admin-sidebar .menu-item[aria-current="page"] .icon {
+  color: var(--sand) !important;
+  transform: scale(1.1) !important;
+  text-shadow: 0 0 8px var(--sand) !important;
+}
+
+/* ==========================================================================
+   SUBMENU - High specificity
+   ========================================================================== */
+body .admin-sidebar .submenu {
+  display: flex !important;
+  flex-direction: column !important;
+  background: rgba(0, 0, 0, 0.1) !important;
+  border-radius: var(--border-radius) !important;
+  margin: 0 10px !important;
+  overflow: hidden !important;
+  animation: slideDown 0.3s ease-out !important;
+}
+
+/* ==========================================================================
+   LOGOUT BUTTON - High specificity
+   ========================================================================== */
+body .admin-sidebar .logout-btn {
+  margin: 15px 20px !important;
+  padding: 12px 20px !important;
+  border: none !important;
+  background: linear-gradient(135deg, var(--brownDark), var(--brown)) !important;
+  color: var(--creamLight) !important;
+  cursor: pointer !important;
+  border-radius: var(--border-radius-lg) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  transition: var(--transition) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow) !important;
+}
+
+body .admin-sidebar .logout-btn::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent) !important;
+  transition: var(--transition) !important;
+}
+
+body .admin-sidebar .logout-btn:hover::before {
+  left: 100% !important;
+}
+
+body .admin-sidebar .logout-btn:hover {
+  background: linear-gradient(135deg, var(--brown), var(--brownLight)) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-lg) !important;
+  color: var(--white) !important;
+}
+
+body .admin-sidebar .logout-btn:active {
+  transform: translateY(0) !important;
+}
+
+/* ==========================================================================
+   ANIMATIONS - Modern & Smooth
+   ========================================================================== */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 500px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN - High specificity
+   ========================================================================== */
+@media (max-width: 768px) {
+  body .admin-sidebar {
+    width: 240px !important;
+    transform: translateX(-100%) !important;
+    position: fixed !important;
+    transition: transform 0.3s ease !important;
+  }
+  
+  body .admin-sidebar.open {
+    transform: translateX(0) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body .admin-sidebar {
+    width: 100% !important;
+  }
+}
+
+/* ==========================================================================
+   PRINT STYLES - High specificity
+   ========================================================================== */
+@media print {
+  body .admin-sidebar {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   Fallback STYLES - High specificity (Original Colors)
+   ========================================================================== */
+body .admin-sidebar {
+  background: #7F5539 !important;
+  color: #EDE0D4 !important;
+}
+
+body .admin-sidebar .menu-item {
+  color: #E6CCB2 !important;
+}
+
+body .admin-sidebar .menu-item:hover {
+  background: #9C6644 !important;
+  color: #fff !important;
+}
+
+body .admin-sidebar .menu-item.active {
+  background: #B08968 !important;
+  border-left: 4px solid #EDE0D4 !important;
+  color: #fff !important;
+}
+
+body .admin-sidebar .logout-btn {
+  background: #9C6644 !important;
+  color: #EDE0D4 !important;
+}
+
+body .admin-sidebar .logout-btn:hover {
+  background: #B08968 !important;
 }

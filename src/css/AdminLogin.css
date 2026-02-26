@@ -35,20 +35,20 @@
   text-align: center;
 }
 
-.form-group {
+.admin-form-group {
   display: flex;
   flex-direction: column;
   gap: 6px;
   margin-bottom: 14px;
 }
 
-.form-group label {
+.admin-form-group label {
   font-size: 13px;
   font-weight: 500;
   color: #7f5539;
 }
 
-.form-group input {
+.admin-form-group input {
   padding: 9px 10px;
   border-radius: 12px;
   border: 1px solid rgba(176, 137, 104, 0.55);
@@ -58,11 +58,11 @@
   color: #7f5539;
 }
 
-.form-group input::placeholder {
+.admin-form-group input::placeholder {
   color: rgba(124, 92, 65, 0.7);
 }
 
-.form-group input:focus {
+.admin-form-group input:focus {
   border-color: #7f5539;
   box-shadow: 0 0 0 2px rgba(176, 137, 104, 0.3);
   background: #ffffff;

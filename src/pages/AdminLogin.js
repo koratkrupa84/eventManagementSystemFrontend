@@ -73,7 +73,7 @@ function AdminLogin() {
         </p>
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+          <div className="admin-form-group">
             <label htmlFor="loginEmail">Email</label>
               <input
                 id="loginEmail"
@@ -84,7 +84,7 @@ function AdminLogin() {
               />
           </div>
 
-          <div className="form-group">
+          <div className="admin-form-group">
             <label htmlFor="loginPassword">Password</label>
               <input
                 id="loginPassword"

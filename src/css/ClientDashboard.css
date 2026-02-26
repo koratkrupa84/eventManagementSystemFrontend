@@ -1,6 +1,418 @@
 /* =========================
-   APPOINTMENTS SECTION
+   GALLERY UPLOAD SECTION
 ========================= */
+
+.gallery-upload-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, var(--brown), var(--brownDark));
+  border-radius: 16px;
+  color: var(--cream);
+  box-shadow: 0 10px 25px rgba(127, 85, 57, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.gallery-upload-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.gallery-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cream);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.upload-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.file-input-hidden {
+  display: none;
+}
+
+.choose-photos-btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--brown);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.choose-photos-btn:hover {
+  background: #ffffff;
+  color: var(--brownLight);
+  box-shadow: 0 12px 30px rgba(255, 255, 255, 0.4);
+  transform: translateY(-3px);
+}
+
+.btn-icon {
+  font-size: 16px;
+}
+
+.photo-count {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--cream);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.upload-btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-btn:hover:not(.uploading) {
+  background: linear-gradient(135deg, #059669, #10b981);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+}
+
+.upload-btn.uploading {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.upload-btn .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.clear-btn {
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clear-btn:hover {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(239, 68, 68, 0.4);
+}
+
+/* Photo Preview Section */
+.photo-preview-section {
+  margin-bottom: 32px;
+}
+
+.preview-title {
+  margin: 0 0 20px 0;
+  color: var(--brown);
+  font-size: 18px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--brownLight);
+}
+
+.photo-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+  padding: 24px;
+  background: linear-gradient(135deg, var(--creamLight), var(--cream));
+  border-radius: 16px;
+  border: 1px solid rgba(127, 85, 57, 0.15);
+  box-shadow: 0 8px 24px rgba(127, 85, 57, 0.08);
+}
+
+.preview-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 2px solid var(--brownLight);
+  box-shadow: 0 4px 12px rgba(127, 85, 57, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  aspect-ratio: 1;
+}
+
+.preview-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(127, 85, 57, 0.25);
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.preview-item:hover .preview-image {
+  transform: scale(1.1);
+}
+
+.preview-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(127, 85, 57, 0.8), rgba(127, 85, 57, 0.6));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.preview-item:hover .preview-overlay {
+  opacity: 1;
+}
+
+.preview-number {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--brown);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* No Photos State */
+.no-photos-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, var(--creamLight), var(--cream));
+  border-radius: 20px;
+  border: 2px dashed var(--brownLight);
+  color: var(--brown);
+}
+
+.no-photos-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.no-photos-state h4 {
+  margin: 0 0 12px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--brown);
+}
+
+.no-photos-state p {
+  margin: 0;
+  font-size: 16px;
+  color: var(--brownLight);
+  opacity: 0.8;
+}
+
+/* Event Photos Grid */
+.event-photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.photo-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(127, 85, 57, 0.15);
+  box-shadow: 0 10px 30px rgba(127, 85, 57, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.photo-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(127, 85, 57, 0.15);
+}
+
+.photo-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.photo-card:hover .photo-image {
+  transform: scale(1.05);
+}
+
+.photo-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, rgba(127, 85, 57, 0.9), rgba(127, 85, 57, 0.7));
+  color: var(--cream);
+  padding: 12px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.photo-card:hover .photo-overlay {
+  transform: translateY(0);
+}
+
+.photo-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.photo-date {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.delete-photo-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--cream);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 12px;
+}
+
+.delete-photo-btn:hover {
+  background: rgba(239, 68, 68, 0.8);
+  border-color: rgba(239, 68, 68, 0.9);
+  transform: scale(1.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .gallery-upload-header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+  }
+  
+  .upload-controls {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .photo-preview-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  .event-photos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  
+  .photo-image {
+    height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-title {
+    font-size: 24px;
+  }
+  
+  .upload-controls {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .choose-photos-btn,
+  .upload-btn,
+  .clear-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .photo-preview-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+    padding: 12px;
+  }
+  
+  .event-photos-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .photo-image {
+    height: 180px;
+  }
+}
 
 .appointments-content {
   background: white;

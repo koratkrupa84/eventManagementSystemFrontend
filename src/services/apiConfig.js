@@ -72,7 +72,6 @@ export const API = {
   
   // Requests
   GET_REQUESTS: `${BASE_URL}/admin/requests`,
-  UPDATE_APPOINTMENT: `${BASE_URL}/admin/appointments`,
   
   // Public Events
   GET_PUBLIC_EVENTS: `${BASE_URL}/publicEvents`,
@@ -109,6 +108,8 @@ export const API = {
   ORGANIZER_GOOGLE_AUTH: `${BASE_URL}/organizer/google`,
   ORGANIZER_PROFILE: `${BASE_URL}/organizer/profile`,
   ORGANIZER_UPLOAD_PHOTO: `${BASE_URL}/organizer/upload-photo`,
+  ORGANIZER_APPOINTMENTS: `${BASE_URL}/organizer/appointments`,
+  ORGANIZER_CLIENTS: `${BASE_URL}/organizer/clients`,
   
   // Admin Organizer endpoints
   ADMIN_GET_ORGANIZERS: `${BASE_URL}/admin/organizers`,

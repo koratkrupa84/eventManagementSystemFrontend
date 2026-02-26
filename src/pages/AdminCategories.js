@@ -208,7 +208,7 @@ const AdminCategories = () => {
       <div className="category-header">
         <div>
           <h2>Manage Categories</h2>
-          <p className="sub-title">All Categories</p>
+          <p className="category-sub-title">All Categories</p>
         </div>
 
         <div className="header-actions">
@@ -239,7 +239,7 @@ const AdminCategories = () => {
               <h3>Add Category</h3>
               
               {/* Basic Information */}
-              <div className="form-section">
+              <div className="category-form-section">
                 <h4>Basic Information</h4>
                 <input
                   type="text"
@@ -265,7 +265,7 @@ const AdminCategories = () => {
               </div>
 
               {/* Pricing Information */}
-              <div className="form-section">
+              <div className="category-form-section">
                 <h4>Pricing Information</h4>
                 <div className="price-inputs">
                   <input
@@ -294,7 +294,7 @@ const AdminCategories = () => {
               </div>
 
               {/* Event Details */}
-              <div className="form-section">
+              <div className="category-form-section">
                 <h4>Event Details</h4>
                 <input
                   type="text"
@@ -331,7 +331,7 @@ const AdminCategories = () => {
               </div>
 
               {/* Features */}
-              <div className="form-section">
+              <div className="category-form-section">
                 <h4>Features</h4>
                 <div className="array-input">
                   <input
@@ -370,7 +370,7 @@ const AdminCategories = () => {
               </div>
 
               {/* Included Services */}
-              <div className="form-section">
+              <div className="category-form-section">
                 <h4>Included Services</h4>
                 <div className="array-input">
                   <input
@@ -409,7 +409,7 @@ const AdminCategories = () => {
               </div>
 
               {/* Additional Information */}
-              <div className="form-section">
+              <div className="category-form-section">
                 <h4>Additional Information</h4>
                 <textarea
                   placeholder="Additional details about this category"
@@ -421,7 +421,7 @@ const AdminCategories = () => {
               </div>
 
               {/* Status */}
-              <div className="form-section">
+              <div className="category-form-section">
                 <label className="checkbox-label">
                   <input
                     type="checkbox"
@@ -460,7 +460,7 @@ const AdminCategories = () => {
               )}
               
               {/* Basic Information */}
-              <div className="form-section">
+              <div className="category-form-section">
                 <h4>Basic Information</h4>
                 <input
                   type="text"
@@ -491,7 +491,7 @@ const AdminCategories = () => {
               </div>
 
               {/* Pricing Information */}
-              <div className="form-section">
+              <div className="category-form-section">
                 <h4>Pricing Information</h4>
                 <div className="price-inputs">
                   <input
@@ -520,7 +520,7 @@ const AdminCategories = () => {
               </div>
 
               {/* Event Details */}
-              <div className="form-section">
+              <div className="category-form-section">
                 <h4>Event Details</h4>
                 <input
                   type="text"
@@ -557,7 +557,7 @@ const AdminCategories = () => {
               </div>
 
               {/* Features */}
-              <div className="form-section">
+              <div className="category-form-section">
                 <h4>Features</h4>
                 <div className="array-input">
                   <input
@@ -596,7 +596,7 @@ const AdminCategories = () => {
               </div>
 
               {/* Included Services */}
-              <div className="form-section">
+              <div className="category-form-section">
                 <h4>Included Services</h4>
                 <div className="array-input">
                   <input
@@ -635,7 +635,7 @@ const AdminCategories = () => {
               </div>
 
               {/* Additional Information */}
-              <div className="form-section">
+              <div className="category-form-section">
                 <h4>Additional Information</h4>
                 <textarea
                   placeholder="Additional details about this category"
@@ -647,7 +647,7 @@ const AdminCategories = () => {
               </div>
 
               {/* Status */}
-              <div className="form-section">
+              <div className="category-form-section">
                 <label className="checkbox-label">
                   <input
                     type="checkbox"
@@ -666,7 +666,7 @@ const AdminCategories = () => {
                 </button>
                 <button 
                   type="button" 
-                  className="btn cancel"
+                  className="btn category-cancel"
                   onClick={() => setShowViewModal(false)}
                 >
                   Cancel

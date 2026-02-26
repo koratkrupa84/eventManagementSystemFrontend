@@ -49,26 +49,26 @@ const AdminPrivateEvents = () => {
       const token = localStorage.getItem("token");
       console.log("=== FETCH REQUESTS DEBUG START ===");
       console.log("Token:", token);
-      
+
       const res = await axios.get(API.GET_REQUESTS, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      
+
       console.log("API Response:", res.data);
       console.log("All requests:", res.data.data || []);
-      
+
       // Show all requests first to debug
       const allRequests = res.data.data || [];
       console.log("All requests before filter:", allRequests);
-      
+
       // Filter for approved requests
       const approvedRequests = allRequests.filter(
         (r) => r.status === "approved"
       );
-      
+
       console.log("Approved requests:", approvedRequests);
       console.log("=== FETCH REQUESTS DEBUG END ===");
-      
+
       // Show only approved requests in dropdown
       setRequests(approvedRequests);
     } catch (err) {
@@ -84,7 +84,7 @@ const AdminPrivateEvents = () => {
       const res = await axios.get(API.GET_APPOINTMENTS, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      
+
       // Filter only private events (type: 'private_event')
       const privateEvents = (res.data.data || res.data || [])
         .filter(event => event.type === 'private_event');
@@ -94,7 +94,7 @@ const AdminPrivateEvents = () => {
       // Use the data as-is since backend should now populate client properly
       const eventsWithClients = privateEvents.map(event => {
         let clientName = 'Unknown Client';
-        
+
         // Try to get client name from various sources
         if (event.request_id?.client_id?.name) {
           clientName = event.request_id.client_id.name;
@@ -103,7 +103,7 @@ const AdminPrivateEvents = () => {
         } else if (event.full_name && event.full_name !== 'Unknown Client') {
           clientName = event.full_name;
         }
-        
+
         return {
           ...event,
           client_name: clientName
@@ -146,22 +146,78 @@ const AdminPrivateEvents = () => {
       setError("Please select a request");
       return;
     }
+
+    // Validate required fields
+    if (!selectedRequest._id) {
+      setError("Request ID is missing from selected request");
+      return;
+    }
+
+    if (!formData.details || formData.details.trim() === '') {
+      setError("Event details are required");
+      return;
+    }
+
+    if (!formData.organizer_id) {
+      setError("Please select an organizer");
+      return;
+    }
+
+    console.log("Selected request:", selectedRequest);
+    console.log("Selected request client_id:", selectedRequest.client_id);
+    console.log("Selected request client_id._id:", selectedRequest.client_id?._id);
+    console.log("Form data:", formData);
+
+    // Include client information as backend requires it
+    const eventData = {
+      requestId: selectedRequest._id,
+      request_id: selectedRequest._id,
+      organizerId: formData.organizer_id,
+      organizer_id: formData.organizer_id,
+      clientName: selectedRequest.client_id?.name || selectedRequest.full_name,
+      detail: formData.details,
+      details: formData.details,
+      guests: formData.guests,
+      budget: formData.budget,
+      location: formData.location,
+      eventDate: formData.event_date,
+      event_date: formData.event_date,
+      status: "confirmed",
+    };
+
+    console.log("Event data to be sent:", eventData);
+    console.log("API endpoint:", API.CREATE_PRIVATE_EVENT);
+
     try {
       const token = localStorage.getItem("token");
+
       const res = await axios.post(
-        API.CREATE_APPOINTMENT,
-        {
-          request_id: selectedRequest._id,
-          organizer_id: formData.organizer_id,
-          details: formData.details,
-          guests: formData.guests,
-          budget: formData.budget,
-          location: formData.location,
-          event_date: formData.event_date,
-          status: "confirmed",
-        },
+        API.CREATE_PRIVATE_EVENT,
+        eventData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
+      // Add the created event to local addedEvents state
+      if (res.data?.data) {
+        const newEvent = res.data.data;
+        // Ensure the new event has client_name for display
+        const eventWithClientName = {
+          ...newEvent,
+          client_name: selectedRequest.client_id?.name || selectedRequest.full_name || 'Unknown Client'
+        };
+
+        setAddedEvents((prev) => [...prev, eventWithClientName]);
+      } else if (res.data) {
+        const newEvent = res.data;
+        const eventWithClientName = {
+          ...newEvent,
+          client_name: selectedRequest.client_id?.name || selectedRequest.full_name || 'Unknown Client'
+        };
+
+        setAddedEvents((prev) => [...prev, eventWithClientName]);
+        console.log("Event added to state. New addedEvents length:", [...addedEvents, eventWithClientName].length);
+        console.log("Event with client name:", eventWithClientName);
+      }
 
       // Update request status to confirmed
       await axios.put(
@@ -169,9 +225,6 @@ const AdminPrivateEvents = () => {
         { status: "confirmed" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      // Add the created event to local addedEvents state
-      setAddedEvents((prev) => [...prev, res.data.data || res.data]);
 
       // Reset form
       setShowAddForm(false);
@@ -186,6 +239,8 @@ const AdminPrivateEvents = () => {
       });
       setError("");
     } catch (err) {
+      console.error("Error creating private event:", err);
+      console.error("Error response:", err.response?.data);
       setError(err.response?.data?.message || "Something went wrong");
     }
   };
@@ -280,7 +335,7 @@ const AdminPrivateEvents = () => {
             <span className="form-icon">🎉</span>
             Create New Private Event
           </div>
-          
+
           <div className="form-section">
             <label className="section-label">Select Approved Request</label>
             <select
@@ -307,29 +362,29 @@ const AdminPrivateEvents = () => {
                 <span className="section-icon">📋</span>
                 Request Details
               </div>
-              
-              <div className="request-preview">
-                <div className="preview-grid">
-                  <div className="preview-item">
+
+              <div className="admin-request-preview">
+                <div className="admin-preview-grid">
+                  <div className="admin-preview-item">
                     <span className="preview-label">Event Type:</span>
                     <span className="preview-value">{selectedRequest.event_type}</span>
                   </div>
-                  <div className="preview-item">
+                  <div className="admin-preview-item">
                     <span className="preview-label">Date:</span>
                     <span className="preview-value">{formatDate(selectedRequest.event_date)}</span>
                   </div>
-                  <div className="preview-item">
+                  <div className="admin-preview-item">
                     <span className="preview-label">Location:</span>
                     <span className="preview-value">{selectedRequest.location}</span>
                   </div>
                   {selectedRequest.guests && (
-                    <div className="preview-item">
+                    <div className="admin-preview-item">
                       <span className="preview-label">Guests:</span>
                       <span className="preview-value">{selectedRequest.guests}</span>
                     </div>
                   )}
                   {selectedRequest.budget && (
-                    <div className="preview-item">
+                    <div className="admin-preview-item">
                       <span className="preview-label">Budget:</span>
                       <span className="preview-value">₹{selectedRequest.budget}</span>
                     </div>
@@ -368,7 +423,7 @@ const AdminPrivateEvents = () => {
                   <span className="section-icon">📝</span>
                   Event Information
                 </div>
-                
+
                 <div className="form-grid">
                   <div className="form-group">
                     <label className="form-label">
@@ -458,7 +513,6 @@ const AdminPrivateEvents = () => {
                   onClick={handleAddEvent}
                   className="success-btn"
                 >
-                  <span className="btn-icon">✅</span>
                   Create Event
                 </button>
                 <button
@@ -469,7 +523,6 @@ const AdminPrivateEvents = () => {
                   }}
                   className="cancel-btn"
                 >
-                  <span className="btn-icon">❌</span>
                   Cancel
                 </button>
               </div>
@@ -517,13 +570,13 @@ const AdminPrivateEvents = () => {
                     </span>
                   </td>
                   <td className="action-btns">
-                    <button 
+                    <button
                       className="view-btn"
                       onClick={() => handleViewEvent(e)}
                     >
                       View/Edit
                     </button>
-                    <button 
+                    <button
                       className="delete-btn"
                       onClick={() => handleDeleteEvent(e._id)}
                     >
@@ -542,7 +595,7 @@ const AdminPrivateEvents = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <h3 className="modal-header">Edit Event</h3>
-            
+
             <div className="form-group">
               <label className="form-label">Organizer Name:</label>
               <select

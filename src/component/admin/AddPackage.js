@@ -58,7 +58,7 @@ function AddPackage({ onSuccess = () => { }, onClose = () => { }, editData = nul
           setMessage("");
 
           if (!form.package_name || !form.price || !form.services) {
-               setError("All fields are required");
+               setError("Package name, price, and services are required");
                return;
           }
 
@@ -71,6 +71,13 @@ function AddPackage({ onSuccess = () => { }, onClose = () => { }, editData = nul
                formData.append("package_name", form.package_name);
                formData.append("price", form.price);
                formData.append("services", form.services);
+               
+               // Debug: Log form data
+               console.log("Form data being submitted:", {
+                    package_name: form.package_name,
+                    price: form.price,
+                    services: form.services
+               });
 
                // 🔥 NEW IMAGES
                images.forEach((img) => {
@@ -147,7 +154,7 @@ function AddPackage({ onSuccess = () => { }, onClose = () => { }, editData = nul
                     {message && <p className="success-text">{message}</p>}
 
                     <form onSubmit={handleSubmit}>
-                         <div className="form-group">
+                         <div className="package-form-group">
                               <label htmlFor="packageName">Package Name</label>
                               <select
                                    id="packageName"
@@ -161,7 +168,7 @@ function AddPackage({ onSuccess = () => { }, onClose = () => { }, editData = nul
                               </select>
                          </div>
 
-                         <div className="form-group">
+                         <div className="package-form-group">
                               <label htmlFor="packagePrice">Price</label>
                               <input
                                    id="packagePrice"
@@ -172,7 +179,7 @@ function AddPackage({ onSuccess = () => { }, onClose = () => { }, editData = nul
                               />
                          </div>
 
-                         <div className="form-group">
+                         <div className="package-form-group">
                               <label htmlFor="packageServices">Services</label>
                               <textarea
                                    id="packageServices"
@@ -182,7 +189,7 @@ function AddPackage({ onSuccess = () => { }, onClose = () => { }, editData = nul
                               />
                          </div>
 
-                         <div className="form-group">
+                         <div className="package-form-group">
                               <label>Package Images</label>
                               <input
                                    type="file"

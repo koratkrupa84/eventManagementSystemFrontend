@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/ClientDashboard.css';
-import { API } from '../services/apiConfig';
+import { API, BASE_URL } from '../services/apiConfig';
 import OrganizerProfileModal from '../component/organizer/OrganizerProfileModal';
 
 function OrganizerDashboard() {
@@ -20,25 +20,27 @@ function OrganizerDashboard() {
   const [newEventPhotos, setNewEventPhotos] = useState([]);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
-  useEffect(() => {
-    fetchOrganizerData();
-    fetchAppointments();
-    fetchClients();
-    fetchEventPhotos();
-  }, [fetchOrganizerData, fetchAppointments, fetchClients, fetchEventPhotos]);
-
   const fetchEventPhotos = async () => {
     try {
       const token = localStorage.getItem('token');
+      console.log('Fetching event photos with token:', token ? 'Token exists' : 'No token');
+      console.log('API URL:', `${API.ORGANIZER_PROFILE}/event-photos`);
+      
       const res = await fetch(`${API.ORGANIZER_PROFILE}/event-photos`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
 
+      console.log('API Response status:', res.status);
       const data = await res.json();
+      console.log('API Response data:', data);
+      
       if (res.ok && data.success) {
         setEventPhotos(data.data || []);
+        console.log('Photos set:', data.data);
+      } else {
+        console.error('API Error:', data.message || 'Unknown error');
       }
     } catch (err) {
       console.error('Failed to fetch event photos:', err);
@@ -48,6 +50,7 @@ function OrganizerDashboard() {
   const fetchOrganizerData = async () => {
     try {
       const token = localStorage.getItem('token');
+      
       if (!token) {
         navigate('/organizer/login');
         return;
@@ -60,6 +63,7 @@ function OrganizerDashboard() {
       });
 
       const data = await res.json();
+      
       if (res.ok && data.success) {
         setOrganizerData(data.data);
       }
@@ -71,14 +75,16 @@ function OrganizerDashboard() {
   const fetchAppointments = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`${API.GET_APPOINTMENTS}?organizer=${localStorage.getItem('userEmail')}`, {
+      
+      const res = await fetch(API.ORGANIZER_APPOINTMENTS, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
 
       const data = await res.json();
-      if (res.ok) {
+      
+      if (res.ok && data.success) {
         setAppointments(data.data || []);
       }
     } catch (err) {
@@ -91,17 +97,17 @@ function OrganizerDashboard() {
   const fetchClients = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(API.GET_USERS, {
+      
+      const res = await fetch(API.ORGANIZER_CLIENTS, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
 
       const data = await res.json();
+      
       if (res.ok && data.success) {
-        // Filter clients only
-        const clientList = data.data.filter(user => user.role === 'client');
-        setClients(clientList);
+        setClients(data.data || []);
       }
     } catch (err) {
       console.error('Failed to fetch clients:', err);
@@ -111,7 +117,7 @@ function OrganizerDashboard() {
   const updateAppointmentStatus = async (appointmentId, newStatus) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`${API.UPDATE_APPOINTMENT_STATUS}/${appointmentId}`, {
+      const res = await fetch(`${API.ORGANIZER_APPOINTMENTS}/${appointmentId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -121,7 +127,7 @@ function OrganizerDashboard() {
       });
 
       const data = await res.json();
-      if (res.ok) {
+      if (res.ok && data.success) {
         setMessage('Appointment status updated successfully');
         fetchAppointments();
       } else {
@@ -201,10 +207,10 @@ function OrganizerDashboard() {
     }
   };
 
-  const handleDeletePhoto = async (photoIndex) => {
+  const handleDeletePhoto = async (photoId) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`${API.ORGANIZER_PROFILE}/delete-event-photo/${photoIndex}`, {
+      const res = await fetch(`${API.ORGANIZER_PROFILE}/delete-event-photo/${photoId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -214,7 +220,7 @@ function OrganizerDashboard() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        setEventPhotos(prev => prev.filter((_, index) => index !== photoIndex));
+        setEventPhotos(prev => prev.filter(photo => photo._id !== photoId));
         setMessage('Photo deleted successfully!');
       } else {
         setError(data.message || 'Failed to delete photo');
@@ -223,6 +229,38 @@ function OrganizerDashboard() {
       setError('Failed to delete photo. Please try again.');
     }
   };
+
+  // Initialize data on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userRole = localStorage.getItem('userRole');
+    
+    if (!token) {
+      navigate('/organizer/login');
+      return;
+    }
+    
+    if (userRole !== 'organizer') {
+      navigate('/organizer/login');
+      return;
+    }
+    
+    // Fetch all data
+    const fetchData = async () => {
+      try {
+        await Promise.all([
+          fetchOrganizerData(),
+          fetchAppointments(),
+          fetchClients(),
+          fetchEventPhotos()
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, [navigate]);
 
   if (loading) {
     return (
@@ -440,10 +478,17 @@ function OrganizerDashboard() {
         {activeTab === 'appointments' && (
           <div>
             <h3 style={{ color: 'var(--brown)', marginBottom: '20px' }}>Your Appointments</h3>
-            {appointments.length === 0 ? (
+            {loading ? (
               <p style={{ textAlign: 'center', color: '#666', padding: '40px' }}>
-                No appointments found
+                Loading appointments...
               </p>
+            ) : appointments.length === 0 ? (
+              <div style={{ textAlign: 'center', color: '#666', padding: '40px' }}>
+                <p>No appointments found</p>
+                <p style={{ fontSize: '14px', marginTop: '10px' }}>
+                  Appointments will appear here once clients book events with you.
+                </p>
+              </div>
             ) : (
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -546,10 +591,17 @@ function OrganizerDashboard() {
         {activeTab === 'clients' && (
           <div>
             <h3 style={{ color: 'var(--brown)', marginBottom: '20px' }}>Your Clients</h3>
-            {clients.length === 0 ? (
+            {loading ? (
               <p style={{ textAlign: 'center', color: '#666', padding: '40px' }}>
-                No clients found
+                Loading clients...
               </p>
+            ) : clients.length === 0 ? (
+              <div style={{ textAlign: 'center', color: '#666', padding: '40px' }}>
+                <p>No clients found</p>
+                <p style={{ fontSize: '14px', marginTop: '10px' }}>
+                  Client information will appear here once you have appointments.
+                </p>
+              </div>
             ) : (
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -569,10 +621,7 @@ function OrganizerDashboard() {
                         <td style={{ padding: '12px' }}>{client.email}</td>
                         <td style={{ padding: '12px' }}>{client.phone || 'N/A'}</td>
                         <td style={{ padding: '12px' }}>
-                          {client.address ? 
-                            `${client.address.city || ''}, ${client.address.state || ''}`.trim() || 'N/A' 
-                            : 'N/A'
-                          }
+                          {client.address && client.address !== 'N/A' ? client.address : 'N/A'}
                         </td>
                         <td style={{ padding: '12px' }}>
                           {formatDate(client.createdAt)}
@@ -589,63 +638,54 @@ function OrganizerDashboard() {
         {/* Gallery Tab */}
         {activeTab === 'gallery' && (
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h3 style={{ color: 'var(--brown)', margin: 0 }}>Event Gallery</h3>
-              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <div className="gallery-upload-header">
+              <h3 className="gallery-title">Event Gallery</h3>
+              <div className="upload-controls">
                 <input
                   id="eventPhotoInput"
                   type="file"
                   accept="image/*"
                   multiple
                   onChange={(e) => setNewEventPhotos(Array.from(e.target.files))}
-                  style={{ display: 'none' }}
+                  className="file-input-hidden"
                 />
                 <button
                   onClick={() => document.getElementById('eventPhotoInput').click()}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: 'var(--brown)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer'
-                  }}
+                  className="choose-photos-btn"
                 >
+                  <span className="btn-icon">📷</span>
                   Choose Photos
                 </button>
                 {newEventPhotos.length > 0 && (
                   <>
-                    <span style={{ color: '#666', fontSize: '14px' }}>
+                    <span className="photo-count">
                       {newEventPhotos.length} photo(s) selected
                     </span>
                     <button
                       onClick={handlePhotoUpload}
                       disabled={uploadingPhoto}
-                      style={{
-                        padding: '8px 16px',
-                        backgroundColor: uploadingPhoto ? '#ccc' : '#4CAF50',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '6px',
-                        cursor: uploadingPhoto ? 'not-allowed' : 'pointer'
-                      }}
+                      className={`upload-btn ${uploadingPhoto ? 'uploading' : ''}`}
                     >
-                      {uploadingPhoto ? 'Uploading...' : `Upload ${newEventPhotos.length} Photo(s)`}
+                      {uploadingPhoto ? (
+                        <>
+                          <span className="spinner"></span>
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <span className="btn-icon">⬆️</span>
+                          Upload {newEventPhotos.length} Photo(s)
+                        </>
+                      )}
                     </button>
                     <button
                       onClick={() => {
                         setNewEventPhotos([]);
                         document.getElementById('eventPhotoInput').value = '';
                       }}
-                      style={{
-                        padding: '8px 16px',
-                        backgroundColor: '#f44336',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '6px',
-                        cursor: 'pointer'
-                      }}
+                      className="clear-btn"
                     >
+                      <span className="btn-icon">🗑️</span>
                       Clear
                     </button>
                   </>
@@ -655,35 +695,19 @@ function OrganizerDashboard() {
             
             {/* Photo Preview Section */}
             {newEventPhotos.length > 0 && (
-              <div style={{ marginBottom: '20px' }}>
-                <h4 style={{ color: 'var(--brown)', marginBottom: '10px' }}>Photo Preview:</h4>
-                <div style={{ 
-                  display: 'flex', 
-                  gap: '10px', 
-                  flexWrap: 'wrap',
-                  padding: '15px',
-                  backgroundColor: '#f9f9f9',
-                  borderRadius: '8px',
-                  border: '1px solid #ddd'
-                }}>
+              <div className="photo-preview-section">
+                <h4 className="preview-title">Photo Preview:</h4>
+                <div className="photo-preview-grid">
                   {newEventPhotos.map((photo, index) => (
-                    <div key={index} style={{
-                      position: 'relative',
-                      width: '100px',
-                      height: '100px',
-                      borderRadius: '8px',
-                      overflow: 'hidden',
-                      border: '2px solid #ddd'
-                    }}>
+                    <div key={index} className="preview-item">
                       <img
                         src={URL.createObjectURL(photo)}
                         alt={`Preview ${index + 1}`}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover'
-                        }}
+                        className="preview-image"
                       />
+                      <div className="preview-overlay">
+                        <span className="preview-number">{index + 1}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -691,56 +715,40 @@ function OrganizerDashboard() {
             )}
             
             {eventPhotos.length === 0 ? (
-              <p style={{ textAlign: 'center', color: '#666', padding: '40px' }}>
-                No event photos found. Upload your first event photo above!
-              </p>
+              <div className="no-photos-state">
+                <div className="no-photos-icon">📷</div>
+                <h4>No Photos Yet</h4>
+                <p>Upload your first event photo above to get started!</p>
+              </div>
             ) : (
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', 
-                gap: '20px' 
-              }}>
-                {eventPhotos.map((photo, index) => (
-                  <div key={index} style={{
-                    position: 'relative',
-                    borderRadius: '8px',
-                    overflow: 'hidden',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                    backgroundColor: 'white'
-                  }}>
-                    <img
-                      src={photo}
-                      alt={`Event photo ${index + 1}`}
-                      style={{
-                        width: '100%',
-                        height: '200px',
-                        objectFit: 'cover',
-                        display: 'block'
-                      }}
-                    />
-                    <button
-                      onClick={() => handleDeletePhoto(index)}
-                      style={{
-                        position: 'absolute',
-                        top: '10px',
-                        right: '10px',
-                        backgroundColor: 'rgba(244, 67, 54, 0.9)',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '50%',
-                        width: '30px',
-                        height: '30px',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '16px'
-                      }}
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
+              <div className="event-photos-grid">
+                {eventPhotos.map((photo, index) => {
+                    const imagePath = photo.image_path || photo.path || photo.url;
+                    const fullImageUrl = imagePath && imagePath.startsWith('http') ? imagePath : `${BASE_URL}${imagePath || ''}`;
+                    
+                    return (
+                      <div key={index} className="photo-card">
+                        <img
+                          src={fullImageUrl}
+                          alt={`Event photo ${index + 1}`}
+                          className="photo-image"
+                          onError={(e) => {
+                            e.target.src = "https://via.placeholder.com/200x150";
+                          }}
+                        />
+                        <div className="photo-overlay">
+                          <div className="photo-info">
+                            <span className="photo-date">
+                              {photo.uploaded_at ? new Date(photo.uploaded_at).toLocaleDateString() : 'No date'}
+                            </span>
+                            <button className="delete-photo-btn" onClick={() => handleDeletePhoto(photo._id || index)}>
+                              🗑️
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
               </div>
             )}
           </div>
