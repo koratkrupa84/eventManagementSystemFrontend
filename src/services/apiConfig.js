@@ -94,6 +94,7 @@ export const API = {
   UPDATE_BLOG: `${BASE_URL}/admin/blogs`,
   DELETE_BLOG: `${BASE_URL}/admin/blogs`,
   GET_BLOG_STATS: `${BASE_URL}/blogs/stats`,
+  UPLOAD_BLOG_IMAGE: `${BASE_URL}/upload/blog`,
   
   // Private Events
   CREATE_PRIVATE_EVENT: `${BASE_URL}/privateEvents/create-event`,

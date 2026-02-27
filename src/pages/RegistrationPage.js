@@ -3,6 +3,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import '../css/RegistrationPage.css';
 import { API } from '../services/apiConfig';
+import AlphanumericCaptcha from '../component/AlphanumericCaptcha';
 
 function RegistrationPage() {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ function RegistrationPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [captchaValid, setCaptchaValid] = useState(false);
+  const [captchaReset, setCaptchaReset] = useState(false);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -33,6 +36,11 @@ function RegistrationPage() {
 
     if (form.password !== form.confirmPassword) {
       setError('Passwords do not match.');
+      return;
+    }
+
+    if (!captchaValid) {
+      setError('Please enter the correct CAPTCHA code to continue.');
       return;
     }
 
@@ -61,6 +69,7 @@ function RegistrationPage() {
       }, 1000);
     } catch (err) {
       setError('Something went wrong. Please try again.');
+      setCaptchaReset(prev => !prev);
     } finally {
       setLoading(false);
     }
@@ -174,6 +183,11 @@ function RegistrationPage() {
                 />
               </div>
             </div>
+
+            <AlphanumericCaptcha 
+              onCaptchaChange={setCaptchaValid}
+              reset={captchaReset}
+            />
 
             <button type="submit" className="primary-btn" disabled={loading}>
               {loading ? 'Creating account...' : 'Create account'}

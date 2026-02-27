@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API } from "../services/apiConfig";
 import "../css/AdminLogin.css";
+import AlphanumericCaptcha from "../component/AlphanumericCaptcha";
 
 function AdminLogin() {
   const navigate = useNavigate();
@@ -13,6 +14,8 @@ function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('')
+  const [captchaValid, setCaptchaValid] = useState(false);
+  const [captchaReset, setCaptchaReset] = useState(false);
   
   // ---------------- EMAIL LOGIN ----------------
     const handleChange = (e) => {
@@ -33,6 +36,11 @@ function AdminLogin() {
   
       if (!form.email || !form.password) {
         setError('Please enter email and password.');
+        return;
+      }
+
+      if (!captchaValid) {
+        setError('Please enter correct CAPTCHA code to continue.');
         return;
       }
   
@@ -58,6 +66,7 @@ function AdminLogin() {
         navigate('/admin/dashboard');
       } catch (err) {
         setError(err.message || 'Something went wrong.');
+        setCaptchaReset(prev => !prev);
       } finally {
         setLoading(false);
       }
@@ -94,6 +103,11 @@ function AdminLogin() {
                 placeholder="Enter your password"
               />
           </div>
+
+          <AlphanumericCaptcha 
+            onCaptchaChange={setCaptchaValid}
+            reset={captchaReset}
+          />
 
           <button type="submit" className="primary-btn" >
               {loading ? 'Logging in...' : 'Log in'}

@@ -3,6 +3,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import '../css/RegistrationPage.css';
 import { API } from '../services/apiConfig';
+import AlphanumericCaptcha from '../component/AlphanumericCaptcha';
 
 function OrganizerRegister() {
   const navigate = useNavigate();
@@ -24,6 +25,8 @@ function OrganizerRegister() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [serviceInput, setServiceInput] = useState('');
+  const [captchaValid, setCaptchaValid] = useState(false);
+  const [captchaReset, setCaptchaReset] = useState(false);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -67,6 +70,11 @@ function OrganizerRegister() {
       return;
     }
 
+    if (!captchaValid) {
+      setError('Please enter correct CAPTCHA code to continue.');
+      return;
+    }
+
     try {
       setLoading(true);
       const res = await fetch(API.ORGANIZER_REGISTER, {
@@ -101,6 +109,7 @@ function OrganizerRegister() {
       }
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');
+      setCaptchaReset(prev => !prev);
     } finally {
       setLoading(false);
     }
@@ -357,6 +366,11 @@ function OrganizerRegister() {
                 />
               </div>
             </div>
+
+            <AlphanumericCaptcha 
+              onCaptchaChange={setCaptchaValid}
+              reset={captchaReset}
+            />
 
             <button type="submit" className="primary-btn" disabled={loading}>
               {loading ? 'Creating account...' : 'Create Organizer Account'}

@@ -3,6 +3,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import '../css/LoginPage.css';
 import { API } from '../services/apiConfig';
+import AlphanumericCaptcha from '../component/AlphanumericCaptcha';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [captchaValid, setCaptchaValid] = useState(false);
+  const [captchaReset, setCaptchaReset] = useState(false);
 
   // ================= HANDLE INPUT =================
   const handleChange = (e) => {
@@ -68,6 +71,12 @@ function LoginPage() {
       return;
     }
 
+    if (!captchaValid) {
+      console.log('Login Debug - CAPTCHA not valid:', captchaValid);
+      setError('Please enter the correct CAPTCHA code to continue.');
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -87,7 +96,7 @@ function LoginPage() {
 
       setMessage('Login successful!');
 
-     if (data.user.role === "client") {
+      if (data.user.role === "client") {
         navigate("/client/dashboard");
       } else if (data.user.role === "organizer") {
         navigate("/organizer/dashboard");
@@ -97,6 +106,7 @@ function LoginPage() {
 
     } catch (err) {
       setError(err.message || 'Something went wrong.');
+      setCaptchaReset(prev => !prev);
     } finally {
       setLoading(false);
     }
@@ -203,6 +213,11 @@ function LoginPage() {
                 placeholder="Enter your password"
               />
             </div>
+
+            <AlphanumericCaptcha 
+              onCaptchaChange={setCaptchaValid}
+              reset={captchaReset}
+            />
 
             <button
               type="submit"

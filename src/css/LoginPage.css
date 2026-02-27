@@ -257,3 +257,64 @@ input:focus {
   }
 }
 
+/* Math CAPTCHA Styles */
+.captcha-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.captcha-canvas-wrapper {
+  border-radius: 10px;
+  border: 1px solid #DDB892;
+  background-color: #FFF7F0;
+  padding: 4px;
+}
+
+.captcha-canvas {
+  display: block;
+  border-radius: 6px;
+}
+
+.captcha-question {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #DDB892;
+  background-color: #FFF7F0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #7F5539;
+  min-width: 120px;
+  text-align: center;
+}
+
+.captcha-input {
+  flex: 1;
+  margin-top: 8px;
+}
+
+.captcha-refresh-btn {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #DDB892;
+  background-color: #FFF7F0;
+  color: #7F5539;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease, transform 0.1s ease;
+  min-width: 44px;
+  height: 44px;
+}
+
+.captcha-refresh-btn:hover {
+  background-color: #FFEBD7;
+  border-color: #B08968;
+  transform: translateY(-1px);
+}
+
+.captcha-refresh-btn:active {
+  transform: translateY(0);
+}
+

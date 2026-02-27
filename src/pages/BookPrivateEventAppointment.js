@@ -4,6 +4,7 @@ import "../css/BookPrivateEventAppointment.css";
 import { API } from "../services/apiConfig";
 import Header from "../component/Header";
 import Footer from "../component/Footer";
+import AlphanumericCaptcha from "../component/AlphanumericCaptcha";
 
 const BookPrivateEventAppointment = () => {
   const [formData, setFormData] = useState({
@@ -20,6 +21,8 @@ const BookPrivateEventAppointment = () => {
   const [success, setSuccess] = useState(false);
   const [categories, setCategories] = useState([]);
   const [packages, setPackages] = useState([]);
+  const [captchaValid, setCaptchaValid] = useState(false);
+  const [captchaReset, setCaptchaReset] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -61,6 +64,11 @@ const BookPrivateEventAppointment = () => {
     setError("");
     setSuccess(false);
 
+    if (!captchaValid) {
+      setError("Please enter correct CAPTCHA code to continue.");
+      return;
+    }
+
     try {
       setLoading(true);
       
@@ -97,6 +105,7 @@ const BookPrivateEventAppointment = () => {
     } catch (err) {
       const msg = err.response?.data?.message || err.message || "Error submitting request";
       setError(msg);
+      setCaptchaReset(prev => !prev);
     } finally {
       setLoading(false);
     }
@@ -151,6 +160,11 @@ const BookPrivateEventAppointment = () => {
           placeholder="Any specific requirements or details about your event..."
           onChange={handleChange}
         ></textarea>
+
+        <AlphanumericCaptcha 
+          onCaptchaChange={setCaptchaValid}
+          reset={captchaReset}
+        />
 
         <button type="submit" disabled={loading}>
           {loading ? "Submitting..." : "Submit Booking Request"}

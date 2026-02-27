@@ -92,10 +92,6 @@ function AdminSidebar() {
                 Manage Gallery
               </NavLink>
 
-              <NavLink to="/admin/blogs" className="menu-item">
-                <FaNewspaper className="icon" />
-                Manage Blogs
-              </NavLink>
             </div>
           )}
         </div>

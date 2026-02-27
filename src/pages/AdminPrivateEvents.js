@@ -11,6 +11,7 @@ const AdminPrivateEvents = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
     organizer_id: "",
+    event_name: "",
     details: "",
     guests: "",
     budget: "",
@@ -47,33 +48,20 @@ const AdminPrivateEvents = () => {
   const fetchRequests = async () => {
     try {
       const token = localStorage.getItem("token");
-      console.log("=== FETCH REQUESTS DEBUG START ===");
-      console.log("Token:", token);
 
       const res = await axios.get(API.GET_REQUESTS, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log("API Response:", res.data);
-      console.log("All requests:", res.data.data || []);
-
-      // Show all requests first to debug
-      const allRequests = res.data.data || [];
-      console.log("All requests before filter:", allRequests);
-
       // Filter for approved requests
-      const approvedRequests = allRequests.filter(
+      const approvedRequests = (res.data.data || []).filter(
         (r) => r.status === "approved"
       );
-
-      console.log("Approved requests:", approvedRequests);
-      console.log("=== FETCH REQUESTS DEBUG END ===");
 
       // Show only approved requests in dropdown
       setRequests(approvedRequests);
     } catch (err) {
       console.error("Error fetching requests:", err);
-      console.error("Error response:", err.response?.data);
     }
   };
 
@@ -88,8 +76,6 @@ const AdminPrivateEvents = () => {
       // Filter only private events (type: 'private_event')
       const privateEvents = (res.data.data || res.data || [])
         .filter(event => event.type === 'private_event');
-
-      console.log("Raw private events:", privateEvents);
 
       // Use the data as-is since backend should now populate client properly
       const eventsWithClients = privateEvents.map(event => {
@@ -110,7 +96,6 @@ const AdminPrivateEvents = () => {
         };
       });
 
-      console.log("Events with clients:", eventsWithClients);
       setEvents(eventsWithClients);
       setAddedEvents(eventsWithClients);
     } catch (err) {
@@ -124,6 +109,7 @@ const AdminPrivateEvents = () => {
     setSelectedRequest(req);
     setFormData({
       organizer_id: req.client_id?._id || "",
+      event_name: req.event_type || "",
       details: `Event: ${req.event_type} on ${formatDate(
         req.event_date
       )} at ${req.location}`,
@@ -163,11 +149,6 @@ const AdminPrivateEvents = () => {
       return;
     }
 
-    console.log("Selected request:", selectedRequest);
-    console.log("Selected request client_id:", selectedRequest.client_id);
-    console.log("Selected request client_id._id:", selectedRequest.client_id?._id);
-    console.log("Form data:", formData);
-
     // Include client information as backend requires it
     const eventData = {
       requestId: selectedRequest._id,
@@ -175,6 +156,8 @@ const AdminPrivateEvents = () => {
       organizerId: formData.organizer_id,
       organizer_id: formData.organizer_id,
       clientName: selectedRequest.client_id?.name || selectedRequest.full_name,
+      eventName: formData.event_name,
+      event_name: formData.event_name,
       detail: formData.details,
       details: formData.details,
       guests: formData.guests,
@@ -184,9 +167,6 @@ const AdminPrivateEvents = () => {
       event_date: formData.event_date,
       status: "confirmed",
     };
-
-    console.log("Event data to be sent:", eventData);
-    console.log("API endpoint:", API.CREATE_PRIVATE_EVENT);
 
     try {
       const token = localStorage.getItem("token");
@@ -215,8 +195,6 @@ const AdminPrivateEvents = () => {
         };
 
         setAddedEvents((prev) => [...prev, eventWithClientName]);
-        console.log("Event added to state. New addedEvents length:", [...addedEvents, eventWithClientName].length);
-        console.log("Event with client name:", eventWithClientName);
       }
 
       // Update request status to confirmed
@@ -231,6 +209,7 @@ const AdminPrivateEvents = () => {
       setSelectedRequest(null);
       setFormData({
         organizer_id: "",
+        event_name: "",
         details: "",
         guests: "",
         budget: "",
@@ -240,7 +219,6 @@ const AdminPrivateEvents = () => {
       setError("");
     } catch (err) {
       console.error("Error creating private event:", err);
-      console.error("Error response:", err.response?.data);
       setError(err.response?.data?.message || "Something went wrong");
     }
   };
@@ -250,6 +228,7 @@ const AdminPrivateEvents = () => {
     setShowViewModal(true);
     setFormData({
       organizer_id: event.organizer_id?._id || event.organizer_id || "",
+      event_name: event.event_name || event.event_type || "",
       details: event.details || "",
       guests: event.guests || "",
       budget: event.budget || "",
@@ -427,6 +406,20 @@ const AdminPrivateEvents = () => {
                 <div className="form-grid">
                   <div className="form-group">
                     <label className="form-label">
+                      <span className="label-icon">🎉</span>
+                      Event Name
+                    </label>
+                    <input
+                      type="text"
+                      name="event_name"
+                      value={formData.event_name}
+                      onChange={handleFormChange}
+                      placeholder="Enter event name"
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">
                       <span className="label-icon">📅</span>
                       Event Date
                     </label>
@@ -438,6 +431,9 @@ const AdminPrivateEvents = () => {
                       className="form-input"
                     />
                   </div>
+                </div>
+
+                <div className="form-grid">
                   <div className="form-group">
                     <label className="form-label">
                       <span className="label-icon">👥</span>
@@ -452,21 +448,20 @@ const AdminPrivateEvents = () => {
                       className="form-input"
                     />
                   </div>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">
-                    <span className="label-icon">📄</span>
-                    Event Details
-                  </label>
-                  <input
-                    type="text"
-                    name="details"
-                    value={formData.details}
-                    onChange={handleFormChange}
-                    placeholder="Enter event details"
-                    className="form-input"
-                  />
+                  <div className="form-group">
+                    <label className="form-label">
+                      <span className="label-icon">📄</span>
+                      Event Details
+                    </label>
+                    <input
+                      type="text"
+                      name="details"
+                      value={formData.details}
+                      onChange={handleFormChange}
+                      placeholder="Enter event details"
+                      className="form-input"
+                    />
+                  </div>
                 </div>
 
                 <div className="form-grid">
@@ -537,6 +532,7 @@ const AdminPrivateEvents = () => {
           <thead>
             <tr>
               <th>ID</th>
+              <th>Event Name</th>
               <th>Event Type</th>
               <th>Date</th>
               <th>Location</th>
@@ -550,7 +546,7 @@ const AdminPrivateEvents = () => {
           <tbody>
             {addedEvents.length === 0 ? (
               <tr>
-                <td colSpan="9" className="empty-state">
+                <td colSpan="10" className="empty-state">
                   No events created yet. Create events from approved requests.
                 </td>
               </tr>
@@ -558,6 +554,7 @@ const AdminPrivateEvents = () => {
               addedEvents.map((e) => (
                 <tr key={e._id}>
                   <td>{e._id.slice(-6)}</td>
+                  <td>{e.event_name || "N/A"}</td>
                   <td>{e.event_type || "Private Event"}</td>
                   <td>{formatDate(e.event_date)}</td>
                   <td>{e.location}</td>
@@ -611,6 +608,17 @@ const AdminPrivateEvents = () => {
                   </option>
                 ))}
               </select>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Event Name:</label>
+              <input
+                type="text"
+                name="event_name"
+                value={formData.event_name}
+                onChange={handleFormChange}
+                className="form-input"
+              />
             </div>
 
             <div className="form-group">

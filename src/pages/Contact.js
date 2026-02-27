@@ -3,6 +3,7 @@ import axios from "axios";
 import "../css/Contact.css";
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaFacebookF, FaInstagram, FaTwitter, FaPinterestP } from "react-icons/fa";
 import { API } from "../services/apiConfig";
+import AlphanumericCaptcha from "../component/AlphanumericCaptcha";
 
 import Header from "../component/Header";
 import Footer from "../component/Footer";
@@ -18,6 +19,8 @@ const Contact = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
+  const [captchaValid, setCaptchaValid] = useState(false);
+  const [captchaReset, setCaptchaReset] = useState(false);
 
   // Fetch all inquiries
   useEffect(() => {
@@ -45,6 +48,14 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate captcha
+    if (!captchaValid) {
+      setMessage("Please complete the CAPTCHA verification");
+      setMessageType("error");
+      return;
+    }
+    
     setLoading(true);
     setMessage("");
 
@@ -53,6 +64,9 @@ const Contact = () => {
       setMessage("Your message has been sent successfully!");
       setMessageType("success");
       setFormData({ name: "", email: "", message: "" });
+      setCaptchaValid(false);
+      setCaptchaReset(true);
+      setTimeout(() => setCaptchaReset(false), 100);
       
       // Refresh inquiries list if showing
       if (showInquiries) {
@@ -163,8 +177,13 @@ const Contact = () => {
                 ></textarea>
               </div>
 
+              <AlphanumericCaptcha 
+                onCaptchaChange={setCaptchaValid} 
+                reset={captchaReset}
+              />
+
               <div className="form-footer">
-                <button type="submit" disabled={loading} className="submit-btn">
+                <button type="submit" disabled={loading || !captchaValid} className="submit-btn">
                   {loading ? (
                     <>
                       <span className="spinner"></span>

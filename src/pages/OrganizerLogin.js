@@ -3,6 +3,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import '../css/LoginPage.css';
 import { API } from '../services/apiConfig';
+import AlphanumericCaptcha from '../component/AlphanumericCaptcha';
 
 function OrganizerLogin() {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ function OrganizerLogin() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [captchaValid, setCaptchaValid] = useState(false);
+  const [captchaReset, setCaptchaReset] = useState(false);
 
   // ================= HANDLE INPUT =================
   const handleChange = (e) => {
@@ -69,6 +72,11 @@ function OrganizerLogin() {
       return;
     }
 
+    if (!captchaValid) {
+      setError('Please enter correct CAPTCHA code to continue.');
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -91,6 +99,7 @@ function OrganizerLogin() {
 
     } catch (err) {
       setError(err.message || 'Something went wrong.');
+      setCaptchaReset(prev => !prev);
     } finally {
       setLoading(false);
     }
@@ -190,6 +199,11 @@ function OrganizerLogin() {
                 placeholder="Enter your password"
               />
             </div>
+
+            <AlphanumericCaptcha 
+              onCaptchaChange={setCaptchaValid}
+              reset={captchaReset}
+            />
 
             <button
               type="submit"

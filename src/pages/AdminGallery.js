@@ -621,7 +621,7 @@ const AdminGallery = () => {
                   <h3>
                     {eventGroup.event_type === "public" 
                       ? eventGroup.event_id?.title || "Unknown Public Event"
-                      : `Private Event #${eventGroup.event_id?._id?.slice(-6) || "Unknown"}`
+                      : eventGroup.event_id?.event_name || eventGroup.event_id?.event_type || `Private Event #${eventGroup.event_id?._id?.slice(-6) || "Unknown"}`
                     }
                   </h3>
                   <span className="event-badge">
