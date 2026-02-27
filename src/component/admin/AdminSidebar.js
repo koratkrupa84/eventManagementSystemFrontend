@@ -34,12 +34,13 @@ function AdminSidebar() {
     
     // Auto-expand the menu section that contains the current page
     if (currentPath.includes('/admin/categories') || currentPath.includes('/admin/packages') || 
-        currentPath.includes('/admin/gallery') || currentPath.includes('/admin/blogs')) {
+        currentPath.includes('/admin/gallery') || currentPath.includes('/admin/blogs') ||
+        currentPath.includes('/admin/public-events')) {
       setOpenMenu("management");
     } else if (currentPath.includes('/admin/clients') || currentPath.includes('/admin/organizers')) {
       setOpenMenu("users");
     } else if (currentPath.includes('/admin/appointments') || currentPath.includes('/admin/private-events') || 
-              currentPath.includes('/admin/inquiries')) {
+              currentPath.includes('/admin/inquiries') || currentPath.includes('/admin/event-registrations')) {
       setOpenMenu("bookings");
     } else if (currentPath.includes('/admin/review')) {
       setOpenMenu("feedback");
@@ -92,6 +93,11 @@ function AdminSidebar() {
                 Manage Gallery
               </NavLink>
 
+              <NavLink to="/admin/public-events" className="menu-item">
+                <FaCalendar className="icon" />
+                Public Events
+              </NavLink>
+
             </div>
           )}
         </div>
@@ -139,6 +145,11 @@ function AdminSidebar() {
               <NavLink to="/admin/inquiries" className="menu-item">
                 <FaCalendar className="icon" />
                 Manage Inquiries
+              </NavLink>
+
+              <NavLink to="/admin/event-registrations" className="menu-item">
+                <FaCalendar className="icon" />
+                Event Registrations
               </NavLink>
             </div>
           )}

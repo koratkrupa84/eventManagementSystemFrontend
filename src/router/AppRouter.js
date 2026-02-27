@@ -22,7 +22,10 @@ import AdminInquiries from "../pages/AdminInquiries";
 import AdminPrivateEvents from "../pages/AdminPrivateEvents";
 import AdminClients from "../pages/AdminClients";
 import AdminOrganizers from "../pages/AdminOrganizers";
+import AdminPublicEvents from "../pages/AdminPublicEvents";
+import AdminEventRegistrations from "../pages/AdminEventRegistrations";
 import ClientDashboard from "../pages/ClientDashboard";
+import PublicEvents from "../pages/PublicEvents";
 // Organizer routes
 import OrganizerLogin from "../pages/OrganizerLogin";
 import OrganizerRegister from "../pages/OrganizerRegister";
@@ -42,6 +45,7 @@ const AppRouter = () => {
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/reviews" element={<Reviews />} />
                     <Route path="/services" element={<Services />} />
+                    <Route path="/public-events" element={<PublicEvents />} />
 
                     // Admin route
                     <Route path="/admin/login" element={<AdminLogin />} />
@@ -56,6 +60,8 @@ const AppRouter = () => {
                          <Route path="inquiries" element={<AdminInquiries />} />
                          <Route path="clients" element={<AdminClients />} />
                          <Route path="organizers" element={<AdminOrganizers />} />
+                         <Route path="public-events" element={<AdminPublicEvents />} />
+                         <Route path="event-registrations" element={<AdminEventRegistrations />} />
                     </Route>
 
                     // Client route

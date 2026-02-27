@@ -19,7 +19,7 @@
    ========================================================================== */
 body .admin-sidebar {
   width: 260px !important;
-  height: 100vh !important;
+  height: auto !important;
   background: linear-gradient(180deg, var(--brown) 0%, var(--brownDark) 100%) !important;
   color: var(--creamLight) !important;
   display: flex !important;

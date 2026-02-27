@@ -51,6 +51,9 @@ function Header() {
           <a href="/services" className="nav-link">
             Services
           </a>
+          <a href="/public-events" className="nav-link">
+            Events
+          </a>
           <a href="/gallery" className="nav-link">
             Gallery
           </a>

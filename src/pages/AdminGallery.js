@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import "../css/AdminGallery.css";
 import "../css/AdminCommon.css";
 import { API } from "../services/apiConfig";
@@ -13,7 +13,7 @@ const AdminGallery = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImages, setSelectedImages] = useState([]);
-  const [uploading, setUploading] = useState(false);
+  const [uploading, setuploading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("all"); // "all" or "events"
   const [publicEvents, setPublicEvents] = useState([]);
@@ -32,19 +32,34 @@ const AdminGallery = () => {
     fetchEvents();
   }, []);
 
+  // Debug viewMode changes
   useEffect(() => {
-    const filtered = images.filter((img) => {
-      const eventTitle = img.event_id?.title || '';
+    console.log('viewMode changed to:', viewMode);
+  }, [viewMode]);
+
+  // Memoized filtered images to prevent unnecessary recalculations
+  const memoizedFilteredImages = useMemo(() => {
+    if (!searchTerm) return images;
+    
+    const searchLower = searchTerm.toLowerCase();
+    return images.filter((img) => {
+      const eventTitle = img.event_id?.title || img.event_id?.event_name || '';
       const eventType = img.event_type || '';
-      const searchLower = searchTerm.toLowerCase();
+      const eventName = img.event_id?.event_type || '';
+      
       return eventTitle.toLowerCase().includes(searchLower) || 
-             eventType.toLowerCase().includes(searchLower);
+             eventType.toLowerCase().includes(searchLower) ||
+             eventName.toLowerCase().includes(searchLower);
     });
-    setFilteredImages(filtered);
   }, [images, searchTerm]);
 
-  // Group images by events
-  const getImagesByEvents = () => {
+  // Update filtered images when memoized result changes
+  useEffect(() => {
+    setFilteredImages(memoizedFilteredImages);
+  }, [memoizedFilteredImages]);
+
+  // Memoized grouped images to prevent expensive recalculations
+  const groupedImages = useMemo(() => {
     const grouped = {};
     
     filteredImages.forEach(img => {
@@ -64,37 +79,42 @@ const AdminGallery = () => {
     });
     
     return Object.values(grouped);
-  };
+  }, [filteredImages]);
 
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       
-      // Fetch public events
-      const publicRes = await fetch(API.GET_PUBLIC_EVENTS, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      const publicData = await publicRes.json();
+      // Use Promise.all for parallel requests
+      const [publicRes, privateRes] = await Promise.all([
+        fetch(API.GET_PUBLIC_EVENTS, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }),
+        fetch(API.GET_PRIVATE_EVENTS, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+      ]);
+
+      // Process responses in parallel
+      const [publicData, privateData] = await Promise.all([
+        publicRes.json(),
+        privateRes.json()
+      ]);
+
       if (publicRes.ok) {
         setPublicEvents(publicData.data || []);
       }
-
-      // Fetch private events
-      const privateRes = await fetch(API.GET_PRIVATE_EVENTS, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      const privateData = await privateRes.json();
       if (privateRes.ok) {
         setPrivateEvents(privateData.data || []);
       }
     } catch (err) {
       console.error("Failed to fetch events:", err);
     }
-  };
+  }, []);
 
   const fetchGallery = async () => {
     try {
@@ -117,23 +137,29 @@ const AdminGallery = () => {
 
   const handleUpload = async (e) => {
     e.preventDefault();
+    console.log('Upload button clicked');
+    console.log('Selected images:', selectedImages);
+    console.log('Form data:', formData);
+    
     setError("");
-    setUploading(true);
+    setuploading(true);
 
     if (selectedImages.length === 0) {
       setError("Please select at least one image");
-      setUploading(false);
+      setuploading(false);
       return;
     }
 
     if (!formData.event_type || !formData.event_id) {
       setError("Please select event type and event");
-      setUploading(false);
+      setuploading(false);
       return;
     }
 
     try {
       const token = localStorage.getItem("token");
+      console.log('Token:', token ? 'exists' : 'missing');
+      
       const uploadFormData = new FormData();
       
       // Add images
@@ -145,6 +171,12 @@ const AdminGallery = () => {
       uploadFormData.append("event_type", formData.event_type);
       uploadFormData.append("event_id", formData.event_id);
 
+      console.log('uploading to:', API.ADD_GALLERY);
+      console.log('FormData contents:');
+      for (let [key, value] of uploadFormData.entries()) {
+        console.log(key, value);
+      }
+
       const res = await fetch(API.ADD_GALLERY, {
         method: "POST",
         headers: {
@@ -153,21 +185,27 @@ const AdminGallery = () => {
         body: uploadFormData
       });
 
+      console.log('Response status:', res.status);
+      console.log('Response ok:', res.ok);
+
       if (!res.ok) {
         const errorText = await res.text();
+        console.error('Error response:', errorText);
         throw new Error(errorText || "Failed to upload images");
       }
       
       const data = await res.json();
+      console.log('Success response:', data);
 
       setShowUploadForm(false);
       setSelectedImages([]);
       setFormData({ event_type: "public", event_id: "" });
       fetchGallery();
     } catch (err) {
+      console.error('Upload error:', err);
       setError(err.message);
     } finally {
-      setUploading(false);
+      setuploading(false);
     }
   };
 
@@ -265,7 +303,7 @@ const AdminGallery = () => {
       <div className="gallery-header">
         <div>
           <h2>Manage Gallery</h2>
-          <p className="sub-title">Gallery Images</p>
+          <p className="gallery-sub-title">Gallery Images</p>
         </div>
 
         <div className="header-actions">
@@ -278,7 +316,10 @@ const AdminGallery = () => {
             </button>
             <button
               className={`toggle-btn ${viewMode === "events" ? "active" : ""}`}
-              onClick={() => setViewMode("events")}
+              onClick={() => {
+                console.log('By Events button clicked');
+                setViewMode("events");
+              }}
             >
               By Events
             </button>
@@ -324,7 +365,7 @@ const AdminGallery = () => {
               
               {error && <div className="error-text">{error}</div>}
               
-              <div className="form-group">
+              <div className="gallery-form-group">
                 <label htmlFor="event_type">Event Type</label>
                 <select
                   id="event_type"
@@ -339,7 +380,7 @@ const AdminGallery = () => {
                 </select>
               </div>
 
-              <div className="form-group">
+              <div className="gallery-form-group">
                 <label htmlFor="event_id">
                   {formData.event_type === "public" ? "Public Event" : "Private Event"}
                 </label>
@@ -413,7 +454,7 @@ const AdminGallery = () => {
                 </div>
               )}
 
-              <div className="form-actions">
+              <div className="gallery-form-actions">
                 <button
                   type="button"
                   className="cancel-btn"
@@ -431,7 +472,7 @@ const AdminGallery = () => {
                   disabled={selectedImages.length === 0 || uploading || !formData.event_id}
                 >
                   {uploading 
-                    ? 'Uploading...' 
+                    ? 'uploading...' 
                     : selectedImages.length > 0 
                       ? `Upload ${selectedImages.length} Image(s)` 
                       : 'Upload Images'}
@@ -508,7 +549,7 @@ const AdminGallery = () => {
               
               {error && <div className="error-text">{error}</div>}
               
-              <div className="form-group">
+              <div className="gallery-form-group">
                 <label htmlFor="edit_event_type">Event Type</label>
                 <select
                   id="edit_event_type"
@@ -523,7 +564,7 @@ const AdminGallery = () => {
                 </select>
               </div>
 
-              <div className="form-group">
+              <div className="gallery-form-group">
                 <label htmlFor="edit_event_id">
                   {editFormData.event_type === "public" ? "Public Event" : "Private Event"}
                 </label>
@@ -550,7 +591,7 @@ const AdminGallery = () => {
                 </select>
               </div>
 
-              <div className="form-actions">
+              <div className="gallery-form-actions">
                 <button
                   type="button"
                   className="cancel-btn"
@@ -612,10 +653,10 @@ const AdminGallery = () => {
         </div>
       ) : (
         <div className="events-gallery">
-          {getImagesByEvents().length === 0 ? (
+          {groupedImages.length === 0 ? (
             <p>{searchTerm ? "No events found matching your search" : "No events found"}</p>
           ) : (
-            getImagesByEvents().map((eventGroup, index) => (
+            groupedImages.map((eventGroup, index) => (
               <div key={index} className="event-group">
                 <div className="event-header">
                   <h3>

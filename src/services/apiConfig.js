@@ -75,21 +75,22 @@ export const API = {
   
   // Public Events
   GET_PUBLIC_EVENTS: `${BASE_URL}/publicEvents`,
-  GET_PUBLIC_EVENT: `${BASE_URL}/publicEvents`,
+  GET_PUBLIC_EVENT: `${BASE_URL}/publicEvents/{id}`,
   CREATE_PUBLIC_EVENT: `${BASE_URL}/publicEvents`,
-  UPDATE_PUBLIC_EVENT: `${BASE_URL}/publicEvents`,
-  DELETE_PUBLIC_EVENT: `${BASE_URL}/publicEvents`,
+  UPDATE_PUBLIC_EVENT: `${BASE_URL}/publicEvents/{id}`,
+  DELETE_PUBLIC_EVENT: `${BASE_URL}/publicEvents/{id}`,
   
   // Event Registrations
   REGISTER_FOR_EVENT: `${BASE_URL}/registrations`,
   GET_MY_REGISTRATIONS: `${BASE_URL}/registrations/user/my-registrations`,
-  CANCEL_REGISTRATION: `${BASE_URL}/registrations`,
-  GET_EVENT_REGISTRATIONS: `${BASE_URL}/registrations/event`,
+  GET_ALL_EVENT_REGISTRATIONS: `${BASE_URL}/registrations/admin/all`,
+  UPDATE_REGISTRATION_STATUS: `${BASE_URL}/registrations/admin/{id}`,
+  DELETE_EVENT_REGISTRATION: `${BASE_URL}/registrations/admin/{id}`,
   
   // Blogs
   GET_BLOGS: `${BASE_URL}/blogs`,
-  GET_BLOG: `${BASE_URL}/blogs`,
-  GET_BLOG_BY_SLUG: `${BASE_URL}/blogs/slug`,
+  GET_BLOG: `${BASE_URL}/blogs/{slug}`,
+  GET_BLOG_BY_SLUG: `${BASE_URL}/blogs/slug/{slug}`,
   CREATE_BLOG: `${BASE_URL}/admin/blogs`,
   UPDATE_BLOG: `${BASE_URL}/admin/blogs`,
   DELETE_BLOG: `${BASE_URL}/admin/blogs`,
