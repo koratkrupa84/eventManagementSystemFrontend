@@ -37,6 +37,11 @@ const AdminGallery = () => {
     console.log('viewMode changed to:', viewMode);
   }, [viewMode]);
 
+  // Update filtered events when editFormData.event_type changes
+  useEffect(() => {
+    console.log('editFormData.event_type changed to:', editFormData.event_type);
+  }, [editFormData.event_type]);
+
   // Memoized filtered images to prevent unnecessary recalculations
   const memoizedFilteredImages = useMemo(() => {
     if (!searchTerm) return images;
@@ -109,6 +114,7 @@ const AdminGallery = () => {
         setPublicEvents(publicData.data || []);
       }
       if (privateRes.ok) {
+        console.log('Private Events Data:', privateData.data); // Debug log
         setPrivateEvents(privateData.data || []);
       }
     } catch (err) {
@@ -118,6 +124,7 @@ const AdminGallery = () => {
 
   const fetchGallery = async () => {
     try {
+      console.log('Fetching gallery from:', API.GET_GALLERY); // Debug log
       const res = await fetch(API.GET_GALLERY);
       
       if (!res.ok) {
@@ -126,9 +133,11 @@ const AdminGallery = () => {
       }
       
       const data = await res.json();
+      console.log('Gallery response:', data); // Debug log
       setImages(data.data);
       setFilteredImages(data.data);
     } catch (err) {
+      console.error("Failed to fetch gallery:", err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -346,11 +355,11 @@ const AdminGallery = () => {
       {error && <div className="error-text">{error}</div>}
 
       {showUploadForm && (
-        <div className="modal-overlay" onClick={() => {
+        <div className="gallery-modal-overlay" onClick={() => {
           setShowUploadForm(false);
           setSelectedImages([]);
         }}>
-          <div className="modal-content gallery-upload-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="gallery-modal-content gallery-upload-modal" onClick={(e) => e.stopPropagation()}>
             <span className="close-btn" onClick={() => {
               setShowUploadForm(false);
               setSelectedImages([]);
@@ -359,13 +368,13 @@ const AdminGallery = () => {
             </span>
             <form onSubmit={handleUpload}>
               <h3>Upload Images</h3>
-              <p style={{ color: '#9c6644', fontSize: '14px', marginBottom: '20px' }}>
+              <p style={{ color: '#7f5539', fontSize: '14px', marginBottom: '20px', fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
                 Select event and images to upload to the gallery
               </p>
               
               {error && <div className="error-text">{error}</div>}
               
-              <div className="gallery-form-group">
+              <div className="form-group">
                 <label htmlFor="event_type">Event Type</label>
                 <select
                   id="event_type"
@@ -374,13 +383,14 @@ const AdminGallery = () => {
                     setFormData({ ...formData, event_type: e.target.value, event_id: "" });
                   }}
                   required
+                  className="form-control"
                 >
                   <option value="public">Public Event</option>
                   <option value="private">Private Event</option>
                 </select>
               </div>
 
-              <div className="gallery-form-group">
+              <div className="form-group">
                 <label htmlFor="event_id">
                   {formData.event_type === "public" ? "Public Event" : "Private Event"}
                 </label>
@@ -391,6 +401,7 @@ const AdminGallery = () => {
                     setFormData({ ...formData, event_id: e.target.value });
                   }}
                   required
+                  className="form-control"
                 >
                   <option value="">Select Event</option>
                   {formData.event_type === "public"
@@ -399,44 +410,50 @@ const AdminGallery = () => {
                           {event.title} - {new Date(event.event_date).toLocaleDateString()}
                         </option>
                       ))
-                    : privateEvents.map((event) => (
-                        <option key={event._id} value={event._id}>
-                          Event #{event._id.slice(-6)} - {new Date(event.createdAt).toLocaleDateString()}
-                        </option>
-                      ))}
+                    : privateEvents.map((event) => {
+                        console.log('Private Event:', event); // Debug log
+                        return (
+                          <option key={event._id} value={event._id}>
+                            {event.event_name} - {event.event_date ? new Date(event.event_date).toLocaleDateString() : new Date(event.createdAt).toLocaleDateString()}
+                          </option>
+                        );
+                      })}
                 </select>
                 {formData.event_type === "public" && publicEvents.length === 0 && (
-                  <p style={{ color: '#9c6644', fontSize: '12px', marginTop: '4px' }}>
+                  <p style={{ color: '#9c6644', fontSize: '12px', marginTop: '4px', fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
                     No public events available. Create a public event first.
                   </p>
                 )}
                 {formData.event_type === "private" && privateEvents.length === 0 && (
-                  <p style={{ color: '#9c6644', fontSize: '12px', marginTop: '4px' }}>
+                  <p style={{ color: '#9c6644', fontSize: '12px', marginTop: '4px', fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
                     No private events available. Create a private event first.
                   </p>
                 )}
               </div>
               
-              <div className="file-input-wrapper">
-                <label htmlFor="gallery-images" className="file-input-label">
-                  <span className="file-input-icon">📷</span>
-                  <span className="file-input-text">
-                    {selectedImages.length > 0 
-                      ? `${selectedImages.length} image(s) selected` 
-                      : 'Choose Images'}
-                  </span>
-                  <input
-                    id="gallery-images"
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={(e) =>
-                      setSelectedImages(Array.from(e.target.files))
-                    }
-                    required
-                    className="file-input"
-                  />
-                </label>
+              <div className="form-group">
+                <label htmlFor="gallery-images">Images</label>
+                <div className="file-input-wrapper">
+                  <label htmlFor="gallery-images" className="file-input-label">
+                    <span className="file-input-icon">📷</span>
+                    <span className="file-input-text">
+                      {selectedImages.length > 0 
+                        ? `${selectedImages.length} image(s) selected` 
+                        : 'Choose Images'}
+                    </span>
+                    <input
+                      id="gallery-images"
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={(e) =>
+                        setSelectedImages(Array.from(e.target.files))
+                      }
+                      required
+                      className="file-input"
+                    />
+                  </label>
+                </div>
               </div>
 
               {selectedImages.length > 0 && (
@@ -454,10 +471,10 @@ const AdminGallery = () => {
                 </div>
               )}
 
-              <div className="gallery-form-actions">
+              <div className="form-actions">
                 <button
                   type="button"
-                  className="cancel-btn"
+                  className="btn btn-secondary"
                   onClick={() => {
                     setShowUploadForm(false);
                     setSelectedImages([]);
@@ -468,7 +485,7 @@ const AdminGallery = () => {
                 </button>
                 <button 
                   type="submit" 
-                  className="upload-submit-btn" 
+                  className="btn btn-primary" 
                   disabled={selectedImages.length === 0 || uploading || !formData.event_id}
                 >
                   {uploading 
@@ -485,8 +502,8 @@ const AdminGallery = () => {
 
       {/* View Image Modal */}
       {showViewModal && selectedImage && (
-        <div className="modal-overlay" onClick={() => setShowViewModal(false)}>
-          <div className="modal-content gallery-view-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="gallery-modal-overlay" onClick={() => setShowViewModal(false)}>
+          <div className="gallery-modal-content gallery-view-modal" onClick={(e) => e.stopPropagation()}>
             <span className="close-btn" onClick={() => setShowViewModal(false)}>
               ×
             </span>
@@ -503,7 +520,7 @@ const AdminGallery = () => {
               
               <div className="image-info">
                 <p><strong>Event Type:</strong> {selectedImage.event_type}</p>
-                <p><strong>Event:</strong> {selectedImage.event_id?.title || 'Unknown Event'}</p>
+                <p><strong>Event:</strong> {selectedImage.event_id?.event_name || 'Unknown Event'}</p>
                 <p><strong>Uploaded:</strong> {new Date(selectedImage.createdAt).toLocaleDateString()}</p>
               </div>
               
@@ -531,8 +548,8 @@ const AdminGallery = () => {
 
       {/* Edit Image Modal */}
       {showEditModal && selectedImage && (
-        <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
-          <div className="modal-content gallery-edit-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="gallery-modal-overlay" onClick={() => setShowEditModal(false)}>
+          <div className="gallery-modal-content gallery-edit-modal" onClick={(e) => e.stopPropagation()}>
             <span className="close-btn" onClick={() => setShowEditModal(false)}>
               ×
             </span>
@@ -549,7 +566,7 @@ const AdminGallery = () => {
               
               {error && <div className="error-text">{error}</div>}
               
-              <div className="gallery-form-group">
+              <div className="form-group">
                 <label htmlFor="edit_event_type">Event Type</label>
                 <select
                   id="edit_event_type"
@@ -564,7 +581,7 @@ const AdminGallery = () => {
                 </select>
               </div>
 
-              <div className="gallery-form-group">
+              <div className="form-group">
                 <label htmlFor="edit_event_id">
                   {editFormData.event_type === "public" ? "Public Event" : "Private Event"}
                 </label>
@@ -583,15 +600,18 @@ const AdminGallery = () => {
                           {event.title} - {new Date(event.event_date).toLocaleDateString()}
                         </option>
                       ))
-                    : privateEvents.map((event) => (
-                        <option key={event._id} value={event._id}>
-                          Event #{event._id.slice(-6)} - {new Date(event.createdAt).toLocaleDateString()}
-                        </option>
-                      ))}
+                    : privateEvents.map((event) => {
+                        console.log('Edit Private Event:', event); // Debug log
+                        return (
+                          <option key={event._id} value={event._id}>
+                            {event.event_name} - {event.event_date ? new Date(event.event_date).toLocaleDateString() : new Date(event.createdAt).toLocaleDateString()}
+                          </option>
+                        );
+                      })}
                 </select>
               </div>
 
-              <div className="gallery-form-actions">
+              <div className="form-actions">
                 <button
                   type="button"
                   className="cancel-btn"

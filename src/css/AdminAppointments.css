@@ -194,6 +194,10 @@
   background: #ffffff;
   color: #7f5539;
   border: 1px solid rgba(127, 85, 57, 0.36);
+  width: auto;
+  height: auto;
+  padding: 10px;
+  border-radius: 10px;
 }
 
 .cancel-btn:hover {
@@ -211,7 +215,7 @@
     align-items: stretch;
     gap: 8px;
   }
-  
+
   .search-input {
     width: 100%;
   }
@@ -383,8 +387,13 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
@@ -392,9 +401,9 @@
     opacity: 0;
     transform: translateY(16px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
-
