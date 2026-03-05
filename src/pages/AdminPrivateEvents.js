@@ -17,6 +17,7 @@ const AdminPrivateEvents = () => {
     budget: "",
     location: "",
     event_date: "",
+    status: "confirmed",
   });
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showViewModal, setShowViewModal] = useState(false);
@@ -203,39 +204,36 @@ const AdminPrivateEvents = () => {
         { status: "confirmed" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      // Reset form
-      setShowAddForm(false);
-      setSelectedRequest(null);
-      setFormData({
-        organizer_id: "",
-        event_name: "",
-        details: "",
-        guests: "",
-        budget: "",
-        location: "",
-        event_date: "",
-      });
-      setError("");
     } catch (err) {
-      console.error("Error creating private event:", err);
       setError(err.response?.data?.message || "Something went wrong");
     }
   };
 
   const handleViewEvent = (event) => {
+    console.log('=== HANDLE VIEW EVENT DEBUG ===');
+    console.log('Event Object:', event);
+    console.log('Event Name:', event.event_name);
+    console.log('Event Type:', event.event_type);
+    console.log('All Event Keys:', Object.keys(event));
+    
     setSelectedEvent(event);
     setShowViewModal(true);
-    setFormData({
+    
+    const updatedFormData = {
       organizer_id: event.organizer_id?._id || event.organizer_id || "",
-      event_name: event.event_name || event.event_type || "",
+      event_name: event.event_name || "",
       details: event.details || "",
       guests: event.guests || "",
       budget: event.budget || "",
       location: event.location || "",
       event_date: event.event_date || "",
       status: event.status || "confirmed",
-    });
+    };
+    
+    console.log('Updated Form Data:', updatedFormData);
+    console.log('Event Name in Form Data:', updatedFormData.event_name);
+    
+    setFormData(updatedFormData);
   };
 
   const handleUpdateEvent = async () => {
@@ -276,7 +274,7 @@ const AdminPrivateEvents = () => {
     <div className="private-events-container">
       <div className="page-header">
         <h2 className="private-events-header">
-          <span className="header-icon">📅</span>
+          <span className="header-icon"><i className="fas fa-calendar"></i></span>
           Private Events Management
         </h2>
         <p className="header-subtitle">Create and manage private events from approved requests</p>
@@ -303,7 +301,7 @@ const AdminPrivateEvents = () => {
         onClick={() => setShowAddForm(!showAddForm)}
         className="primary-btn"
       >
-        <span className="btn-icon">➕</span>
+        <span className="btn-icon"><i className="fas fa-plus"></i></span>
         Create Event from Approved Request
       </button>
 
@@ -311,7 +309,7 @@ const AdminPrivateEvents = () => {
       {showAddForm && (
         <div className="form-container">
           <div className="form-header">
-            <span className="form-icon">🎉</span>
+            <span className="form-icon"><i className="fas fa-glass-cheers"></i></span>
             Create New Private Event
           </div>
 
@@ -338,7 +336,7 @@ const AdminPrivateEvents = () => {
           {selectedRequest && (
             <div className="request-details-section">
               <div className="section-title">
-                <span className="section-icon">📋</span>
+                <span className="section-icon"><i className="fas fa-clipboard-list"></i></span>
                 Request Details
               </div>
 
@@ -373,12 +371,12 @@ const AdminPrivateEvents = () => {
 
               <div className="form-section">
                 <div className="section-title">
-                  <span className="section-icon">👤</span>
+                  <span className="section-icon"><i className="fas fa-user"></i></span>
                   Assign Organizer
                 </div>
                 <div className="form-group">
                   <label className="form-label">
-                    <span className="label-icon">🎯</span>
+                    <span className="label-icon"><i className="fas fa-bullseye"></i></span>
                     Select Organizer
                   </label>
                   <select
@@ -399,14 +397,14 @@ const AdminPrivateEvents = () => {
 
               <div className="form-section">
                 <div className="section-title">
-                  <span className="section-icon">📝</span>
+                  <span className="section-icon"><i className="fas fa-edit"></i></span>
                   Event Information
                 </div>
 
                 <div className="form-grid">
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-icon">🎉</span>
+                      <span className="label-icon"><i className="fas fa-glass-cheers"></i></span>
                       Event Name
                     </label>
                     <input
@@ -420,7 +418,7 @@ const AdminPrivateEvents = () => {
                   </div>
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-icon">📅</span>
+                      <span className="label-icon"><i className="fas fa-calendar"></i></span>
                       Event Date
                     </label>
                     <input
@@ -436,7 +434,7 @@ const AdminPrivateEvents = () => {
                 <div className="form-grid">
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-icon">👥</span>
+                      <span className="label-icon"><i className="fas fa-users"></i></span>
                       Number of Guests
                     </label>
                     <input
@@ -450,7 +448,7 @@ const AdminPrivateEvents = () => {
                   </div>
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-icon">📄</span>
+                      <span className="label-icon"><i className="fas fa-file-alt"></i></span>
                       Event Details
                     </label>
                     <input
@@ -467,7 +465,7 @@ const AdminPrivateEvents = () => {
                 <div className="form-grid">
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-icon">💰</span>
+                      <span className="label-icon"><i className="fas fa-rupee-sign"></i></span>
                       Budget (₹)
                     </label>
                     <input
@@ -481,7 +479,7 @@ const AdminPrivateEvents = () => {
                   </div>
                   <div className="form-group">
                     <label className="form-label">
-                      <span className="label-icon">📍</span>
+                      <span className="label-icon"><i className="fas fa-map-marker-alt"></i></span>
                       Event Location
                     </label>
                     <input
@@ -498,7 +496,7 @@ const AdminPrivateEvents = () => {
 
               {error && (
                 <div className="error-message">
-                  <span className="error-icon">⚠️</span>
+                  <span className="error-icon"><i className="fas fa-exclamation-triangle"></i></span>
                   {error}
                 </div>
               )}
@@ -672,9 +670,25 @@ const AdminPrivateEvents = () => {
                 type="date"
                 name="event_date"
                 value={formData.event_date?.slice(0, 10)}
+                onChange={handleFormChange}
                 className="form-input"
                 readOnly
               />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Event Status:</label>
+              <select
+                name="status"
+                value={formData.status || "confirmed"}
+                onChange={handleFormChange}
+                className="form-select"
+              >
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
             </div>
 
             <div className="btn-group">
@@ -689,6 +703,16 @@ const AdminPrivateEvents = () => {
                   setShowViewModal(false);
                   setSelectedEvent(null);
                   setError("");
+                  setFormData({
+                    organizer_id: "",
+                    event_name: "",
+                    details: "",
+                    guests: "",
+                    budget: "",
+                    location: "",
+                    event_date: "",
+                    status: "confirmed",
+                  });
                 }}
                 className="cancel-btn"
               >

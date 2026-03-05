@@ -79,6 +79,8 @@ export const API = {
   CREATE_PUBLIC_EVENT: `${BASE_URL}/publicEvents`,
   UPDATE_PUBLIC_EVENT: `${BASE_URL}/publicEvents/{id}`,
   DELETE_PUBLIC_EVENT: `${BASE_URL}/publicEvents/{id}`,
+  // Add missing endpoint for updating public events
+  UPDATE_PUBLIC_EVENT_STATUS: `${BASE_URL}/publicEvents/{id}/status`,
   
   // Event Registrations
   REGISTER_FOR_EVENT: `${BASE_URL}/registrations`,
@@ -120,6 +122,7 @@ export const API = {
   
   // Admin Client endpoints
   ADMIN_GET_CLIENTS: `${BASE_URL}/admin/clients`,
+  ADMIN_CREATE_CLIENT: `${BASE_URL}/admin/clients`,
   ADMIN_DELETE_CLIENT: `${BASE_URL}/admin/clients`,
   ADMIN_UPDATE_CLIENT_STATUS: `${BASE_URL}/admin/clients`
 };

@@ -329,7 +329,13 @@
 
 .view-icon {
   font-size: 2rem;
+  color: var(--brown);
   animation: pulse 2s infinite;
+  transition: all 0.3s ease;
+}
+
+.view-icon:hover {
+  color: var(--brownDark);
 }
 
 @keyframes pulse {
@@ -366,7 +372,20 @@
 
 .likes-icon {
   font-size: 1rem;
+  color: var(--brown);
   transition: transform 0.3s ease;
+}
+
+.likes-icon .fas {
+  color: #e74c3c;
+}
+
+.likes-icon .far {
+  color: var(--brown);
+}
+
+.likes-stat:hover .likes-icon .far {
+  color: #e74c3c;
 }
 
 .likes-stat:hover .likes-icon {
@@ -439,8 +458,15 @@
 
 .no-photos-icon {
   font-size: 4rem;
+  color: var(--brown);
   margin-bottom: 20px;
   opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.no-photos-icon:hover {
+  opacity: 0.8;
+  color: var(--brownDark);
 }
 
 .no-photos-content h3 {

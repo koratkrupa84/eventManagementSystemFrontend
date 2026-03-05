@@ -117,15 +117,15 @@ const Home = () => {
 
                          <div className="card-grid">
                               {[
-                                   { name: "Birthday Decorations", desc: "Make birthdays special with themed decorations, balloons, and custom setups", icon: "🎂" },
-                                   { name: "Wedding Decorations", desc: "Elegant wedding decorations with flowers, lighting, and romantic setups", icon: "💒" },
-                                   { name: "Baby Shower Decorations", desc: "Cute and adorable baby shower themes with pastel colors and sweet details", icon: "👶" },
-                                   { name: "Corporate Events", desc: "Professional corporate event decorations for meetings, conferences, and celebrations", icon: "💼" },
-                                   { name: "Anniversary Parties", desc: "Celebrate your special day with romantic and personalized decorations", icon: "💕" },
-                                   { name: "Festive Celebrations", desc: "Festival-themed decorations for Diwali, Christmas, and other celebrations", icon: "🎉" }
+                                   { name: "Birthday Decorations", desc: "Make birthdays special with themed decorations, balloons, and custom setups", icon: "fa-birthday-cake" },
+                                   { name: "Wedding Decorations", desc: "Elegant wedding decorations with flowers, lighting, and romantic setups", icon: "fa-church" },
+                                   { name: "Baby Shower Decorations", desc: "Cute and adorable baby shower themes with pastel colors and sweet details", icon: "fa-baby" },
+                                   { name: "Corporate Events", desc: "Professional corporate event decorations for meetings, conferences, and celebrations", icon: "fa-briefcase" },
+                                   { name: "Anniversary Parties", desc: "Celebrate your special day with romantic and personalized decorations", icon: "fa-heart" },
+                                   { name: "Festive Celebrations", desc: "Festival-themed decorations for Diwali, Christmas, and other celebrations", icon: "fa-glass-cheers" }
                               ].map((item, index) => (
                                    <div className="card" key={index}>
-                                        <div className="card-icon">{item.icon}</div>
+                                        <div className="card-icon"><i className={`fas ${item.icon}`}></i></div>
                                         <h3>{item.name}</h3>
                                         <p>{item.desc}</p>
                                         <button className="secondary-btn" onClick={() => handleBookNow(item.name)}>Book Now</button>

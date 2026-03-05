@@ -62,46 +62,53 @@ const Services = () => {
 
   const getCategoryIcon = (categoryName) => {
     const icons = {
-      'wedding': '💑',
-      'corporate': '💼',
-      'birthday': '🎂',
-      'social': '🎉',
-      'cultural': '🎭',
-      'exhibition': '🏪',
-      'conference': '🏢',
-      'seminar': '🎓',
-      'party': '🎊',
-      'festival': '🎪',
-      'meeting': '🤝',
-      'workshop': '🛠️'
+      'wedding': 'fa-heart',
+      'corporate': 'fa-briefcase',
+      'birthday': 'fa-birthday-cake',
+      'party': 'fa-glass-cheers',
+      'conference': 'fa-users',
+      'meeting': 'fa-handshake',
+      'celebration': 'fa-champagne-glasses',
+      'reception': 'fa-music',
+      'gala': 'fa-star',
+      'ceremony': 'fa-ring',
+      'festival': 'fa-flag',
+      'concert': 'fa-microphone',
+      'workshop': 'fa-chalkboard-teacher',
+      'seminar': 'fa-presentation',
+      'exhibition': 'fa-images',
+      'fundraiser': 'fa-hand-holding-heart',
+      'networking': 'fa-network-wired'
     };
     
     const name = categoryName?.toLowerCase() || '';
     for (const [key, icon] of Object.entries(icons)) {
       if (name.includes(key)) return icon;
     }
-    return '📋'; // Default icon
+    return 'fa-folder-open'; // Default icon
   };
 
   const getPackageIcon = (packageName) => {
     const icons = {
-      'basic': '📦',
-      'premium': '💎',
-      'gold': '🏆',
-      'silver': '🥈',
-      'bronze': '🥉',
-      'platinum': '⭐',
-      'deluxe': '🌟',
-      'standard': '📋',
-      'economy': '💰',
-      'luxury': '👑'
+      'basic': 'fa-box',
+      'premium': 'fa-gem',
+      'gold': 'fa-trophy',
+      'silver': 'fa-medal',
+      'bronze': 'fa-award',
+      'standard': 'fa-cube',
+      'deluxe': 'fa-crown',
+      'vip': 'fa-star',
+      'executive': 'fa-user-tie',
+      'platinum': 'fa-gem',
+      'diamond': 'fa-gem',
+      'luxury': 'fa-crown'
     };
     
     const name = packageName?.toLowerCase() || '';
     for (const [key, icon] of Object.entries(icons)) {
       if (name.includes(key)) return icon;
     }
-    return '📦'; // Default icon
+    return 'fa-box'; // Default icon
   };
 
   const handleViewDetails = (item) => {
@@ -192,7 +199,7 @@ const Services = () => {
                         />
                       ) : null}
                       <div className="service-icon" style={{ display: category.image ? 'none' : 'block' }}>
-                        {getCategoryIcon(category.title)}
+                        <i className={`fas ${getCategoryIcon(category.title)}`}></i>
                       </div>
                     </div>
                     <h3>{category.title}</h3>
@@ -272,7 +279,7 @@ const Services = () => {
                         />
                       ) : null}
                       <div className="service-icon" style={{ display: (pkg.images && pkg.images.length > 0) ? 'none' : 'block' }}>
-                        {getPackageIcon(pkg.package_name)}
+                        <i className={`fas ${getPackageIcon(pkg.package_name)}`}></i>
                       </div>
                     </div>
                     <h3>{pkg.package_name}</h3>
@@ -315,22 +322,22 @@ const Services = () => {
             <h2>Why Choose EventSphere?</h2>
             <div className="features-grid">
               <div className="feature-item">
-                <div className="feature-icon">✨</div>
+                <div className="feature-icon"><i className="fas fa-magic"></i></div>
                 <h4>Expert Planning</h4>
                 <p>Professional event planners with years of experience</p>
               </div>
               <div className="feature-item">
-                <div className="feature-icon">💰</div>
+                <div className="feature-icon"><i className="fas fa-dollar-sign"></i></div>
                 <h4>Best Prices</h4>
                 <p>Competitive pricing with no hidden charges</p>
               </div>
               <div className="feature-item">
-                <div className="feature-icon">🎯</div>
+                <div className="feature-icon"><i className="fas fa-bullseye"></i></div>
                 <h4>Custom Solutions</h4>
                 <p>Tailored events to match your vision and budget</p>
               </div>
               <div className="feature-item">
-                <div className="feature-icon">📞</div>
+                <div className="feature-icon"><i className="fas fa-phone-alt"></i></div>
                 <h4>24/7 Support</h4>
                 <p>Round-the-clock assistance for your events</p>
               </div>
@@ -378,7 +385,7 @@ const Services = () => {
                   />
                 ) : null}
                 <div className="modal-icon" style={{ display: selectedService.image ? 'none' : 'block' }}>
-                  {getCategoryIcon(selectedService.title)}
+                  <i className={`fas ${getCategoryIcon(selectedService.title)}`}></i>
                 </div>
               </div>
 

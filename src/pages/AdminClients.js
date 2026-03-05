@@ -3,6 +3,7 @@ import axios from "axios";
 import { API } from "../services/apiConfig";
 import "../css/AdminAppointments.css";
 import "../css/AdminCommon.css";
+import "../css/AdminClients.css";
 
 const AdminClients = () => {
   const [clients, setClients] = useState([]);
@@ -27,9 +28,23 @@ const AdminClients = () => {
   const fetchClients = async () => {
     try {
       const token = localStorage.getItem("token");
+      
+      // First, try to fix existing client profiles
+      try {
+        await axios.post(API.ADMIN_CREATE_CLIENT + '/fix', {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } catch (fixErr) {
+        console.log('Fix attempt:', fixErr.response?.data?.message || 'Already fixed or not needed');
+      }
+      
+      // Then fetch clients
       const res = await axios.get(API.ADMIN_GET_CLIENTS, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
+      console.log('Fetched clients:', res.data.data);
+      console.log('Sample client data:', res.data.data[0]);
 
       setClients(res.data.data || []);
       setLoading(false);
@@ -73,7 +88,23 @@ const AdminClients = () => {
     try {
       const token = localStorage.getItem("token");
       
-      await axios.post(API.CREATE_USER, formData, {
+      const clientData = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: "client",
+        UserProfile: {
+          phone: formData.phone || "",
+          address: "",
+          city: "",
+          state: "",
+          zipCode: ""
+        }
+      };
+      
+      console.log("Sending client data:", clientData);
+      
+      await axios.post(API.ADMIN_CREATE_CLIENT, clientData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -89,6 +120,7 @@ const AdminClients = () => {
       fetchClients();
 
     } catch (err) {
+      console.error("Add client error:", err.response?.data);
       setError(err.response?.data?.message || "Failed to add client");
     }
   };
@@ -101,63 +133,44 @@ const AdminClients = () => {
 
   if (loading) {
     return (
-      <div style={{ padding: "20px", textAlign: "center" }}>
+      <div className="loading">
         <p>Loading clients...</p>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: "20px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+    <div className="admin-clients-container">
+      <div className="clients-header">
         <h2>Clients Management</h2>
         <button
           onClick={() => setShowAddModal(true)}
-          style={{
-            padding: "8px 14px",
-            background: "#6C5CE7",
-            color: "#fff",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer"
-          }}
+          className="add-btn"
         >
           Add New Client
         </button>
       </div>
 
       {/* Search Bar */}
-      <div style={{ marginBottom: "20px" }}>
+      <div className="search-bar">
+        <i className="fas fa-search search-icon"></i>
         <input
           type="text"
           placeholder="Search clients by name, email, or phone..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            border: "1px solid #ddd",
-            borderRadius: "6px",
-            fontSize: "14px"
-          }}
+          className="search-input search-input-with-icon"
         />
       </div>
 
       {error && (
-        <div style={{ 
-          padding: "10px", 
-          background: "#fee", 
-          border: "1px solid #fcc", 
-          borderRadius: "6px", 
-          marginBottom: "20px",
-          color: "#c00"
-        }}>
+        <div className="error-message">
           {error}
         </div>
       )}
 
       <div className="table-wrapper">
-        <table className="appointment-table">
+        <table className="clients-table">
           <thead>
             <tr>
               <th>Client ID</th>
@@ -165,7 +178,6 @@ const AdminClients = () => {
               <th>Email</th>
               <th>Phone</th>
               <th>Registration Date</th>
-              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -173,7 +185,7 @@ const AdminClients = () => {
           <tbody>
             {filteredClients.length === 0 ? (
               <tr>
-                <td colSpan="7" style={{ textAlign: "center" }}>
+                <td colSpan="6" className="empty-state">
                   {searchTerm ? "No clients found matching your search." : "No clients found."}
                 </td>
               </tr>
@@ -183,13 +195,10 @@ const AdminClients = () => {
                   <td>{client._id.slice(-6)}</td>
                   <td>{client.name}</td>
                   <td>{client.email}</td>
-                  <td>{client.clientProfile?.phone || client.phone || 'N/A'}</td>
-                  <td>{new Date(client.createdAt).toLocaleDateString()}</td>
                   <td>
-                    <span className={`status ${client.isActive !== false ? 'approved' : 'rejected'}`}>
-                      {client.isActive !== false ? 'Active' : 'Inactive'}
-                    </span>
+                    {client.clientProfile?.phone || client.phone || 'N/A'}
                   </td>
+                  <td>{new Date(client.createdAt).toLocaleDateString()}</td>
                   <td className="action-btns">
                     <button 
                       className="view-btn"
@@ -213,11 +222,11 @@ const AdminClients = () => {
 
       {/* View Client Modal */}
       {showViewModal && selectedClient && (
-        <div className="modal-overlay" onClick={() => {
+        <div className="admin-client-modal-overlay" onClick={() => {
           setShowViewModal(false);
           setSelectedClient(null);
         }}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="admin-client-modal-content" onClick={(e) => e.stopPropagation()}>
             <span className="close-btn" onClick={() => {
               setShowViewModal(false);
               setSelectedClient(null);
@@ -226,57 +235,38 @@ const AdminClients = () => {
             </span>
             <h3>Client Details</h3>
             
-            <div style={{ marginBottom: '20px' }}>
-              <h4 style={{ color: '#7F5539', marginBottom: '12px' }}>Personal Information</h4>
-              <div style={{ 
-                background: '#FDF7F2', 
-                padding: '16px', 
-                borderRadius: '12px',
-                fontSize: '14px',
-                color: '#7F5539'
-              }}>
+            <div className="client-details-section">
+              <h4>Personal Information</h4>
+              <div className="client-info-card">
                 <p><strong>Name:</strong> {selectedClient.name}</p>
-                <p style={{ marginTop: '10px' }}><strong>Email:</strong> {selectedClient.email}</p>
-                <p style={{ marginTop: '10px' }}><strong>Phone:</strong> {selectedClient.clientProfile?.phone || selectedClient.phone || 'N/A'}</p>
-                <p style={{ marginTop: '10px' }}><strong>Role:</strong> {selectedClient.role}</p>
-                <p style={{ marginTop: '10px' }}><strong>Status:</strong> 
+                <p><strong>Email:</strong> {selectedClient.email}</p>
+                <p><strong>Phone:</strong> {selectedClient.clientProfile?.phone || 'N/A'}</p>
+                <p><strong>Role:</strong> {selectedClient.role}</p>
+                <p><strong>Status:</strong> 
                   <span className={`status ${selectedClient.isActive !== false ? 'approved' : 'rejected'}`} style={{ marginLeft: '8px' }}>
                     {selectedClient.isActive !== false ? 'Active' : 'Inactive'}
                   </span>
                 </p>
-                <p style={{ marginTop: '10px' }}><strong>Registration Date:</strong> {new Date(selectedClient.createdAt).toLocaleDateString()}</p>
+                <p><strong>Registration Date:</strong> {new Date(selectedClient.createdAt).toLocaleDateString()}</p>
               </div>
             </div>
 
             {selectedClient.clientProfile?.address && (
-              <div style={{ marginBottom: '20px' }}>
-                <h4 style={{ color: '#7F5539', marginBottom: '12px' }}>Address Information</h4>
-                <div style={{ 
-                  background: '#FDF7F2', 
-                  padding: '16px', 
-                  borderRadius: '12px',
-                  fontSize: '14px',
-                  color: '#7F5539'
-                }}>
+              <div className="client-details-section">
+                <h4>Address Information</h4>
+                <div className="client-info-card">
                   <p><strong>Address:</strong> {selectedClient.clientProfile.address}</p>
                 </div>
               </div>
             )}
 
-            <div className="form-actions" style={{ marginTop: '24px' }}>
+            <div className="form-actions">
               <button
                 onClick={() => {
                   setShowViewModal(false);
                   setSelectedClient(null);
                 }}
-                style={{
-                  padding: "8px 14px",
-                  background: "#d63031",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer"
-                }}
+                className="btn-danger"
               >
                 Close
               </button>
@@ -287,11 +277,11 @@ const AdminClients = () => {
 
       {/* Add Client Modal */}
       {showAddModal && (
-        <div className="modal-overlay" onClick={() => {
+        <div className="admin-client-modal-overlay" onClick={() => {
           setShowAddModal(false);
           setError("");
         }}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="admin-client-modal-content" onClick={(e) => e.stopPropagation()}>
             <span className="close-btn" onClick={() => {
               setShowAddModal(false);
               setError("");
@@ -300,91 +290,59 @@ const AdminClients = () => {
             </span>
             <h3>Add New Client</h3>
             
-            <div style={{ marginBottom: '20px' }}>
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', color: '#7F5539' }}>Name *</label>
+            <div>
+              <div className="form-group">
+                <label>Name *</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    border: '1px solid #ddd',
-                    borderRadius: '6px',
-                    background: '#fff'
-                  }}
+                  className="form-input"
                   required
                 />
               </div>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', color: '#7F5539' }}>Email *</label>
+              <div className="form-group">
+                <label>Email *</label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    border: '1px solid #ddd',
-                    borderRadius: '6px',
-                    background: '#fff'
-                  }}
+                  className="form-input"
                   required
                 />
               </div>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', color: '#7F5539' }}>Phone</label>
+              <div className="form-group">
+                <label>Phone</label>
                 <input
-                  type="tel"
+                  type="phone"
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    border: '1px solid #ddd',
-                    borderRadius: '6px',
-                    background: '#fff'
-                  }}
+                  className="form-input"
                 />
               </div>
 
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', color: '#7F5539' }}>Password *</label>
+              <div className="form-group">
+                <label>Password *</label>
                 <input
                   type="password"
                   value={formData.password}
                   onChange={(e) => setFormData({...formData, password: e.target.value})}
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    border: '1px solid #ddd',
-                    borderRadius: '6px',
-                    background: '#fff'
-                  }}
+                  className="form-input"
                   required
                 />
               </div>
             </div>
 
             {error && (
-              <p style={{ color: "red", fontSize: "14px", marginBottom: '15px' }}>{error}</p>
+              <p className="form-error">{error}</p>
             )}
 
-            <div className="form-actions" style={{ marginTop: '24px' }}>
+            <div className="form-actions">
               <button
                 onClick={handleAddClient}
-                style={{
-                  padding: "8px 14px",
-                  background: "#00B894",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                  marginRight: "10px"
-                }}
+                className="btn-primary"
               >
                 Add Client
               </button>
@@ -400,14 +358,7 @@ const AdminClients = () => {
                   });
                   setError("");
                 }}
-                style={{
-                  padding: "8px 14px",
-                  background: "#d63031",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer"
-                }}
+                className="btn-secondary"
               >
                 Cancel
               </button>

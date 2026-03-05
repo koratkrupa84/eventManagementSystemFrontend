@@ -46,22 +46,22 @@ function Header() {
 
         <nav className="nav-links">
           <a href="/" className="nav-link">
-            Home
+            <i className="fas fa-home"></i> Home
           </a>
           <a href="/services" className="nav-link">
-            Services
+            <i className="fas fa-concierge-bell"></i> Services
           </a>
           <a href="/public-events" className="nav-link">
-            Events
+            <i className="fas fa-calendar-alt"></i> Events
           </a>
           <a href="/gallery" className="nav-link">
-            Gallery
+            <i className="fas fa-images"></i> Gallery
           </a>
           <a href="/reviews" className="nav-link">
-            Reviews
+            <i className="fas fa-star"></i> Reviews
           </a>
           <a href="/contact" className="nav-link">
-            Contact
+            <i className="fas fa-envelope"></i> Contact
           </a>
         </nav>
 
@@ -74,7 +74,7 @@ function Header() {
             {isLoggedIn && userRole === 'client' ? (
               <>
                 <a href="/client/dashboard">
-                  <span className="dashboard-icon">👤</span>
+                  <span className="dashboard-icon"><i className="fas fa-tachometer-alt"></i></span>
                   <span>Dashboard</span>
                 </a>
               </>

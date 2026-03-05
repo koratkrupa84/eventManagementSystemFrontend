@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/Contact.css";
-import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaFacebookF, FaInstagram, FaTwitter, FaPinterestP } from "react-icons/fa";
 import { API } from "../services/apiConfig";
 import AlphanumericCaptcha from "../component/AlphanumericCaptcha";
 
@@ -116,15 +115,15 @@ const Contact = () => {
 
             <h4>Contact Information</h4>
 
-            <p><FaMapMarkerAlt /> 123 Event Street, City, State 12345</p>
-            <p><FaPhoneAlt /> +1 (234) 567-890</p>
-            <p><FaEnvelope /> info@eventdecorpro.com</p>
+            <p><i className="fas fa-map-marker-alt"></i> 123 Event Street, City, State 12345</p>
+            <p><i className="fas fa-phone-alt"></i> +1 (234) 567-890</p>
+            <p><i className="fas fa-envelope"></i> info@eventdecorpro.com</p>
 
             <div className="social-icons">
-              <span><FaFacebookF /></span>
-              <span><FaInstagram /></span>
-              <span><FaTwitter /></span>
-              <span><FaPinterestP /></span>
+              <span><i className="fab fa-facebook-f"></i></span>
+              <span><i className="fab fa-instagram"></i></span>
+              <span><i className="fab fa-twitter"></i></span>
+              <span><i className="fab fa-pinterest-p"></i></span>
             </div>
           </div>
 
@@ -191,7 +190,7 @@ const Contact = () => {
                     </>
                   ) : (
                     <>
-                      <span className="btn-icon">📨</span>
+                      <span className="btn-icon"><i className="fas fa-paper-plane"></i></span>
                       Send Message
                     </>
                   )}
@@ -205,7 +204,7 @@ const Contact = () => {
             {message && (
               <div className={`message ${messageType}`}>
                 <span className="message-icon">
-                  {messageType === 'success' ? '✓' : '⚠'}
+                  {messageType === 'success' ? <i className="fas fa-check"></i> : <i className="fas fa-exclamation-triangle"></i>}
                 </span>
                 {message}
               </div>

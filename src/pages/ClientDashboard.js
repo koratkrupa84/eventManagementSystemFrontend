@@ -246,25 +246,25 @@ const ClientDashboard = () => {
                 className={`nav-btn ${activeTab === "dashboard" ? "active" : ""}`}
                 onClick={() => setActiveTab("dashboard")}
               >
-                📊 Dashboard
+                <i className="fas fa-tachometer-alt"></i> Dashboard
               </button>
               <button
                 className={`nav-btn ${activeTab === "appointments" ? "active" : ""}`}
                 onClick={() => setActiveTab("appointments")}
               >
-                📅 My Appointments
+                <i className="fas fa-calendar"></i> My Appointments
               </button>
               <button
                 className={`nav-btn ${activeTab === "book" ? "active" : ""}`}
                 onClick={() => setActiveTab("book")}
               >
-                📝 Book Event
+                <i className="fas fa-calendar-plus"></i> Book Event
               </button>
               <button
                 className={`nav-btn ${activeTab === "profile" ? "active" : ""}`}
                 onClick={() => setActiveTab("profile")}
               >
-                👤 Profile
+                <i className="fas fa-user"></i> Profile
               </button>
             </nav>
           </div>

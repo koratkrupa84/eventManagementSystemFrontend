@@ -1,8 +1,5 @@
 import React from "react";
 import "./Footer.css";
-import { FaFacebookF, FaInstagram, FaTwitter, FaPinterestP } from "react-icons/fa";
-import { MdLocationOn, MdEmail, MdAccessTime } from "react-icons/md";
-import { FiPhoneCall } from "react-icons/fi";
 
 const Footer = () => {
   return (
@@ -18,10 +15,10 @@ const Footer = () => {
           </p>
 
           <div className="social-icons">
-            <a href="#"><FaFacebookF /></a>
-            <a href="#"><FaInstagram /></a>
-            <a href="#"><FaTwitter /></a>
-            <a href="#"><FaPinterestP /></a>
+            <a href="#"><i className="fab fa-facebook-f"></i></a>
+            <a href="#"><i className="fab fa-instagram"></i></a>
+            <a href="#"><i className="fab fa-twitter"></i></a>
+            <a href="#"><i className="fab fa-pinterest-p"></i></a>
           </div>
         </div>
 
@@ -54,10 +51,10 @@ const Footer = () => {
         <div className="footer-box">
           <h3 className="footer-heading">Contact Info</h3>
 
-          <p><MdLocationOn /> 123 Event Street, City, State 12345</p>
-          <p><FiPhoneCall /> +1 (234) 567-890</p>
-          <p><MdEmail /> info@eventdecorpro.com</p>
-          <p><MdAccessTime /> Mon-Sun: 9:00 AM - 8:00 PM</p>
+          <p><i className="fas fa-map-marker-alt"></i> 123 Event Street, City, State 12345</p>
+          <p><i className="fas fa-phone"></i> +1 (234) 567-890</p>
+          <p><i className="fas fa-envelope"></i> info@eventdecorpro.com</p>
+          <p><i className="fas fa-clock"></i> Mon-Sun: 9:00 AM - 8:00 PM</p>
         </div>
 
       </div>

@@ -653,7 +653,7 @@ function OrganizerDashboard() {
                   onClick={() => document.getElementById('eventPhotoInput').click()}
                   className="choose-photos-btn"
                 >
-                  <span className="btn-icon">📷</span>
+                  <span className="btn-icon"><i className="fas fa-camera"></i></span>
                   Choose Photos
                 </button>
                 {newEventPhotos.length > 0 && (
@@ -673,7 +673,7 @@ function OrganizerDashboard() {
                         </>
                       ) : (
                         <>
-                          <span className="btn-icon">⬆️</span>
+                          <span className="btn-icon"><i className="fas fa-upload"></i></span>
                           Upload {newEventPhotos.length} Photo(s)
                         </>
                       )}
@@ -685,7 +685,7 @@ function OrganizerDashboard() {
                       }}
                       className="clear-btn"
                     >
-                      <span className="btn-icon">🗑️</span>
+                      <span className="btn-icon"><i className="fas fa-trash"></i></span>
                       Clear
                     </button>
                   </>
@@ -716,7 +716,7 @@ function OrganizerDashboard() {
             
             {eventPhotos.length === 0 ? (
               <div className="no-photos-state">
-                <div className="no-photos-icon">📷</div>
+                <div className="no-photos-icon"><i className="fas fa-camera"></i></div>
                 <h4>No Photos Yet</h4>
                 <p>Upload your first event photo above to get started!</p>
               </div>

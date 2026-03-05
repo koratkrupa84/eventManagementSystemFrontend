@@ -230,8 +230,8 @@ const AdminCategories = () => {
       {error && <div className="error-text">{error}</div>}
 
       {showAddForm && (
-        <div className="modal-overlay" onClick={() => setShowAddForm(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="category-modal-overlay" onClick={() => setShowAddForm(false)}>
+          <div className="category-modal-content" onClick={(e) => e.stopPropagation()}>
             <span className="close-btn" onClick={() => setShowAddForm(false)}>
               ×
             </span>
@@ -441,53 +441,84 @@ const AdminCategories = () => {
       )}
 
       {showViewModal && selectedCategory && (
-        <div className="modal-overlay" onClick={() => setShowViewModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="category-modal-overlay" onClick={() => setShowViewModal(false)}>
+          <div className="category-modal-content" onClick={(e) => e.stopPropagation()}>
             <span className="close-btn" onClick={() => setShowViewModal(false)}>
               ×
             </span>
             <form onSubmit={handleUpdate}>
               <h3>View & Update Category</h3>
               
-              {selectedCategory.image && (
-                <div className="current-image">
-                  <img
-                    src={`http://localhost:5000/${selectedCategory.image}`}
-                    alt={selectedCategory.title}
-                    style={{ width: "100%", maxHeight: "200px", objectFit: "cover", marginBottom: "15px" }}
+              {/* Photo Section */}
+              <div className="category-form-section">
+                <h4>Category Photo</h4>
+                
+                {/* Current Image Display */}
+                {selectedCategory.image && (
+                  <div className="current-photo-container">
+                    <label className="photo-label">Current Photo:</label>
+                    <div className="current-photo">
+                      <img
+                        src={`http://localhost:5000/${selectedCategory.image}`}
+                        alt={selectedCategory.title}
+                      />
+                    </div>
+                  </div>
+                )}
+                
+                {/* New Image Selection */}
+                <div className="new-photo-container">
+                  <label className="photo-label">Choose New Photo (Optional):</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setSelectedImage(e.target.files[0])}
+                    className="photo-input"
                   />
+                  
+                  {/* New Image Preview */}
+                  {selectedImage && (
+                    <div className="new-photo-preview">
+                      <label className="photo-label">New Photo Preview:</label>
+                      <div className="preview-image">
+                        <img
+                          src={URL.createObjectURL(selectedImage)}
+                          alt="New preview"
+                        />
+                        <button
+                          type="button"
+                          className="remove-photo-btn"
+                          onClick={() => setSelectedImage(null)}
+                        >
+                          × Remove
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
               
               {/* Basic Information */}
               <div className="category-form-section">
                 <h4>Basic Information</h4>
+                <label className="form-label">Category Title *</label>
                 <input
                   type="text"
-                  placeholder="Category Title"
+                  placeholder="Enter category title"
                   value={formData.title}
                   onChange={(e) =>
                     setFormData({ ...formData, title: e.target.value })
                   }
                   required
                 />
+                <label className="form-label">Description</label>
                 <textarea
-                  placeholder="Description"
+                  placeholder="Enter category description"
                   value={formData.description}
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
                   }
                 />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setSelectedImage(e.target.files[0])}
-                />
-                {selectedImage && (
-                  <p style={{ fontSize: "12px", color: "#666", marginTop: "5px" }}>
-                    New image selected: {selectedImage.name}
-                  </p>
-                )}
               </div>
 
               {/* Pricing Information */}

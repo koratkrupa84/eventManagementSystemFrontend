@@ -83,12 +83,17 @@ const AdminGallery = () => {
       grouped[eventKey].images.push(img);
     });
     
+    // Debug log to understand data structure
+    console.log('Grouped Images:', grouped);
+    
     return Object.values(grouped);
   }, [filteredImages]);
 
   const fetchEvents = useCallback(async () => {
     try {
+      console.log('=== FETCH EVENTS DEBUG ===');
       const token = localStorage.getItem("token");
+      console.log('Token exists:', !!token);
       
       // Use Promise.all for parallel requests
       const [publicRes, privateRes] = await Promise.all([
@@ -104,18 +109,42 @@ const AdminGallery = () => {
         })
       ]);
 
+      console.log('Public Events Response Status:', publicRes.status);
+      console.log('Private Events Response Status:', privateRes.status);
+
       // Process responses in parallel
       const [publicData, privateData] = await Promise.all([
         publicRes.json(),
         privateRes.json()
       ]);
 
+      console.log('Public Events Data:', publicData);
+      console.log('Private Events Data:', privateData); // Debug log
+      console.log('Private Events Success:', privateRes.ok);
+      console.log('Private Events Data Length:', privateData.data?.length || 0);
+
       if (publicRes.ok) {
         setPublicEvents(publicData.data || []);
       }
       if (privateRes.ok) {
-        console.log('Private Events Data:', privateData.data); // Debug log
-        setPrivateEvents(privateData.data || []);
+        console.log('Private Events Data:', privateData); // Debug log
+        console.log('Private Events Data Type:', typeof privateData.data);
+        console.log('Private Events Data Constructor:', privateData.data?.constructor?.name);
+        
+        // Handle different data structures
+        let privateEventsList = [];
+        if (Array.isArray(privateData.data)) {
+          privateEventsList = privateData.data;
+        } else if (privateData.data && typeof privateData.data === 'object') {
+          // If data is an object, try to extract array from it
+          privateEventsList = Object.values(privateData.data);
+        } else if (Array.isArray(privateData)) {
+          privateEventsList = privateData;
+        }
+        
+        console.log('Processed Private Events List:', privateEventsList);
+        console.log('Final Private Events Length:', privateEventsList.length);
+        setPrivateEvents(privateEventsList);
       }
     } catch (err) {
       console.error("Failed to fetch events:", err);
@@ -246,6 +275,14 @@ const AdminGallery = () => {
   };
 
   const handleView = (img) => {
+    console.log('=== VIEW IMAGE DEBUG ===');
+    console.log('Complete Image Object:', img);
+    console.log('Event ID Object:', img.event_id);
+    console.log('Event ID Type:', typeof img.event_id);
+    console.log('Event Name (event_name):', img.event_id?.event_name);
+    console.log('Event Title (title):', img.event_id?.title);
+    console.log('Event Type:', img.event_id?.event_type);
+    console.log('Event Type (img.event_type):', img.event_type);
     setSelectedImage(img);
     setShowViewModal(true);
   };
@@ -520,7 +557,14 @@ const AdminGallery = () => {
               
               <div className="image-info">
                 <p><strong>Event Type:</strong> {selectedImage.event_type}</p>
-                <p><strong>Event:</strong> {selectedImage.event_id?.event_name || 'Unknown Event'}</p>
+                <p><strong>Event:</strong> {
+                  selectedImage.event_id?.title || 
+                  selectedImage.event_id?.event_name || 
+                  (selectedImage.event_type === 'private' 
+                    ? selectedImage.event_name || 'Event'
+                    : selectedImage.event_id?.event_type || 
+                    'Unknown Event')
+                }</p>
                 <p><strong>Uploaded:</strong> {new Date(selectedImage.createdAt).toLocaleDateString()}</p>
               </div>
               
@@ -681,8 +725,8 @@ const AdminGallery = () => {
                 <div className="event-header">
                   <h3>
                     {eventGroup.event_type === "public" 
-                      ? eventGroup.event_id?.title || "Unknown Public Event"
-                      : eventGroup.event_id?.event_name || eventGroup.event_id?.event_type || `Private Event #${eventGroup.event_id?._id?.slice(-6) || "Unknown"}`
+                      ? eventGroup.event_id?.title || eventGroup.event_id?.event_name || "Unknown Public Event"
+                      : eventGroup.event_id?.event_name || eventGroup.event_id?.event_type || `Private Event - ${eventGroup.images[0]?.event_type || 'Event'}`
                     }
                   </h3>
                   <span className="event-badge">

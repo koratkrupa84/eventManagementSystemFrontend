@@ -82,12 +82,25 @@
   border-radius: 8px;
   transition: all 0.3s ease;
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-link i {
+  font-size: 14px;
+  color: #5C4033;
+  transition: all 0.3s ease;
 }
 
 .nav-link:hover {
   background: rgba(139, 115, 85, 0.1);
   color: #7F5539;
   transform: translateY(-2px);
+}
+
+.nav-link:hover i {
+  color: #7F5539;
 }
 
 .nav-link::after {
@@ -174,7 +187,13 @@
 
 .dashboard-icon {
   font-size: 18px;
+  color: white;
   animation: pulse 2s infinite;
+  transition: all 0.3s ease;
+}
+
+.dashboard-icon i {
+  color: white;
 }
 
 @keyframes pulse {

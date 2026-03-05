@@ -211,11 +211,15 @@ body .admin-sidebar .icon {
   min-width: 16px !important;
   text-align: center !important;
   transition: var(--transition) !important;
+  color: var(--cream) !important;
+  opacity: 0.9 !important;
 }
 
 body .admin-sidebar .menu-item:hover .icon {
   transform: scale(1.1) !important;
   color: var(--sand) !important;
+  opacity: 1 !important;
+  text-shadow: 0 0 12px rgba(237, 224, 212, 0.3) !important;
 }
 
 body .admin-sidebar .menu-item.active .icon,
@@ -223,6 +227,8 @@ body .admin-sidebar .menu-item[aria-current="page"] .icon {
   color: var(--sand) !important;
   transform: scale(1.1) !important;
   text-shadow: 0 0 8px var(--sand) !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 0 6px rgba(237, 224, 212, 0.4)) !important;
 }
 
 /* ==========================================================================

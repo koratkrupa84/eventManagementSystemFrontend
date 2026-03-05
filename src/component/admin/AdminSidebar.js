@@ -1,16 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import {
-  FaTachometerAlt,
-  FaFolder,
-  FaUsers,
-  FaCalendar,
-  FaStar,
-  FaSignOutAlt,
-  FaBox,
-  FaImages,
-  FaNewspaper
-} from "react-icons/fa";
 import "./AdminSidebar.css";
 import "../../css/variables.css";
 
@@ -66,7 +55,7 @@ function AdminSidebar() {
       <nav className="sidebar-menu">
         {/* Dashboard */}
         <NavLink to="/admin/dashboard" className="menu-item">
-          <FaTachometerAlt className="icon" />
+          <i className="fas fa-tachometer-alt icon"></i>
           Dashboard
         </NavLink>
 
@@ -79,29 +68,32 @@ function AdminSidebar() {
           {openMenu === "management" && (
             <div className="submenu">
               <NavLink to="/admin/categories" className="menu-item">
-                <FaFolder className="icon" />
+                <i className="fas fa-folder icon"></i>
                 Manage Categories
               </NavLink>
 
               <NavLink to="/admin/packages" className="menu-item">
-                <FaBox className="icon" />
+                <i className="fas fa-box icon"></i>
                 Manage Packages
               </NavLink>
 
               <NavLink to="/admin/gallery" className="menu-item">
-                <FaImages className="icon" />
+                <i className="fas fa-images icon"></i>
                 Manage Gallery
               </NavLink>
 
               <NavLink to="/admin/public-events" className="menu-item">
-                <FaCalendar className="icon" />
+                <i className="fas fa-calendar icon"></i>
                 Public Events
               </NavLink>
 
+              <NavLink to="/admin/blogs" className="menu-item">
+                <i className="fas fa-newspaper icon"></i>
+                Manage Blogs
+              </NavLink>
             </div>
           )}
         </div>
-
 
         {/* USERS */}
         <div className="menu">
@@ -112,12 +104,12 @@ function AdminSidebar() {
           {openMenu === "users" && (
             <div className="submenu">
               <NavLink to="/admin/clients" className="menu-item">
-                <FaUsers className="icon" />
+                <i className="fas fa-users icon"></i>
                 Manage Clients
               </NavLink>
 
               <NavLink to="/admin/organizers" className="menu-item">
-                <FaUsers className="icon" />
+                <i className="fas fa-users icon"></i>
                 Manage Organizers
               </NavLink>
             </div>
@@ -133,22 +125,22 @@ function AdminSidebar() {
           {openMenu === "bookings" && (
             <div className="submenu">
               <NavLink to="/admin/appointments" className="menu-item">
-                <FaCalendar className="icon" />
+                <i className="fas fa-calendar icon"></i>
                 Manage Appointments
               </NavLink>
 
               <NavLink to="/admin/private-events" className="menu-item">
-                <FaCalendar className="icon" />
+                <i className="fas fa-calendar icon"></i>
                 Private Events
               </NavLink>
 
               <NavLink to="/admin/inquiries" className="menu-item">
-                <FaCalendar className="icon" />
+                <i className="fas fa-calendar icon"></i>
                 Manage Inquiries
               </NavLink>
 
               <NavLink to="/admin/event-registrations" className="menu-item">
-                <FaCalendar className="icon" />
+                <i className="fas fa-calendar icon"></i>
                 Event Registrations
               </NavLink>
             </div>
@@ -164,7 +156,7 @@ function AdminSidebar() {
           {openMenu === "feedback" && (
             <div className="submenu">
               <NavLink to="/admin/review" className="menu-item">
-                <FaStar className="icon" />
+                <i className="fas fa-star icon"></i>
                 Manage Review
               </NavLink>
             </div>
@@ -173,7 +165,7 @@ function AdminSidebar() {
       </nav>
 
       <button className="logout-btn" onClick={handleLogout}>
-        <FaSignOutAlt /> Logout
+        <i className="fas fa-sign-out-alt"></i> Logout
       </button>
     </aside>
   );

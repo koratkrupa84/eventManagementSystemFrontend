@@ -202,7 +202,7 @@ const Gallery = () => {
           {filteredImages.length === 0 ? (
             <div className="no-photos-container">
               <div className="no-photos-content">
-                <div className="no-photos-icon">📷</div>
+                <div className="no-photos-icon"><i className="fas fa-camera"></i></div>
                 <h3>No Photos Found</h3>
                 <p>
                   {searchTerm || filter !== "all" 
@@ -236,12 +236,12 @@ const Gallery = () => {
                   />
                   <div className="photo-overlay">
                     <div className="overlay-content">
-                      <span className="view-icon">👁️</span>
+                      <span className="view-icon"><i className="fas fa-eye"></i></span>
                       <span className="view-text">View Photo</span>
                     </div>
                     <div className="photo-stats">
                       <span className="likes-stat">
-                        <span className="likes-icon">{likedPhotos.has(photo._id) ? '❤️' : '🤍'}</span>
+                        <span className="likes-icon">{likedPhotos.has(photo._id) ? <i className="fas fa-heart"></i> : <i className="far fa-heart"></i>}</span>
                         <span className="likes-count">{photoLikes[photo._id] || 0}</span>
                       </span>
                     </div>
@@ -254,7 +254,7 @@ const Gallery = () => {
 
         {error && (
           <div className="error-message">
-            <span className="error-icon">⚠️</span>
+            <span className="error-icon"><i className="fas fa-exclamation-triangle"></i></span>
             <span>{error}</span>
           </div>
         )}
