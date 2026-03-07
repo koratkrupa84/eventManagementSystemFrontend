@@ -126,63 +126,42 @@ const AdminOrganizers = () => {
 
   if (loading) {
     return (
-      <div style={{ padding: "20px", textAlign: "center" }}>
+      <div className="loading">
         <p>Loading organizers...</p>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: "20px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+    <div className="admin-organizers-container">
+      <div className="organizers-header">
         <h2>Organizers Management</h2>
         <button
+          className="add-btn"
           onClick={() => setShowAddModal(true)}
-          style={{
-            padding: "8px 14px",
-            background: "#6C5CE7",
-            color: "#fff",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer"
-          }}
         >
           Add New Organizer
         </button>
       </div>
 
-      {/* Search Bar */}
-      <div style={{ marginBottom: "20px" }}>
+      <div className="search-bar">
         <input
           type="text"
+          className="search-input"
           placeholder="Search organizers by name, email, phone, or specialization..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            border: "1px solid #ddd",
-            borderRadius: "6px",
-            fontSize: "14px"
-          }}
         />
       </div>
 
       {error && (
-        <div style={{ 
-          padding: "10px", 
-          background: "#fee", 
-          border: "1px solid #fcc", 
-          borderRadius: "6px", 
-          marginBottom: "20px",
-          color: "#c00"
-        }}>
+        <div className="error-message">
           {error}
         </div>
       )}
 
-      <div className="table-wrapper">
-        <table className="appointment-table">
+      <div className="organizer-table-wrapper">
+        <table className="organizers-table">
           <thead>
             <tr>
               <th>Organizer ID</th>
@@ -191,7 +170,6 @@ const AdminOrganizers = () => {
               <th>Phone</th>
               <th>Specialization</th>
               <th>Experience</th>
-              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -199,7 +177,7 @@ const AdminOrganizers = () => {
           <tbody>
             {filteredOrganizers.length === 0 ? (
               <tr>
-                <td colSpan="9" style={{ textAlign: "center" }}>
+                <td colSpan="7" style={{ textAlign: "center" }}>
                   {searchTerm ? "No organizers found matching your search." : "No organizers found."}
                 </td>
               </tr>
@@ -212,12 +190,7 @@ const AdminOrganizers = () => {
                   <td>{organizer.phone || 'N/A'}</td>
                   <td>{organizer.specialization || 'N/A'}</td>
                   <td>{organizer.experience || 'N/A'}</td>
-                  <td>
-                    <span className={`status ${organizer.isActive !== false ? 'approved' : 'rejected'}`}>
-                      {organizer.isActive !== false ? 'Active' : 'Inactive'}
-                    </span>
-                  </td>
-                  <td className="action-btns">
+                  <td className="organizer-action-btns">
                     <button 
                       className="view-btn"
                       onClick={() => handleViewOrganizer(organizer)}
@@ -240,12 +213,12 @@ const AdminOrganizers = () => {
 
       {/* View Organizer Modal */}
       {showViewModal && selectedOrganizer && (
-        <div className="modal-overlay" onClick={() => {
+        <div className="organizer-modal-overlay" onClick={() => {
           setShowViewModal(false);
           setSelectedOrganizer(null);
         }}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <span className="close-btn" onClick={() => {
+          <div className="organizer-modal-content" onClick={(e) => e.stopPropagation()}>
+            <span className="organizer-close-btn" onClick={() => {
               setShowViewModal(false);
               setSelectedOrganizer(null);
             }}>
@@ -361,12 +334,12 @@ const AdminOrganizers = () => {
 
       {/* Add Organizer Modal */}
       {showAddModal && (
-        <div className="modal-overlay" onClick={() => {
+        <div className="organizer-modal-overlay" onClick={() => {
           setShowAddModal(false);
           setError("");
         }}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <span className="close-btn" onClick={() => {
+          <div className="organizer-modal-content" onClick={(e) => e.stopPropagation()}>
+            <span className="organizer-close-btn" onClick={() => {
               setShowAddModal(false);
               setError("");
             }}>
