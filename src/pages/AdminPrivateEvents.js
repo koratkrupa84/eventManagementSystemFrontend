@@ -5,7 +5,6 @@ import { API } from "../services/apiConfig";
 
 const AdminPrivateEvents = () => {
   const [requests, setRequests] = useState([]);
-  const [events, setEvents] = useState([]);
   const [organizers, setOrganizers] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -66,20 +65,18 @@ const AdminPrivateEvents = () => {
     }
   };
 
-  // Fetch all events (requests + private events)
+  // Fetch all private events
   const fetchEvents = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(API.GET_APPOINTMENTS, {
+      const res = await axios.get(API.GET_PRIVATE_EVENTS, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Filter only private events (type: 'private_event')
-      const privateEvents = (res.data.data || res.data || [])
-        .filter(event => event.type === 'private_event');
+      console.log("Private events response:", res.data);
 
-      // Use the data as-is since backend should now populate client properly
-      const eventsWithClients = privateEvents.map(event => {
+      // Use the data as-is since backend should populate client properly
+      const eventsWithClients = (res.data.data || res.data || []).map(event => {
         let clientName = 'Unknown Client';
 
         // Try to get client name from various sources
@@ -97,7 +94,6 @@ const AdminPrivateEvents = () => {
         };
       });
 
-      setEvents(eventsWithClients);
       setAddedEvents(eventsWithClients);
     } catch (err) {
       console.error("Error fetching events:", err);
@@ -152,19 +148,14 @@ const AdminPrivateEvents = () => {
 
     // Include client information as backend requires it
     const eventData = {
-      requestId: selectedRequest._id,
       request_id: selectedRequest._id,
-      organizerId: formData.organizer_id,
+      client_id: selectedRequest.client_id?._id || selectedRequest.client_id,
       organizer_id: formData.organizer_id,
-      clientName: selectedRequest.client_id?.name || selectedRequest.full_name,
-      eventName: formData.event_name,
       event_name: formData.event_name,
-      detail: formData.details,
       details: formData.details,
-      guests: formData.guests,
-      budget: formData.budget,
+      guests: formData.guests ? parseInt(formData.guests) : undefined,
+      budget: formData.budget ? parseInt(formData.budget) : undefined,
       location: formData.location,
-      eventDate: formData.event_date,
       event_date: formData.event_date,
       status: "confirmed",
     };
@@ -204,6 +195,25 @@ const AdminPrivateEvents = () => {
         { status: "confirmed" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
+      // Close modal and reset form
+      setShowAddForm(false);
+      setSelectedRequest(null);
+      setError("");
+      setFormData({
+        organizer_id: "",
+        event_name: "",
+        details: "",
+        guests: "",
+        budget: "",
+        location: "",
+        event_date: "",
+        status: "confirmed",
+      });
+
+      // Refresh the events list
+      fetchEvents();
+
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong");
     }
@@ -305,222 +315,236 @@ const AdminPrivateEvents = () => {
         Create Event from Approved Request
       </button>
 
-      {/* Add Event Form */}
+      {/* Add Event Modal */}
       {showAddForm && (
-        <div className="form-container">
-          <div className="form-header">
-            <span className="form-icon"><i className="fas fa-glass-cheers"></i></span>
-            Create New Private Event
-          </div>
-
-          <div className="form-section">
-            <label className="section-label">Select Approved Request</label>
-            <select
-              value={selectedRequest?._id || ""}
-              onChange={(e) =>
-                handleSelectRequest(
-                  requests.find((r) => r._id === e.target.value)
-                )
-              }
-              className="form-select"
-            >
-              <option value="">📋 Select Approved Request</option>
-              {requests.map((r) => (
-                <option key={r._id} value={r._id}>
-                  🎯 {r.event_type} - {formatDate(r.event_date)}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {selectedRequest && (
-            <div className="request-details-section">
-              <div className="section-title">
-                <span className="section-icon"><i className="fas fa-clipboard-list"></i></span>
-                Request Details
-              </div>
-
-              <div className="admin-request-preview">
-                <div className="admin-preview-grid">
-                  <div className="admin-preview-item">
-                    <span className="preview-label">Event Type:</span>
-                    <span className="preview-value">{selectedRequest.event_type}</span>
-                  </div>
-                  <div className="admin-preview-item">
-                    <span className="preview-label">Date:</span>
-                    <span className="preview-value">{formatDate(selectedRequest.event_date)}</span>
-                  </div>
-                  <div className="admin-preview-item">
-                    <span className="preview-label">Location:</span>
-                    <span className="preview-value">{selectedRequest.location}</span>
-                  </div>
-                  {selectedRequest.guests && (
-                    <div className="admin-preview-item">
-                      <span className="preview-label">Guests:</span>
-                      <span className="preview-value">{selectedRequest.guests}</span>
-                    </div>
-                  )}
-                  {selectedRequest.budget && (
-                    <div className="admin-preview-item">
-                      <span className="preview-label">Budget:</span>
-                      <span className="preview-value">₹{selectedRequest.budget}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="form-section">
-                <div className="section-title">
-                  <span className="section-icon"><i className="fas fa-user"></i></span>
-                  Assign Organizer
-                </div>
-                <div className="form-group">
-                  <label className="form-label">
-                    <span className="label-icon"><i className="fas fa-bullseye"></i></span>
-                    Select Organizer
-                  </label>
-                  <select
-                    name="organizer_id"
-                    value={formData.organizer_id}
-                    onChange={handleFormChange}
-                    className="form-select"
-                  >
-                    <option value="">Choose an organizer...</option>
-                    {organizers.map((org) => (
-                      <option key={org._id} value={org._id}>
-                        🎪 {org.name} - {org.specialization} ({org.experience})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="form-section">
-                <div className="section-title">
-                  <span className="section-icon"><i className="fas fa-edit"></i></span>
-                  Event Information
-                </div>
-
-                <div className="form-grid">
-                  <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-icon"><i className="fas fa-glass-cheers"></i></span>
-                      Event Name
-                    </label>
-                    <input
-                      type="text"
-                      name="event_name"
-                      value={formData.event_name}
-                      onChange={handleFormChange}
-                      placeholder="Enter event name"
-                      className="form-input"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-icon"><i className="fas fa-calendar"></i></span>
-                      Event Date
-                    </label>
-                    <input
-                      type="date"
-                      name="event_date"
-                      value={formData.event_date?.slice(0, 10)}
-                      onChange={handleFormChange}
-                      className="form-input"
-                    />
-                  </div>
-                </div>
-
-                <div className="form-grid">
-                  <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-icon"><i className="fas fa-users"></i></span>
-                      Number of Guests
-                    </label>
-                    <input
-                      type="number"
-                      name="guests"
-                      value={formData.guests}
-                      onChange={handleFormChange}
-                      placeholder="Enter number of guests"
-                      className="form-input"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-icon"><i className="fas fa-file-alt"></i></span>
-                      Event Details
-                    </label>
-                    <input
-                      type="text"
-                      name="details"
-                      value={formData.details}
-                      onChange={handleFormChange}
-                      placeholder="Enter event details"
-                      className="form-input"
-                    />
-                  </div>
-                </div>
-
-                <div className="form-grid">
-                  <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-icon"><i className="fas fa-rupee-sign"></i></span>
-                      Budget (₹)
-                    </label>
-                    <input
-                      type="number"
-                      name="budget"
-                      value={formData.budget}
-                      onChange={handleFormChange}
-                      placeholder="Enter budget"
-                      className="form-input"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">
-                      <span className="label-icon"><i className="fas fa-map-marker-alt"></i></span>
-                      Event Location
-                    </label>
-                    <input
-                      type="text"
-                      name="location"
-                      value={formData.location}
-                      onChange={handleFormChange}
-                      placeholder="Enter event location"
-                      className="form-input"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {error && (
-                <div className="error-message">
-                  <span className="error-icon"><i className="fas fa-exclamation-triangle"></i></span>
-                  {error}
-                </div>
-              )}
-
-              <div className="btn-group">
-                <button
-                  onClick={handleAddEvent}
-                  className="success-btn"
-                >
-                  Create Event
-                </button>
-                <button
-                  onClick={() => {
-                    setShowAddForm(false);
-                    setSelectedRequest(null);
-                    setError("");
-                  }}
-                  className="cancel-btn"
-                >
-                  Cancel
-                </button>
-              </div>
+        <div className="modal-overlay">
+          <div className="modal-content form-modal">
+            <div className="modal-header">
+              <span className="form-icon"><i className="fas fa-glass-cheers"></i></span>
+              <span className="header-title">Create New Private Event</span>
+              <span 
+                className="close-btn" 
+                onClick={() => {
+                  setShowAddForm(false);
+                  setSelectedRequest(null);
+                  setError("");
+                }}
+              >
+                ×
+              </span>
             </div>
-          )}
+
+            <div className="form-section">
+              <label className="section-label">Select Approved Request</label>
+              <select
+                value={selectedRequest?._id || ""}
+                onChange={(e) =>
+                  handleSelectRequest(
+                    requests.find((r) => r._id === e.target.value)
+                  )
+                }
+                className="form-select"
+              >
+                <option value="">📋 Select Approved Request</option>
+                {requests.map((r) => (
+                  <option key={r._id} value={r._id}>
+                    🎯 {r.event_type} - {formatDate(r.event_date)}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {selectedRequest && (
+              <>
+                <div className="request-details-section">
+                  <div className="section-title">
+                    <span className="section-icon"><i className="fas fa-clipboard-list"></i></span>
+                    Request Details
+                  </div>
+
+                  <div className="admin-request-preview">
+                    <div className="admin-preview-grid">
+                      <div className="admin-preview-item">
+                        <span className="preview-label">Event Type:</span>
+                        <span className="preview-value">{selectedRequest.event_type}</span>
+                      </div>
+                      <div className="admin-preview-item">
+                        <span className="preview-label">Date:</span>
+                        <span className="preview-value">{formatDate(selectedRequest.event_date)}</span>
+                      </div>
+                      <div className="admin-preview-item">
+                        <span className="preview-label">Location:</span>
+                        <span className="preview-value">{selectedRequest.location}</span>
+                      </div>
+                      {selectedRequest.guests && (
+                        <div className="admin-preview-item">
+                          <span className="preview-label">Guests:</span>
+                          <span className="preview-value">{selectedRequest.guests}</span>
+                        </div>
+                      )}
+                      {selectedRequest.budget && (
+                        <div className="admin-preview-item">
+                          <span className="preview-label">Budget:</span>
+                          <span className="preview-value">₹{selectedRequest.budget}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="form-section">
+                  <div className="section-title">
+                    <span className="section-icon"><i className="fas fa-user"></i></span>
+                    Assign Organizer
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">
+                      <span className="label-icon"><i className="fas fa-bullseye"></i></span>
+                      Select Organizer
+                    </label>
+                    <select
+                      name="organizer_id"
+                      value={formData.organizer_id}
+                      onChange={handleFormChange}
+                      className="form-select"
+                    >
+                      <option value="">Choose an organizer...</option>
+                      {organizers.map((org) => (
+                        <option key={org._id} value={org._id}>
+                          🎪 {org.name} - {org.specialization} ({org.experience})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-section">
+                  <div className="section-title">
+                    <span className="section-icon"><i className="fas fa-edit"></i></span>
+                    Event Information
+                  </div>
+
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label className="form-label">
+                        <span className="label-icon"><i className="fas fa-glass-cheers"></i></span>
+                        Event Name
+                      </label>
+                      <input
+                        type="text"
+                        name="event_name"
+                        value={formData.event_name}
+                        onChange={handleFormChange}
+                        placeholder="Enter event name"
+                        className="form-input"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">
+                        <span className="label-icon"><i className="fas fa-calendar"></i></span>
+                        Event Date
+                      </label>
+                      <input
+                        type="date"
+                        name="event_date"
+                        value={formData.event_date?.slice(0, 10)}
+                        onChange={handleFormChange}
+                        className="form-input"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label className="form-label">
+                        <span className="label-icon"><i className="fas fa-users"></i></span>
+                        Number of Guests
+                      </label>
+                      <input
+                        type="number"
+                        name="guests"
+                        value={formData.guests}
+                        onChange={handleFormChange}
+                        placeholder="Enter number of guests"
+                        className="form-input"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">
+                        <span className="label-icon"><i className="fas fa-file-alt"></i></span>
+                        Event Details
+                      </label>
+                      <input
+                        type="text"
+                        name="details"
+                        value={formData.details}
+                        onChange={handleFormChange}
+                        placeholder="Enter event details"
+                        className="form-input"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label className="form-label">
+                        <span className="label-icon"><i className="fas fa-rupee-sign"></i></span>
+                        Budget (₹)
+                      </label>
+                      <input
+                        type="number"
+                        name="budget"
+                        value={formData.budget}
+                        onChange={handleFormChange}
+                        placeholder="Enter budget"
+                        className="form-input"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">
+                        <span className="label-icon"><i className="fas fa-map-marker-alt"></i></span>
+                        Event Location
+                      </label>
+                      <input
+                        type="text"
+                        name="location"
+                        value={formData.location}
+                        onChange={handleFormChange}
+                        placeholder="Enter event location"
+                        className="form-input"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {error && (
+                  <div className="error-message">
+                    <span className="error-icon"><i className="fas fa-exclamation-triangle"></i></span>
+                    {error}
+                  </div>
+                )}
+
+                <div className="btn-group">
+                  <button
+                    onClick={handleAddEvent}
+                    className="success-btn"
+                  >
+                    Create Event
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowAddForm(false);
+                      setSelectedRequest(null);
+                      setError("");
+                    }}
+                    className="cancel-btn"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       )}
 
@@ -564,7 +588,7 @@ const AdminPrivateEvents = () => {
                       {e.status || "confirmed"}
                     </span>
                   </td>
-                  <td className="action-btns">
+                  <td className="private-action-btns">
                     <button
                       className="view-btn"
                       onClick={() => handleViewEvent(e)}

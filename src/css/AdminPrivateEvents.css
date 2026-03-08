@@ -702,7 +702,7 @@ body .private-events-container .appointment-table th::after {
 }
 
 body .private-events-container .appointment-table td {
-  padding: 16px !important;
+  padding: 10px !important;
   border-bottom: 1px solid var(--creamLight) !important;
   color: var(--brownDark) !important;
   transition: var(--transition) !important;
@@ -786,7 +786,7 @@ body .private-events-container .status.cancelled {
 /* ==========================================================================
    ACTION BUTTONS - Enhanced action button styling
    ========================================================================== */
-body .private-events-container .action-btns {
+body .private-events-container private-action-btns {
   display: flex !important;
   gap: 8px !important;
 }
@@ -936,7 +936,7 @@ body .private-events-container .modal-header::after {
     flex-direction: column !important;
   }
   
-  body .private-events-container .action-btns {
+  body .private-events-container .private-action-btns {
     flex-direction: column !important;
   }
   
@@ -997,7 +997,7 @@ body .private-events-container .primary-btn {
   }
   
   body .private-events-container .primary-btn,
-  body .private-events-container .action-btns,
+  body .private-events-container .private-action-btns,
   body .private-events-container .modal-overlay {
     display: none !important;
   }
