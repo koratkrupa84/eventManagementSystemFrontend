@@ -119,6 +119,23 @@
   position: relative;
 }
 
+.input-with-icon,
+.select-with-icon {
+  position: relative;
+}
+
+.input-icon,
+.select-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--brown);
+  font-size: 16px;
+  pointer-events: none;
+  z-index: 1;
+}
+
 .filter-group::before {
   content: "🎊";
   position: absolute;
@@ -139,7 +156,7 @@
 .search-input,
 .filter-select {
   width: 100%;
-  padding: 16px 20px 16px 45px;
+  padding: 16px 20px 16px 50px;
   border: 2px solid transparent;
   border-radius: 15px;
   font-size: 16px;
@@ -315,23 +332,29 @@
   margin-bottom: 15px;
   color: #5a6c7d;
   font-size: 15px;
-  padding: 10px;
+  padding: 12px;
   background: var(--creamLight);
-  border-radius: 10px;
+  border-radius: 12px;
   transition: all 0.3s ease;
 }
 
 .detail-item:hover {
   background: var(--cream);
   transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(127, 85, 57, 0.1);
 }
 
-.detail-item .icon {
-  font-size: 20px;
-  width: 30px;
+.detail-icon {
+  font-size: 18px;
+  color: var(--brown);
+  width: 24px;
   text-align: center;
-  filter: drop-shadow(0 2px 4px rgba(127, 85, 57, 0.2));
-  animation: iconBounce 2s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+.detail-item:hover .detail-icon {
+  color: var(--brownDark);
+  transform: scale(1.1);
 }
 
 @keyframes iconBounce {
@@ -353,7 +376,10 @@
   font-weight: 700;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   text-align: center;
   flex: 1;
   position: relative;
@@ -541,12 +567,20 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modal-header h2 svg {
+  font-size: 1.6rem;
+  color: var(--brown);
 }
 
 .close-btn {
   background: linear-gradient(135deg, var(--cream), var(--sand));
   border: 2px solid var(--cream);
-  font-size: 32px;
+  font-size: 18px;
   cursor: pointer;
   color: var(--brown);
   padding: 10px;
@@ -612,6 +646,14 @@
   color: #5a6c7d;
   font-size: 15px;
   line-height: 1.6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.event-info p svg {
+  color: var(--brown);
+  font-size: 14px;
 }
 
 .event-date {
@@ -662,6 +704,14 @@
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-group label svg {
+  font-size: 12px;
+  color: var(--brownDark);
 }
 
 .form-group input,
@@ -708,7 +758,14 @@
   color: var(--brownDark);
   font-size: 1.2rem;
   font-weight: 700;
-  animation: pulse 2s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.appointment-note h4 svg {
+  font-size: 1rem;
+  color: var(--brown);
 }
 
 .appointment-note ul {

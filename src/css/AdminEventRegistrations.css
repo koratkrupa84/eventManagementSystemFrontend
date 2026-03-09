@@ -53,7 +53,7 @@
 }
 
 .stat-icon {
-  font-size: 3rem;
+  font-size: 2rem;
   width: 60px;
   height: 60px;
   display: flex;
@@ -61,6 +61,7 @@
   justify-content: center;
   background: var(--cream);
   border-radius: 12px;
+  color: var(--brown);
 }
 
 .stat-info h3 {
@@ -92,10 +93,26 @@
   min-width: 250px;
 }
 
+.input-with-icon,
+.select-with-icon {
+  position: relative;
+}
+
+.input-icon,
+.select-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--brown);
+  font-size: 14px;
+  pointer-events: none;
+}
+
 .search-input,
 .filter-select {
   width: 100%;
-  padding: 12px 16px;
+  padding: 12px 16px 12px 45px;
   border: 2px solid #ecf0f1;
   border-radius: 10px;
   font-size: 15px;
@@ -113,11 +130,21 @@
 /* Registrations Table */
 .registrations-table-container {
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(127, 85, 57, 0.12);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(127, 85, 57, 0.15);
   overflow: hidden;
-  border: 1px solid var(--cream);
+  border: 2px solid var(--cream);
   margin-bottom: 30px;
+  position: relative;
+}
+
+.registrations-table-container::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--brown), var(--brownDark), var(--brown));
 }
 
 .registrations-table {
@@ -129,65 +156,112 @@
 .registrations-table thead {
   background: linear-gradient(135deg, var(--brown), var(--brownDark));
   color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .registrations-table th {
-  padding: 18px 16px;
+  padding: 20px 18px;
   text-align: left;
-  font-weight: 600;
-  font-size: 13px;
+  font-weight: 700;
+  font-size: 14px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: 2px solid var(--brown);
+  letter-spacing: 1px;
+  border-bottom: 3px solid var(--brown);
+  position: relative;
+}
+
+.registrations-table th svg {
+  margin-right: 10px;
+  font-size: 14px;
+  opacity: 0.9;
 }
 
 .registrations-table tbody tr {
   border-bottom: 1px solid var(--cream);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.registrations-table tbody tr::before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: transparent;
   transition: all 0.3s ease;
 }
 
 .registrations-table tbody tr:hover {
-  background: var(--creamLight);
-  transform: scale(1.01);
-  box-shadow: 0 4px 12px rgba(127, 85, 57, 0.1);
+  background: linear-gradient(135deg, var(--creamLight), var(--cream));
+  transform: translateX(5px);
+  box-shadow: 0 6px 20px rgba(127, 85, 57, 0.12);
+}
+
+.registrations-table tbody tr:hover::before {
+  background: linear-gradient(180deg, var(--brown), var(--brownDark));
 }
 
 .registrations-table td {
-  padding: 16px;
+  padding: 18px;
   vertical-align: middle;
   color: var(--text);
   font-weight: 500;
+  position: relative;
 }
 
 .user-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .user-name {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--brownDark);
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-name::before {
   font-size: 14px;
 }
 
 .user-email {
   color: var(--textLight);
-  font-size: 12px;
+  font-size: 13px;
   font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.user-email::before {
+  font-size: 12px;
 }
 
 .event-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .event-title {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--brownDark);
+  font-size: 15px;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.event-title::before {
   font-size: 14px;
-  line-height: 1.3;
 }
 
 .event-category {
@@ -197,107 +271,153 @@
 }
 
 .persons-count {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-size: 13px;
+  font-weight: 700;
   background: linear-gradient(135deg, var(--cream), var(--sand));
   color: var(--brownDark);
-  border: 1px solid rgba(127, 85, 57, 0.2);
-  display: inline-block;
+  border: 2px solid rgba(127, 85, 57, 0.2);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(127, 85, 57, 0.1);
+  transition: all 0.3s ease;
+}
+
+.persons-count::before {
+  font-size: 14px;
+}
+
+.persons-count:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(127, 85, 57, 0.2);
 }
 
 .action-buttons {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
-.btn {
-  padding: 8px 16px;
+.admin-btn {
+  padding: 10px 18px;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   font-size: 12px;
-  font-weight: 600;
-  transition: all 0.3s ease;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
 }
 
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.admin-btn::before {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.admin-btn:hover::before {
+  left: 100%;
+}
+
+.admin-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.admin-btn:active {
+  transform: translateY(-1px) scale(1.02);
 }
 
 .btn-view {
   background: linear-gradient(135deg, var(--brown), var(--brownDark));
   color: white;
+  border: 2px solid transparent;
 }
 
 .btn-view:hover {
   background: linear-gradient(135deg, var(--brownDark), var(--brown));
-  box-shadow: 0 4px 12px rgba(127, 85, 57, 0.3);
+  box-shadow: 0 8px 25px rgba(127, 85, 57, 0.4);
 }
 
 .btn-delete {
   background: linear-gradient(135deg, #ef4444, #dc2626);
   color: white;
+  border: 2px solid transparent;
 }
 
 .btn-delete:hover {
   background: linear-gradient(135deg, #dc2626, #b91c1c);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
 }
 
 .status-select {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 11px;
+  padding: 10px 16px;
+  border-radius: 25px;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
   border: 2px solid transparent;
   cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 100px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 120px;
   text-align: center;
   background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
 }
 
 .status-select:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(127, 85, 57, 0.2);
+  box-shadow: 0 0 0 4px rgba(127, 85, 57, 0.2);
+  transform: translateY(-2px);
 }
 
 .status-select option {
-  padding: 8px;
+  padding: 12px;
   font-weight: 600;
+  background: white;
+  color: var(--text);
 }
 
 .status-select[value="pending"] {
   background: linear-gradient(135deg, #f59e0b, #f97316);
   color: white;
   border-color: #f59e0b;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
 }
 
 .status-select[value="approved"] {
   background: linear-gradient(135deg, #10b981, #059669);
   color: white;
   border-color: #10b981;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
 
 .status-select[value="rejected"] {
   background: linear-gradient(135deg, #ef4444, #dc2626);
   color: white;
   border-color: #ef4444;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
 }
 
 .status-select:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .status.unknown {
@@ -376,6 +496,14 @@
   color: var(--brownDark);
   font-size: 1.8rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-header h2 svg {
+  font-size: 1.4rem;
+  color: var(--brown);
 }
 
 .close-btn {
@@ -415,6 +543,14 @@
   font-weight: 600;
   padding-bottom: 10px;
   border-bottom: 2px solid var(--cream);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.registration-section h3 svg {
+  font-size: 1.1rem;
+  color: var(--brown);
 }
 
 .info-grid {

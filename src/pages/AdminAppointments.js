@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/AdminAppointments.css";
 import "../css/AdminCommon.css";
-import AddPrivateEvent from "../component/admin/AddPrivateEvent.js";
 import { API } from "../services/apiConfig";
 
 const AdminAppointments = () => {
@@ -14,9 +13,25 @@ const AdminAppointments = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [clients, setClients] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [formData, setFormData] = useState({
+    event_type: "",
+    event_date: "",
+    location: "",
+    guests: "",
+    budget: "",
+    special_requirements: "",
+    client_name: "",
+    client_email: "",
+    client_phone: "",
+    client_id: ""
+  });
 
   useEffect(() => {
     fetchAppointments();
+    fetchClients();
+    fetchCategories();
   }, []);
 
   useEffect(() => {
@@ -54,6 +69,48 @@ const AdminAppointments = () => {
       setError(err.response?.data?.message || err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchClients = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      console.log("=== FETCH CLIENTS DEBUG START ===");
+      console.log("Token:", token);
+      
+      const res = await axios.get(API.ADMIN_GET_CLIENTS, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      console.log("Clients API Response:", res.data);
+      console.log("Clients data:", res.data.data);
+      console.log("=== FETCH CLIENTS DEBUG END ===");
+      
+      setClients(res.data.data || []);
+    } catch (err) {
+      console.error("Error fetching clients:", err);
+      console.error("Error response:", err.response?.data);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      console.log("=== FETCH CATEGORIES DEBUG START ===");
+      console.log("Token:", token);
+      
+      const res = await axios.get(API.GET_CATEGORIES, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      console.log("Categories API Response:", res.data);
+      console.log("Categories data:", res.data.data);
+      console.log("=== FETCH CATEGORIES DEBUG END ===");
+      
+      setCategories(res.data.data || []);
+    } catch (err) {
+      console.error("Error fetching categories:", err);
+      console.error("Error response:", err.response?.data);
     }
   };
 
@@ -129,6 +186,88 @@ const AdminAppointments = () => {
     } catch (err) {
       console.error("Error deleting appointment:", err);
       setError(err.response?.data?.message || err.message);
+    }
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleClientChange = (clientId) => {
+    const selectedClient = clients.find(client => client._id === clientId);
+    if (selectedClient) {
+      setFormData(prev => ({
+        ...prev,
+        client_id: clientId,
+        client_name: selectedClient.name,
+        client_email: selectedClient.email,
+        client_phone: selectedClient.phone || ""
+      }));
+    }
+  };
+
+  const handleAddAppointment = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      
+      // Validate required fields - updated for dropdown structure
+      if (!formData.event_type || !formData.event_date || !formData.location || !formData.client_id) {
+        setError("Please select a client and fill all required fields");
+        return;
+      }
+
+      // Use correct field names for admin endpoint
+      const requestData = {
+        eventType: formData.event_type,
+        eventDate: formData.event_date,
+        location: formData.location,
+        guests: formData.guests || null,
+        budget: formData.budget || null,
+        message: formData.special_requirements || "",
+        clientId: formData.client_id,
+        packageId: null
+      };
+
+      console.log("=== CREATE APPOINTMENT DEBUG ===");
+      console.log("Request data:", requestData);
+
+      // Use admin endpoint for creating requests
+      const res = await axios.post(API.ADMIN_ADD_PRIVATE_EVENT, requestData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (res.data.success || res.data) {
+        // Add new appointment to state
+        const newAppointment = res.data.data || res.data;
+        setAppointments(prev => [newAppointment, ...prev]);
+        setFilteredAppointments(prev => [newAppointment, ...prev]);
+        
+        // Reset form and close modal
+        setFormData({
+          event_type: "",
+          event_date: "",
+          location: "",
+          guests: "",
+          budget: "",
+          special_requirements: "",
+          client_name: "",
+          client_email: "",
+          client_phone: "",
+          client_id: ""
+        });
+        setShowModal(false);
+        setError("");
+      }
+    } catch (err) {
+      console.error("Error creating appointment:", err);
+      setError(err.response?.data?.message || "Failed to create appointment");
     }
   };
 
@@ -248,27 +387,182 @@ const AdminAppointments = () => {
           </tbody>
         </table>
         {showModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
+          <div className="admin-modal-overlay">
+            <div className="admin-modal-content">
               {/* Close Button */}
               <span
                 className="close-btn"
                 onClick={() => {
                   setShowModal(false);
-                  fetchAppointments();
+                  setError("");
                 }}
               >
                 ×
               </span>
 
-              {/* 🔥 Your Existing Form Component */}
-              <AddPrivateEvent 
-                onSuccess={() => {
-                  setShowModal(false);
-                  fetchAppointments();
-                }}
-              />
+              {/* Add Appointment Form */}
+              <div className="appointment-form">
+                <h3>Add New Private Request</h3>
+                
+                {error && (
+                  <div className="error-message">
+                    <span className="error-icon">⚠️</span>
+                    {error}
+                  </div>
+                )}
 
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label>Select Client *</label>
+                    <select
+                      name="client_id"
+                      value={formData.client_id}
+                      onChange={(e) => handleClientChange(e.target.value)}
+                      className="form-input"
+                      required
+                    >
+                      <option value="">Choose a client...</option>
+                      {clients.map((client) => (
+                        <option key={client._id} value={client._id}>
+                          {client.name} - {client.email}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Event Type *</label>
+                    <select
+                      name="event_type"
+                      value={formData.event_type}
+                      onChange={handleFormChange}
+                      className="form-input"
+                      required
+                    >
+                      <option value="">Select event type...</option>
+                      {categories.map((category) => (
+                        <option key={category._id} value={category.title}>
+                          {category.title}
+                        </option>
+                      ))}
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label>Client Email</label>
+                    <input
+                      type="email"
+                      name="client_email"
+                      value={formData.client_email}
+                      onChange={handleFormChange}
+                      placeholder="Client email (auto-filled)"
+                      className="form-input"
+                      readOnly
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Client Phone</label>
+                    <input
+                      type="tel"
+                      name="client_phone"
+                      value={formData.client_phone}
+                      onChange={handleFormChange}
+                      placeholder="Client phone (auto-filled)"
+                      className="form-input"
+                      readOnly
+                    />
+                  </div>
+                </div>
+
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label>Event Date *</label>
+                    <input
+                      type="date"
+                      name="event_date"
+                      value={formData.event_date}
+                      onChange={handleFormChange}
+                      className="form-input"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Location *</label>
+                    <input
+                      type="text"
+                      name="location"
+                      value={formData.location}
+                      onChange={handleFormChange}
+                      placeholder="Event location"
+                      className="form-input"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label>Number of Guests</label>
+                    <input
+                      type="number"
+                      name="guests"
+                      value={formData.guests}
+                      onChange={handleFormChange}
+                      placeholder="Expected number of guests"
+                      className="form-input"
+                      min="1"
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Budget (₹)</label>
+                    <input
+                      type="number"
+                      name="budget"
+                      value={formData.budget}
+                      onChange={handleFormChange}
+                      placeholder="Event budget"
+                      className="form-input"
+                      min="0"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Special Requirements</label>
+                  <textarea
+                    name="special_requirements"
+                    value={formData.special_requirements}
+                    onChange={handleFormChange}
+                    placeholder="Any special requirements or preferences"
+                    className="form-textarea"
+                    rows="3"
+                  />
+                </div>
+
+                <div className="form-actions">
+                  <button
+                    onClick={handleAddAppointment}
+                    className="submit-btn"
+                  >
+                    Create Request
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowModal(false);
+                      setError("");
+                    }}
+                    className="cancel-btn"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -276,8 +570,8 @@ const AdminAppointments = () => {
 
       {/* View Appointment Modal */}
       {showViewModal && selectedAppointment && (
-        <div className="modal-overlay" onClick={() => setShowViewModal(false)}>
-          <div className="modal-content appointment-view-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="admin-modal-overlay" onClick={() => setShowViewModal(false)}>
+          <div className="admin-modal-content appointment-view-modal" onClick={(e) => e.stopPropagation()}>
             <span className="close-btn" onClick={() => setShowViewModal(false)}>
               ×
             </span>
@@ -328,7 +622,7 @@ const AdminAppointments = () => {
                 </div>
               </div>
               
-              <div className="modal-actions">
+              <div className="admin-modal-actions">
                 <button 
                   className="cancel-btn"
                   onClick={() => setShowViewModal(false)}

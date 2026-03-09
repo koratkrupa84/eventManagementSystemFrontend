@@ -4,6 +4,17 @@ import "../css/variables.css";
 import { API } from "../services/apiConfig";
 import Header from "../component/Header";
 import Footer from "../component/Footer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { 
+  faSearch, 
+  faFilter, 
+  faCalendarAlt, 
+  faMapMarkerAlt, 
+  faUsers, 
+  faTimes, 
+  faClock,
+  faCheckCircle
+} from "@fortawesome/free-solid-svg-icons";
 
 const PublicEvents = () => {
   const [events, setEvents] = useState([]);
@@ -14,7 +25,6 @@ const PublicEvents = () => {
   const [statusFilter, setStatusFilter] = useState("upcoming");
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [isRegistered, setIsRegistered] = useState(false);
   const [registrationLoading, setRegistrationLoading] = useState(false);
   const [appointmentData, setAppointmentData] = useState({
     total_persons: 1,
@@ -133,27 +143,6 @@ const PublicEvents = () => {
     }
   };
 
-  const checkRegistrationStatus = async (eventId) => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-
-    try {
-      const res = await fetch(API.GET_MY_REGISTRATIONS, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const isEventRegistered = data.data?.some(reg => reg.event_id === eventId);
-        setIsRegistered(isEventRegistered);
-      }
-    } catch (err) {
-      console.error("Failed to check registration status:", err);
-    }
-  };
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -187,25 +176,31 @@ const PublicEvents = () => {
         {/* Filters Section */}
         <div className="filters-section">
           <div className="filter-group">
-            <input
-              type="text"
-              placeholder="Search events..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-            />
+            <div className="input-with-icon">
+              <FontAwesomeIcon icon={faSearch} className="input-icon" />
+              <input
+                type="text"
+                placeholder="Search events..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+            </div>
           </div>
 
           <div className="filter-group">
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="filter-select"
-            >
-              <option value="upcoming">Upcoming Events</option>
-              <option value="completed">Past Events</option>
-              <option value="">All Events</option>
-            </select>
+            <div className="select-with-icon">
+              <FontAwesomeIcon icon={faFilter} className="select-icon" />
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="filter-select"
+              >
+                <option value="upcoming">Upcoming Events</option>
+                <option value="completed">Past Events</option>
+                <option value="">All Events</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -232,11 +227,11 @@ const PublicEvents = () => {
 
                   <div className="event-details">
                     <div className="detail-item">
-                      <span className="icon">📅</span>
+                      <FontAwesomeIcon icon={faCalendarAlt} className="detail-icon" />
                       <span>{formatDate(event.event_date)}</span>
                     </div>
                     <div className="detail-item">
-                      <span className="icon">📍</span>
+                      <FontAwesomeIcon icon={faMapMarkerAlt} className="detail-icon" />
                       <span>{event.location}</span>
                     </div>
                   </div>
@@ -275,12 +270,14 @@ const PublicEvents = () => {
           <div className="modal-overlay">
             <div className="modal">
               <div className="modal-header">
-                <h2>🎉 Book Event Appointment</h2>
+                <h2>
+                  <FontAwesomeIcon icon={faCalendarAlt} /> Book Event Appointment
+                </h2>
                 <button
                   className="close-btn"
                   onClick={() => setShowRegistrationModal(false)}
                 >
-                  ×
+                  <FontAwesomeIcon icon={faTimes} />
                 </button>
               </div>
 
@@ -291,15 +288,21 @@ const PublicEvents = () => {
                   )}
                   <div className="event-info">
                     <h3>{selectedEvent.title}</h3>
-                    <p className="event-date">{formatDate(selectedEvent.event_date)}</p>
-                    <p className="event-location">📍 {selectedEvent.location}</p>
+                    <p className="event-date">
+                      <FontAwesomeIcon icon={faClock} /> {formatDate(selectedEvent.event_date)}
+                    </p>
+                    <p className="event-location">
+                      <FontAwesomeIcon icon={faMapMarkerAlt} /> {selectedEvent.location}
+                    </p>
                   </div>
                 </div>
 
                 <form onSubmit={bookAppointment} className="appointment-form">
                   <div className="form-row">
                     <div className="form-group">
-                      <label>Number of Persons *</label>
+                      <label>
+                        <FontAwesomeIcon icon={faUsers} /> Number of Persons *
+                      </label>
                       <input
                         type="number"
                         name="total_persons"
@@ -312,7 +315,9 @@ const PublicEvents = () => {
                       />
                     </div>
                     <div className="form-group">
-                      <label>Registration Date</label>
+                      <label>
+                        <FontAwesomeIcon icon={faCalendarAlt} /> Registration Date
+                      </label>
                       <input
                         type="date"
                         name="registration_date"
@@ -324,7 +329,9 @@ const PublicEvents = () => {
                   </div>
 
                   <div className="appointment-note">
-                    <h4>🎊 Registration Details</h4>
+                    <h4>
+                      <FontAwesomeIcon icon={faCheckCircle} /> Registration Details
+                    </h4>
                     <ul>
                       <li>Registration will be created with pending status</li>
                       <li>Admin will review and approve your registration</li>
@@ -340,14 +347,24 @@ const PublicEvents = () => {
                       className="btn btn-cancel"
                       onClick={() => setShowRegistrationModal(false)}
                     >
-                      Cancel
+                      <FontAwesomeIcon icon={faTimes} /> Cancel
                     </button>
                     <button
                       type="submit"
                       className="btn btn-confirm"
                       disabled={registrationLoading}
                     >
-                      {registrationLoading ? '🎉 Registering...' : '🎉 Register Now'}
+                      {registrationLoading ? (
+                        <>
+                          <FontAwesomeIcon icon={faCheckCircle} />
+                          Registering...
+                        </>
+                      ) : (
+                        <>
+                          <FontAwesomeIcon icon={faCheckCircle} />
+                          Register Now
+                        </>
+                      )}
                     </button>
                   </div>
                 </form>

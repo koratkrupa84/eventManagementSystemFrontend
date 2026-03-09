@@ -2,6 +2,20 @@ import React, { useState, useEffect } from "react";
 import "../css/AdminEventRegistrations.css";
 import "../css/AdminCommon.css";
 import { API } from "../services/apiConfig";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { 
+  faChartBar, 
+  faCalendarAlt, 
+  faCheckCircle, 
+  faSearch, 
+  faFilter, 
+  faEye, 
+  faTrash, 
+  faTimes, 
+  faUser, 
+  faUsers, 
+  faInfoCircle
+} from "@fortawesome/free-solid-svg-icons";
 
 const AdminEventRegistrations = () => {
   const [registrations, setRegistrations] = useState([]);
@@ -82,19 +96,39 @@ const AdminEventRegistrations = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${API.DELETE_EVENT_REGISTRATION}/${registrationId}`, {
+      console.log("=== DELETE REGISTRATION DEBUG START ===");
+      console.log("Registration ID:", registrationId);
+      console.log("Token exists:", !!token);
+      
+      const deleteUrl = `${API.DELETE_EVENT_REGISTRATION.replace('{id}', registrationId)}`;
+      console.log("Delete URL:", deleteUrl);
+      
+      const res = await fetch(deleteUrl, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
         },
       });
 
-      if (!res.ok) throw new Error("Failed to delete registration");
+      console.log("Delete response status:", res.status);
+      const responseData = await res.json();
+      console.log("Delete response data:", responseData);
 
-      await fetchRegistrations();
+      if (!res.ok) {
+        console.error("Delete failed with status:", res.status);
+        throw new Error(responseData.message || `Failed to delete registration (${res.status})`);
+      }
+
+      // Remove from local state immediately
+      setRegistrations(prev => prev.filter(reg => reg._id !== registrationId));
+      setFilteredRegistrations(prev => prev.filter(reg => reg._id !== registrationId));
+      
       alert("Registration deleted successfully");
+      console.log("=== DELETE REGISTRATION DEBUG END ===");
     } catch (err) {
-      alert(err.message);
+      console.error("Delete registration error:", err);
+      alert(`Error: ${err.message}`);
     }
   };
 
@@ -167,21 +201,27 @@ const AdminEventRegistrations = () => {
       {/* Stats Cards */}
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-icon">📊</div>
+          <div className="stat-icon">
+            <FontAwesomeIcon icon={faChartBar} />
+          </div>
           <div className="stat-info">
             <h3>Total Registrations</h3>
             <p className="stat-number">{stats.total}</p>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon">📅</div>
+          <div className="stat-icon">
+            <FontAwesomeIcon icon={faCalendarAlt} />
+          </div>
           <div className="stat-info">
             <h3>Upcoming Events</h3>
             <p className="stat-number">{stats.upcoming}</p>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon">✅</div>
+          <div className="stat-icon">
+            <FontAwesomeIcon icon={faCheckCircle} />
+          </div>
           <div className="stat-info">
             <h3>Completed Events</h3>
             <p className="stat-number">{stats.completed}</p>
@@ -192,38 +232,47 @@ const AdminEventRegistrations = () => {
       {/* Filters */}
       <div className="filters-section">
         <div className="filter-group">
-          <input
-            type="text"
-            placeholder="Search by user, event, or location..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
+          <div className="input-with-icon">
+            <FontAwesomeIcon icon={faSearch} className="input-icon" />
+            <input
+              type="text"
+              placeholder="Search by user, event, or location..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
         </div>
         <div className="filter-group">
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="filter-select"
-          >
-            <option value="">All Status</option>
-            <option value="upcoming">Upcoming</option>
-            <option value="completed">Completed</option>
-          </select>
+          <div className="select-with-icon">
+            <FontAwesomeIcon icon={faFilter} className="select-icon" />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="filter-select"
+            >
+              <option value="">All Status</option>
+              <option value="upcoming">Upcoming</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
         </div>
         <div className="filter-group">
-          <select
-            value={eventFilter}
-            onChange={(e) => setEventFilter(e.target.value)}
-            className="filter-select"
-          >
-            <option value="">All Events</option>
-            {events.map((event) => (
-              <option key={event._id} value={event._id}>
-                {event.title}
-              </option>
-            ))}
-          </select>
+          <div className="select-with-icon">
+            <FontAwesomeIcon icon={faCalendarAlt} className="select-icon" />
+            <select
+              value={eventFilter}
+              onChange={(e) => setEventFilter(e.target.value)}
+              className="filter-select"
+            >
+              <option value="">All Events</option>
+              {events.map((event) => (
+                <option key={event._id} value={event._id}>
+                  {event.title}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
@@ -232,13 +281,15 @@ const AdminEventRegistrations = () => {
         <table className="registrations-table">
           <thead>
             <tr>
-              <th>User</th>
+              <th>
+                <FontAwesomeIcon icon={faUser} /> User
+              </th>
               <th>Event</th>
-              <th>Date & Time</th>
-              <th>Location</th>
-              <th>Persons</th>
-              <th>Registration Status</th>
+              <th>
+                <FontAwesomeIcon icon={faUsers} /> Persons
+              </th>
               <th>Registered On</th>
+              <th>Registration Status</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -257,17 +308,11 @@ const AdminEventRegistrations = () => {
                   </div>
                 </td>
                 <td>
-                  {registration.event_id?.event_date 
-                    ? formatDate(registration.event_id.event_date)
-                    : 'N/A'
-                  }
-                </td>
-                <td>{registration.event_id?.location || 'N/A'}</td>
-                <td>
                   <span className="persons-count">
                     {registration.total_Parson || 1} {registration.total_Parson > 1 ? 'Persons' : 'Person'}
                   </span>
                 </td>
+                <td>{formatDate(registration.createdAt)}</td>
                 <td>
                   <select
                     value={registration.status || 'pending'}
@@ -279,20 +324,19 @@ const AdminEventRegistrations = () => {
                     <option value="rejected">Rejected</option>
                   </select>
                 </td>
-                <td>{formatDate(registration.createdAt)}</td>
                 <td>
                   <div className="action-buttons">
                     <button 
-                      className="btn btn-view" 
+                      className="admin-btn btn-view" 
                       onClick={() => handleView(registration)}
                     >
-                      View
+                      <FontAwesomeIcon icon={faEye} /> View
                     </button>
                     <button 
-                      className="btn btn-delete" 
+                      className="admin-btn btn-delete" 
                       onClick={() => handleDeleteRegistration(registration._id)}
                     >
-                      Delete
+                      <FontAwesomeIcon icon={faTrash} /> Delete
                     </button>
                   </div>
                 </td>
@@ -313,14 +357,18 @@ const AdminEventRegistrations = () => {
         <div className="modal-overlay">
           <div className="modal">
             <div className="modal-header">
-              <h2>Registration Details</h2>
+              <h2>
+                <FontAwesomeIcon icon={faInfoCircle} /> Registration Details
+              </h2>
               <button className="close-btn" onClick={() => setShowViewModal(false)}>
-                ×
+                <FontAwesomeIcon icon={faTimes} />
               </button>
             </div>
             <div className="registration-view">
               <div className="registration-section">
-                <h3>User Information</h3>
+                <h3>
+                  <FontAwesomeIcon icon={faUser} /> User Information
+                </h3>
                 <div className="info-grid">
                   <div className="info-item">
                     <label>Name:</label>
@@ -338,7 +386,9 @@ const AdminEventRegistrations = () => {
               </div>
 
               <div className="registration-section">
-                <h3>Event Information</h3>
+                <h3>
+                  <FontAwesomeIcon icon={faCalendarAlt} /> Event Information
+                </h3>
                 <div className="info-grid">
                   <div className="info-item">
                     <label>Event Title:</label>
@@ -367,7 +417,9 @@ const AdminEventRegistrations = () => {
               </div>
 
               <div className="registration-section">
-                <h3>Registration Information</h3>
+                <h3>
+                  <FontAwesomeIcon icon={faInfoCircle} /> Registration Information
+                </h3>
                 <div className="info-grid">
                   <div className="info-item">
                     <label>Registration ID:</label>
