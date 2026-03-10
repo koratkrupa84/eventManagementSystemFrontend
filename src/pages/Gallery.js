@@ -198,7 +198,7 @@ const Gallery = () => {
         </div>
 
         {/* Photos Grid */}
-        <div className="photos-grid">
+        <div className="gallery-photos-grid">
           {filteredImages.length === 0 ? (
             <div className="no-photos-container">
               <div className="no-photos-content">

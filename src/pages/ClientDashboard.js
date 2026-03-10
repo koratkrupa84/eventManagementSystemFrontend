@@ -115,7 +115,6 @@ const ClientDashboard = () => {
   // ===============================
   const fetchAppointments = async () => {
     try {
-      console.log("=== FRONTEND FETCH APPOINTMENTS START ===");
       const token = localStorage.getItem("token");
       console.log("Token exists:", !!token);
 
@@ -206,7 +205,8 @@ const ClientDashboard = () => {
       case "pending": return "#FFA500";
       case "approved": return "#4CAF50";
       case "rejected": return "#F44336";
-      case "completed": return "#2196F3";
+      case "completed": return "#5dec88";
+      case "confirmed": return "#126d2e";
       default: return "#666";
     }
   };
@@ -302,22 +302,43 @@ const ClientDashboard = () => {
 
                 <div className="recent-appointments">
                   <h3>Recent Appointments</h3>
-                  <div className="appointment-list">
-                    {appointments.slice(0, 3).map((appointment) => (
-                      <div key={appointment._id} className="appointment-card">
-                        <div className="appointment-info">
-                          <h4>{appointment.event_type}</h4>
-                          <p>{formatDate(appointment.event_date)}</p>
-                          <p>{appointment.location}</p>
-                        </div>
-                        <span
-                          className="status-badge"
-                          style={{ backgroundColor: getStatusColor(appointment.status) }}
-                        >
-                          {appointment.status}
-                        </span>
-                      </div>
-                    ))}
+                  <div className="appointments-table-container">
+                    <table className="appointments-table">
+                      <thead>
+                        <tr>
+                          <th>Event Type</th>
+                          <th>Date</th>
+                          <th>Location</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {appointments.slice(0, 3).map((appointment) => (
+                          <tr key={appointment._id}>
+                            <td>{appointment.event_type}</td>
+                            <td>{formatDate(appointment.event_date)}</td>
+                            <td>{appointment.location}</td>
+                            <td>
+                              <span
+                                className="status-badge"
+                                style={{ backgroundColor: getStatusColor(appointment.status) }}
+                              >
+                                {appointment.status}
+                              </span>
+                            </td>
+                            <td>
+                              <button 
+                                className="view-btn"
+                                onClick={() => handleViewAppointment(appointment)}
+                              >
+                                View Details
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -340,61 +361,50 @@ const ClientDashboard = () => {
                     <p>No appointments found</p>
                   </div>
                 ) : (
-                  <div className="appointments-grid">
-                    {appointments.map((appointment) => {
-                      console.log("Appointment:", appointment); // Debug log
-                      return (
-                    <div key={appointment._id} className="appointment-card">
-                      <div className="appointment-header">
-                        <h3>{appointment.event_type}</h3>
-                        <span
-                          className="status-badge"
-                          style={{ backgroundColor: getStatusColor(appointment.status) }}
-                        >
-                          {appointment.status}
-                        </span>
-                      </div>
-                      <div className="appointment-details">
-                        <p><strong>Date:</strong> {formatDate(appointment.event_date)}</p>
-                        <p><strong>Location:</strong> {appointment.location}</p>
-                        <p><strong>Guests:</strong> {appointment.guests || "N/A"}</p>
-                        <p><strong>Budget:</strong> ₹{appointment.budget || "N/A"}</p>
-                        {appointment.special_requirements && (
-                          <p><strong>Requirements:</strong> {appointment.special_requirements}</p>
-                        )}
-                        
-                        {/* Show organizer details only for confirmed appointments */}
-                        {appointment.status === "approved" && (
-                          <div className="organizer-details">
-                            <h4>Organizer Details:</h4>
-                            {appointment.organizer ? (
-                              <>
-                                <p><strong>Name:</strong> {appointment.organizer.name || "N/A"}</p>
-                                <p><strong>Email:</strong> {appointment.organizer.email || "N/A"}</p>
-                                <p><strong>Phone:</strong> {appointment.organizer.phone || "N/A"}</p>
-                                {appointment.organizer.company && (
-                                  <p><strong>Company:</strong> {appointment.organizer.company}</p>
-                                )}
-                              </>
-                            ) : (
-                              <p><strong>Organizer information not available</strong></p>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                      
-                      <div className="appointment-actions">
-                        <button 
-                          className="view-btn"
-                          onClick={() => handleViewAppointment(appointment)}
-                        >
-                          View Details
-                        </button>
-                      </div>
-                    </div>
-                    );
-                  })}
-                </div>
+                  <div className="appointments-table-container">
+                    <table className="appointments-table">
+                      <thead>
+                        <tr>
+                          <th>Event Type</th>
+                          <th>Date</th>
+                          <th>Location</th>
+                          <th>Guests</th>
+                          <th>Budget</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {appointments.map((appointment) => {
+                          return (
+                            <tr key={appointment._id}>
+                              <td>{appointment.event_type}</td>
+                              <td>{formatDate(appointment.event_date)}</td>
+                              <td>{appointment.location}</td>
+                              <td>{appointment.guests || "N/A"}</td>
+                              <td>₹{appointment.budget || "N/A"}</td>
+                              <td>
+                                <span
+                                  className="status-badge"
+                                  style={{ backgroundColor: getStatusColor(appointment.status) }}
+                                >
+                                  {appointment.status}
+                                </span>
+                              </td>
+                              <td>
+                                <button 
+                                  className="view-btn"
+                                  onClick={() => handleViewAppointment(appointment)}
+                                >
+                                  View Details
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 )}
               </div>
             )}
@@ -508,9 +518,9 @@ const ClientDashboard = () => {
             {activeTab === "profile" && (
               <div className="profile-content">
                 <h2>My Profile</h2>
-                <div className="profile-card">
-                  <div className="profile-header">
-                    <div className="profile-avatar">
+                <div className="client-profile-card">
+                  <div className="client-profile-header">
+                    <div className="client-profile-avatar">
                       {userData?.name?.charAt(0).toUpperCase()}
                     </div>
                     <h3>{userData?.name}</h3>
@@ -530,7 +540,7 @@ const ClientDashboard = () => {
                     </button>
                   </div>
 
-                  <div className="profile-details">
+                  <div className="client-profile-details">
                     {isEditing ? (
                       <form onSubmit={handleProfileUpdate}>
                         <div className="detailItem">

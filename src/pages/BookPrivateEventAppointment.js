@@ -33,7 +33,7 @@ const BookPrivateEventAppointment = () => {
     try {
       const res = await fetch(API.GET_CATEGORIES);
       const result = await res.json();
-      
+
       if (res.ok && result?.success) {
         setCategories(result.data || []);
       }
@@ -46,7 +46,7 @@ const BookPrivateEventAppointment = () => {
     try {
       const res = await fetch(API.GET_PACKAGES);
       const result = await res.json();
-      
+
       if (res.ok && result?.success) {
         setPackages(result.data || []);
       }
@@ -71,17 +71,17 @@ const BookPrivateEventAppointment = () => {
 
     try {
       setLoading(true);
-      
+
       // Get token from localStorage
       const token = localStorage.getItem("authToken");
-      
+
       if (!token) {
         setError("Please login to book an appointment");
         return;
       }
 
       const res = await axios.post(
-        API.PRIVATE_EVENT_BOOKING, 
+        API.PRIVATE_EVENT_BOOKING,
         formData,
         {
           headers: {
@@ -89,7 +89,7 @@ const BookPrivateEventAppointment = () => {
           }
         }
       );
-      
+
       if (res.data.success) {
         setSuccess(true);
         setFormData({
@@ -115,62 +115,62 @@ const BookPrivateEventAppointment = () => {
     <>
       <Header />
       <div className="booking-wrapper">
-      <h2>Book Your Appointment</h2>
-      <p>Fill out the form below and we'll get back to you within 24 hours</p>
+        <h2>Book Your Appointment</h2>
+        <p>Fill out the form below and we'll get back to you within 24 hours</p>
 
-      {error && <div className="booking-alert booking-alert-error">{error}</div>}
-      {success && <div className="booking-alert booking-alert-success">Booking request submitted successfully! We'll contact you soon.</div>}
+        {error && <div className="booking-alert booking-alert-error">{error}</div>}
+        {success && <div className="booking-alert booking-alert-success">Booking request submitted successfully! We'll contact you soon.</div>}
 
-      <form onSubmit={handleSubmit}>
-        <label>Event Type</label>
-        <select name="eventType" required onChange={handleChange}>
-          <option value="">Select Event Type</option>
-          {categories.map((category) => (
-            <option key={category._id} value={category.title}>
-              {category.title}
-            </option>
-          ))}
-        </select>
+        <form onSubmit={handleSubmit}>
+          <label>Event Type</label>
+          <select name="eventType" required onChange={handleChange}>
+            <option value="">Select Event Type</option>
+            {categories.map((category) => (
+              <option key={category._id} value={category.title}>
+                {category.title}
+              </option>
+            ))}
+          </select>
 
-        <label>Package (Optional)</label>
-        <select name="packageId" onChange={handleChange}>
-          <option value="">Select a Package (Optional)</option>
-          {packages.map((pkg) => (
-            <option key={pkg._id} value={pkg._id}>
-              {pkg.package_name} - ₹{pkg.price}
-            </option>
-          ))}
-        </select>
+          <label>Package (Optional)</label>
+          <select name="packageId" onChange={handleChange}>
+            <option value="">Select a Package (Optional)</option>
+            {packages.map((pkg) => (
+              <option key={pkg._id} value={pkg._id}>
+                {pkg.package_name} - ₹{pkg.price}
+              </option>
+            ))}
+          </select>
 
-        <label>Event Date</label>
-        <input type="date" name="eventDate" required onChange={handleChange} />
+          <label>Event Date</label>
+          <input type="date" name="eventDate" required onChange={handleChange} />
 
-        <label>Event Location</label>
-        <input name="location" placeholder="Event Location" required onChange={handleChange} />
+          <label>Event Location</label>
+          <input name="location" placeholder="Event Location" required onChange={handleChange} />
 
-        <label>Number of Guests</label>
-        <input type="number" name="guests" placeholder="Number of Guests" onChange={handleChange} />
+          <label>Number of Guests</label>
+          <input type="number" name="guests" placeholder="Number of Guests" onChange={handleChange} />
 
-        <label>Budget (Optional)</label>
-        <input type="number" name="budget" placeholder="Budget" onChange={handleChange} />
+          <label>Budget (Optional)</label>
+          <input type="number" name="budget" placeholder="Budget" onChange={handleChange} />
 
-        <label>Additional Details</label>
-        <textarea
-          name="message"
-          placeholder="Any specific requirements or details about your event..."
-          onChange={handleChange}
-        ></textarea>
+          <label>Additional Details</label>
+          <textarea
+            name="message"
+            placeholder="Any specific requirements or details about your event..."
+            onChange={handleChange}
+          ></textarea>
 
-        <AlphanumericCaptcha 
-          onCaptchaChange={setCaptchaValid}
-          reset={captchaReset}
-        />
+          <AlphanumericCaptcha
+            onCaptchaChange={setCaptchaValid}
+            reset={captchaReset}
+          />
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Submitting..." : "Submit Booking Request"}
-        </button>
-      </form>
-    </div>
+          <button type="submit" disabled={loading}>
+            {loading ? "Submitting..." : "Submit Booking Request"}
+          </button>
+        </form>
+      </div>
       <Footer />
     </>
   );

@@ -5,13 +5,13 @@ import { API } from "../services/apiConfig";
 import Header from "../component/Header";
 import Footer from "../component/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { 
-  faSearch, 
-  faFilter, 
-  faCalendarAlt, 
-  faMapMarkerAlt, 
-  faUsers, 
-  faTimes, 
+import {
+  faSearch,
+  faFilter,
+  faCalendarAlt,
+  faMapMarkerAlt,
+  faUsers,
+  faTimes,
   faClock,
   faCheckCircle
 } from "@fortawesome/free-solid-svg-icons";
@@ -28,7 +28,7 @@ const PublicEvents = () => {
   const [registrationLoading, setRegistrationLoading] = useState(false);
   const [appointmentData, setAppointmentData] = useState({
     total_persons: 1,
-    registration_date: ""
+    registration_date: new Date().toISOString().split('T')[0]
   });
 
   useEffect(() => {
@@ -267,9 +267,9 @@ const PublicEvents = () => {
 
         {/* Registration Modal */}
         {showRegistrationModal && selectedEvent && (
-          <div className="modal-overlay">
-            <div className="modal">
-              <div className="modal-header">
+          <div className="event-modal-overlay">
+            <div className="event-modal">
+              <div className="event-modal-header">
                 <h2>
                   <FontAwesomeIcon icon={faCalendarAlt} /> Book Event Appointment
                 </h2>
@@ -281,7 +281,7 @@ const PublicEvents = () => {
                 </button>
               </div>
 
-              <div className="modal-content">
+              <div className="event-modal-content">
                 <div className="event-summary">
                   {selectedEvent.image && (
                     <img src={selectedEvent.image} alt={selectedEvent.title} />
@@ -314,18 +314,6 @@ const PublicEvents = () => {
                         placeholder="1"
                       />
                     </div>
-                    <div className="form-group">
-                      <label>
-                        <FontAwesomeIcon icon={faCalendarAlt} /> Registration Date
-                      </label>
-                      <input
-                        type="date"
-                        name="registration_date"
-                        value={appointmentData.registration_date}
-                        onChange={handleAppointmentChange}
-                        min={new Date().toISOString().split('T')[0]}
-                      />
-                    </div>
                   </div>
 
                   <div className="appointment-note">
@@ -341,7 +329,7 @@ const PublicEvents = () => {
                     </ul>
                   </div>
 
-                  <div className="modal-actions">
+                  <div className="event-modal-actions">
                     <button
                       type="button"
                       className="btn btn-cancel"

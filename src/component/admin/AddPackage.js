@@ -156,16 +156,12 @@ function AddPackage({ onSuccess = () => { }, onClose = () => { }, editData = nul
                     <form onSubmit={handleSubmit}>
                          <div className="package-form-group">
                               <label htmlFor="packageName">Package Name</label>
-                              <select
+                              <input
+                                   type="text"
                                    id="packageName"
                                    value={form.package_name}
                                    onChange={handleChange}
-                              >
-                                   <option value="">Select Package</option>
-                                   <option value="Silver">Silver</option>
-                                   <option value="Gold">Gold</option>
-                                   <option value="Platinum">Platinum</option>
-                              </select>
+                              />
                          </div>
 
                          <div className="package-form-group">

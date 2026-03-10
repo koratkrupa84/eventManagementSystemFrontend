@@ -26,11 +26,115 @@
   box-shadow: 0 12px 30px rgba(239, 68, 68, 0.4);
 }
 
-.appointments-content {
+/* Appointments Table Styles */
+.appointments-table-container {
   background: white;
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(127, 85, 57, 0.1);
+  margin-bottom: 30px;
+}
+
+.appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.appointments-table th {
+  background: linear-gradient(135deg, var(--brown), var(--brownDark));
+  color: white;
+  font-weight: 600;
+  text-align: left;
+  padding: 15px 12px;
+  border-bottom: 2px solid var(--brown);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 13px;
+}
+
+.appointments-table td {
+  padding: 15px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.appointments-table tbody tr:hover {
+  background: var(--creamLight);
+  transition: background-color 0.3s ease;
+}
+
+.appointments-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Responsive Table Styles */
+@media (max-width: 768px) {
+  .appointments-table {
+    font-size: 12px;
+  }
+  
+  .appointments-table th,
+  .appointments-table td {
+    padding: 10px 8px;
+  }
+  
+  .appointments-table th {
+    font-size: 11px;
+  }
+  
+  .view-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
+
+/* Appointments Content Section */
+.appointments-content h2 {
+  color: var(--brown);
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 3px solid var(--brown);
+}
+
+.appointments-table td {
+  padding: 15px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.appointments-table tbody tr:hover {
+  background: var(--creamLight);
+  transition: background-color 0.3s ease;
+}
+
+.appointments-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Responsive Table Styles */
+@media (max-width: 768px) {
+  .appointments-table {
+    font-size: 12px;
+  }
+  
+  .appointments-table th,
+  .appointments-table td {
+    padding: 10px 8px;
+  }
+  
+  .appointments-table th {
+    font-size: 11px;
+  }
+  
+  .view-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
 }
 
 .appointments-content h2 {
@@ -517,19 +621,19 @@
    PROFILE SECTION PREMIUM
 ========================= */
 
-.profile-card {
+.client-profile-card {
   background: #fff;
   padding: 30px;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
-.profile-header {
+.client-profile-header {
   text-align: center;
   margin-bottom: 30px;
 }
 
-.profile-avatar {
+.client-profile-avatar {
   width: 100px;
   height: 100px;
   border-radius: 50%;

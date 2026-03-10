@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../css/ClientDashboard.css';
+import '../css/OrganizerDashboard.css';
 import { API, BASE_URL } from '../services/apiConfig';
 import OrganizerProfileModal from '../component/organizer/OrganizerProfileModal';
 
@@ -16,15 +17,12 @@ function OrganizerDashboard() {
   const [clients, setClients] = useState([]);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [eventPhotos, setEventPhotos] = useState([]);
-  const [showGalleryModal, setShowGalleryModal] = useState(false);
   const [newEventPhotos, setNewEventPhotos] = useState([]);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   const fetchEventPhotos = async () => {
     try {
       const token = localStorage.getItem('token');
-      console.log('Fetching event photos with token:', token ? 'Token exists' : 'No token');
-      console.log('API URL:', `${API.ORGANIZER_PROFILE}/event-photos`);
       
       const res = await fetch(`${API.ORGANIZER_PROFILE}/event-photos`, {
         headers: {
@@ -32,18 +30,16 @@ function OrganizerDashboard() {
         }
       });
 
-      console.log('API Response status:', res.status);
       const data = await res.json();
-      console.log('API Response data:', data);
       
       if (res.ok && data.success) {
-        setEventPhotos(data.data || []);
-        console.log('Photos set:', data.data);
+        const photos = data.data || [];
+        setEventPhotos(photos);
       } else {
-        console.error('API Error:', data.message || 'Unknown error');
+        setError(data.message || 'Failed to fetch event photos');
       }
     } catch (err) {
-      console.error('Failed to fetch event photos:', err);
+      setError('Failed to fetch event photos');
     }
   };
 
@@ -152,9 +148,7 @@ function OrganizerDashboard() {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      day: 'numeric'
     });
   };
 
@@ -162,6 +156,10 @@ function OrganizerDashboard() {
     setOrganizerData(prev => ({ ...prev, ...updatedData }));
     setMessage('Profile updated successfully!');
     setTimeout(() => setMessage(''), 3000);
+  };
+
+  const openProfileModal = () => {
+    setShowProfileModal(true);
   };
 
   const handlePhotoUpload = async () => {
@@ -320,7 +318,7 @@ function OrganizerDashboard() {
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button
-              onClick={() => setShowProfileModal(true)}
+              onClick={openProfileModal}
               style={{
                 padding: '10px 20px',
                 backgroundColor: 'var(--brown)',
@@ -716,51 +714,65 @@ function OrganizerDashboard() {
             
             {eventPhotos.length === 0 ? (
               <div className="no-photos-state">
-                <div className="no-photos-icon"><i className="fas fa-camera"></i></div>
+                <div className="no-photos-icon">📷</div>
                 <h4>No Photos Yet</h4>
-                <p>Upload your first event photo above to get started!</p>
+                <p>Upload your first event photo to showcase your work!</p>
               </div>
             ) : (
               <div className="event-photos-grid">
                 {eventPhotos.map((photo, index) => {
-                    const imagePath = photo.image_path || photo.path || photo.url;
-                    const fullImageUrl = imagePath && imagePath.startsWith('http') ? imagePath : `${BASE_URL}${imagePath || ''}`;
+                    let imagePath, fullImageUrl;
+                    
+                    if (typeof photo === 'string') {
+                        imagePath = photo;
+                        fullImageUrl = photo.startsWith('http') ? photo : `${BASE_URL}${photo}`;
+                    } else {
+                        imagePath = photo.image_path || photo.path || photo.url || photo.photo_url || photo.filename;
+                        fullImageUrl = imagePath && imagePath.startsWith('http') 
+                            ? imagePath 
+                            : imagePath ? `${BASE_URL}${imagePath}` : null;
+                    }
+                    
+                    if (!imagePath) {
+                        return null;
+                    }
                     
                     return (
-                      <div key={index} className="photo-card">
-                        <img
-                          src={fullImageUrl}
-                          alt={`Event photo ${index + 1}`}
-                          className="photo-image"
-                          onError={(e) => {
-                            e.target.src = "https://via.placeholder.com/200x150";
-                          }}
-                        />
-                        <div className="photo-overlay">
-                          <div className="photo-info">
-                            <span className="photo-date">
-                              {photo.uploaded_at ? new Date(photo.uploaded_at).toLocaleDateString() : 'No date'}
-                            </span>
-                            <button className="delete-photo-btn" onClick={() => handleDeletePhoto(photo._id || index)}>
-                              🗑️
-                            </button>
-                          </div>
+                        <div key={index} className="photo-card">
+                            <div className="photo-container">
+                                <img
+                                    src={fullImageUrl}
+                                    alt={`Event photo ${index + 1}`}
+                                    onError={(e) => {
+                                        e.target.src = 'https://via.placeholder.com/200x200?text=Photo+Not+Available';
+                                    }}
+                                />
+                                <div className="photo-overlay">
+                                    <div className="photo-number">{index + 1}</div>
+                                    <button
+                                        onClick={() => handleDeletePhoto(typeof photo === 'string' ? null : photo._id)}
+                                        className="delete-photo-btn"
+                                        title="Delete photo"
+                                    >
+                                        🗑️
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                      </div>
                     );
-                  })}
+                })}
               </div>
             )}
           </div>
         )}
+        
+        {/* Profile Modal */}
+        <OrganizerProfileModal 
+          isOpen={showProfileModal}
+          onClose={() => setShowProfileModal(false)}
+          onUpdate={handleProfileUpdate}
+        />
       </div>
-      
-      {/* Profile Modal */}
-      <OrganizerProfileModal
-        isOpen={showProfileModal}
-        onClose={() => setShowProfileModal(false)}
-        onUpdate={handleProfileUpdate}
-      />
     </div>
   );
 }

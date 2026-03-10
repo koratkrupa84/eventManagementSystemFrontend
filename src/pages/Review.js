@@ -148,16 +148,7 @@ const Reviews = () => {
       <Header />
       <div className="testimonial-section">
         <div className="testimonial-header">
-          <h2>Customer Testimonials</h2>
-          <p className="subtitle">
-            Read what our clients have to say about our services
-          </p>
-          <button 
-            className="add-review-btn"
-            onClick={() => setShowForm(!showForm)}
-          >
-            {showForm ? "Cancel" : "Write a Review"}
-          </button>
+          <h2>Customer Reviews</h2>
         </div>
 
         {showForm && (

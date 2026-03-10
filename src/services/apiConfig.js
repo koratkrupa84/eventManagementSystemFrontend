@@ -124,6 +124,9 @@ export const API = {
   ADMIN_GET_CLIENTS: `${BASE_URL}/admin/clients`,
   ADMIN_CREATE_CLIENT: `${BASE_URL}/admin/clients`,
   ADMIN_DELETE_CLIENT: `${BASE_URL}/admin/clients`,
-  ADMIN_UPDATE_CLIENT_STATUS: `${BASE_URL}/admin/clients`
+  ADMIN_UPDATE_CLIENT_STATUS: `${BASE_URL}/admin/clients`,
+
+  // Public Organizers endpoints
+  GET_PUBLIC_ORGANIZERS: `${BASE_URL}/api/organizers`
 };
 

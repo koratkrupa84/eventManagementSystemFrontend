@@ -60,6 +60,9 @@ function Header() {
           <a href="/reviews" className="nav-link">
             <i className="fas fa-star"></i> Reviews
           </a>
+          <a href="/team" className="nav-link">
+            <i className="fas fa-users"></i> Team
+          </a>
           <a href="/contact" className="nav-link">
             <i className="fas fa-envelope"></i> Contact
           </a>

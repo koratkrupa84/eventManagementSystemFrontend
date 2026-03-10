@@ -23,7 +23,7 @@ function AdminSidebar() {
     
     // Auto-expand the menu section that contains the current page
     if (currentPath.includes('/admin/categories') || currentPath.includes('/admin/packages') || 
-        currentPath.includes('/admin/gallery') || currentPath.includes('/admin/blogs') ||
+        currentPath.includes('/admin/gallery') ||
         currentPath.includes('/admin/public-events')) {
       setOpenMenu("management");
     } else if (currentPath.includes('/admin/clients') || currentPath.includes('/admin/organizers')) {
@@ -85,11 +85,6 @@ function AdminSidebar() {
               <NavLink to="/admin/public-events" className="menu-item">
                 <i className="fas fa-calendar icon"></i>
                 Public Events
-              </NavLink>
-
-              <NavLink to="/admin/blogs" className="menu-item">
-                <i className="fas fa-newspaper icon"></i>
-                Manage Blogs
               </NavLink>
             </div>
           )}

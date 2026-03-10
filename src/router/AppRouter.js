@@ -31,6 +31,10 @@ import OrganizerLogin from "../pages/OrganizerLogin";
 import OrganizerRegister from "../pages/OrganizerRegister";
 import OrganizerProfile from "../pages/OrganizerProfile";
 import OrganizerDashboard from "../pages/OrganizerDashboard";
+// Team page
+import Team from "../pages/Team";
+// Organizer Profile View
+import OrganizerProfileView from "../pages/OrganizerProfileView";
 
 const AppRouter = () => {
      return (
@@ -46,6 +50,9 @@ const AppRouter = () => {
                     <Route path="/reviews" element={<Reviews />} />
                     <Route path="/services" element={<Services />} />
                     <Route path="/public-events" element={<PublicEvents />} />
+                    <Route path="/team" element={<Team />} />
+                    <Route path="/organizer/:id" element={<OrganizerProfileView />} />
+                    <Route path="/contact" element={<Contact />} />
 
                     // Admin route
                     <Route path="/admin/login" element={<AdminLogin />} />

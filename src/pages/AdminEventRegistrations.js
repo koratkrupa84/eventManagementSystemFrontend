@@ -304,7 +304,7 @@ const AdminEventRegistrations = () => {
                 </td>
                 <td>
                   <div className="event-info">
-                    <div className="event-title">{registration.event_id?.title || 'N/A'}</div>
+                    <div className="private-event-title">{registration.event_id?.title || 'N/A'}</div>
                   </div>
                 </td>
                 <td>

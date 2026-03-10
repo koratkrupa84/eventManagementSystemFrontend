@@ -250,17 +250,17 @@
   gap: 6px;
 }
 
-.event-title {
-  font-weight: 700;
-  color: var(--brownDark);
-  font-size: 15px;
-  line-height: 1.4;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.private-event-title {
+  font-weight: 700 !important;
+  color: var(--brownDark) !important;
+  font-size: 15px !important;
+  line-height: 1.4 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
 }
 
-.event-title::before {
+.private-event-title::before {
   font-size: 14px;
 }
 

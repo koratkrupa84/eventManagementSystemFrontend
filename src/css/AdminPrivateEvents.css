@@ -149,7 +149,6 @@ body .private-events-container .page-header::after {
 }
 
 body .private-events-container .private-events-header {
-  color: var(--brown) !important;
   font-size: 2.5rem !important;
   font-weight: 800 !important;
   margin-bottom: 0.75rem !important;
@@ -167,7 +166,6 @@ body .private-events-container .header-icon {
 }
 
 body .private-events-container .header-subtitle {
-  color: var(--brownDark) !important;
   font-size: 1.125rem !important;
   font-weight: 500 !important;
   margin: 0 !important;
@@ -972,10 +970,6 @@ body .private-events-container .modal-header::after {
    ========================================================================== */
 body .private-events-container {
   background: linear-gradient(135deg, #faf8f3 0%, #e6ccb2 100%) !important;
-}
-
-body .private-events-container .private-events-header {
-  color: #7f5539 !important;
 }
 
 body .private-events-container .stat-card {

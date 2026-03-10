@@ -47,21 +47,6 @@
   50% { transform: translateY(-20px); }
 }
 
-.page-header::after {
-  content: "🎉";
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  font-size: 3rem;
-  opacity: 0.8;
-  animation: bounce 3s ease-in-out infinite;
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(10deg); }
-}
-
 .page-header h1 {
   font-size: 3.5rem;
   margin: 0 0 15px 0;
@@ -134,23 +119,6 @@
   font-size: 16px;
   pointer-events: none;
   z-index: 1;
-}
-
-.filter-group::before {
-  content: "🎊";
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 18px;
-  z-index: 1;
-  opacity: 0.8;
-  animation: sparkle 2s ease-in-out infinite;
-}
-
-@keyframes sparkle {
-  0%, 100% { transform: translateY(-50%) scale(1); opacity: 0.8; }
-  50% { transform: translateY(-50%) scale(1.2); opacity: 1; }
 }
 
 .search-input,
@@ -296,11 +264,6 @@
   margin: 0 0 20px 0;
   font-weight: 800;
   line-height: 1.2;
-  background: linear-gradient(135deg, var(--brownDark), var(--brown));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: titleColor 4s ease-in-out infinite;
 }
 
 @keyframes titleColor {
@@ -355,11 +318,6 @@
 .detail-item:hover .detail-icon {
   color: var(--brownDark);
   transform: scale(1.1);
-}
-
-@keyframes iconBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
 }
 
 .event-actions {
@@ -487,13 +445,12 @@
 }
 
 /* Modal */
-.modal-overlay {
+.event-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(20px);
   display: flex;
   justify-content: center;
@@ -513,7 +470,7 @@
   }
 }
 
-.modal {
+.event-modal {
   background: white;
   border-radius: 30px;
   width: 90%;
@@ -525,7 +482,7 @@
   position: relative;
 }
 
-.modal::before {
+.event-modal::before {
   content: "";
   position: absolute;
   top: 0;
@@ -547,7 +504,7 @@
   }
 }
 
-.modal-header {
+.event-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -558,7 +515,7 @@
   position: relative;
 }
 
-.modal-header h2 {
+.event-modal-header h2 {
   margin: 0;
   color: var(--brownDark);
   font-size: 2rem;
@@ -572,7 +529,7 @@
   gap: 12px;
 }
 
-.modal-header h2 svg {
+.event-modal-header h2 svg {
   font-size: 1.6rem;
   color: var(--brown);
 }
@@ -601,7 +558,7 @@
   box-shadow: 0 8px 25px rgba(127, 85, 57, 0.3);
 }
 
-.modal-content {
+.event-modal-content {
   padding: 40px;
 }
 
@@ -780,14 +737,7 @@
   position: relative;
 }
 
-.appointment-note li::before {
-  content: "🎊";
-  position: absolute;
-  left: -20px;
-  opacity: 0.8;
-}
-
-.modal-actions {
+.event-modal-actions {
   display: flex;
   gap: 20px;
   justify-content: flex-end;
@@ -889,18 +839,18 @@
     font-size: 1.5rem;
   }
   
-  .modal {
+  .event-modal {
     width: 95%;
     margin: 20px;
     border-radius: 20px;
   }
   
-  .modal-header {
+  .event-modal-header {
     padding: 25px 30px;
     border-radius: 20px 20px 0 0;
   }
   
-  .modal-content {
+  .event-modal-content {
     padding: 30px;
   }
   
@@ -913,7 +863,8 @@
     padding: 20px;
   }
   
-  .modal-actions {
+  .modal-actions,
+  .private-modal-actions {
     flex-direction: column;
   }
   
@@ -939,15 +890,15 @@
     font-size: 1.3rem;
   }
   
-  .modal-header {
+  .event-modal-header {
     padding: 20px 25px;
   }
   
-  .modal-header h2 {
+  .event-modal-header h2 {
     font-size: 1.5rem;
   }
   
-  .modal-content {
+  .event-modal-content {
     padding: 25px;
   }
   
