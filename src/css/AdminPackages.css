@@ -260,14 +260,14 @@
   box-shadow: 0 8px 20px rgba(127, 85, 57, 0.12);
 }
 
-.modal-actions {
+.package-modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
   margin-top: 16px;
 }
 
-.modal-overlay {
+.package-modal-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
@@ -279,34 +279,34 @@
   animation: fadeIn 0.2s ease;
 }
 
-.modal-content {
+.package-modal-content {
   background: #ffffff;
   border-radius: 20px;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
   max-width: 600px;
   width: 100%;
-  max-height: 85vh;
+  height: auto;
   overflow-y: auto;
   padding: 32px;
   animation: slideUp 0.25s ease;
   position: relative;
 }
 
-.modal-content::-webkit-scrollbar {
+.package-modal-content::-webkit-scrollbar {
   width: 6px;
 }
 
-.modal-content::-webkit-scrollbar-track {
+.package-modal-content::-webkit-scrollbar-track {
   background: var(--cream);
   border-radius: 3px;
 }
 
-.modal-content::-webkit-scrollbar-thumb {
+.package-modal-content::-webkit-scrollbar-thumb {
   background: var(--brownLight);
   border-radius: 3px;
 }
 
-.close-btn {
+.package-close-btn {
   position: absolute;
   top: 15px;
   right: 15px;
@@ -319,7 +319,7 @@
   transition: opacity 0.3s ease;
 }
 
-.close-btn:hover {
+.package-close-btn:hover {
   opacity: 1;
 }
 

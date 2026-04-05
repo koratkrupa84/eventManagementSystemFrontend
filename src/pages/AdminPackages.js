@@ -152,8 +152,8 @@ const AdminPackages = () => {
 
       {/* ---------- VIEW PACKAGE MODAL ---------- */}
       {showViewModal && selectedPackage && (
-        <div className="modal-overlay" onClick={() => setShowViewModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="package-modal-overlay" onClick={() => setShowViewModal(false)}>
+          <div className="package-modal-content" onClick={(e) => e.stopPropagation()}>
             <span className="close-btn" onClick={() => setShowViewModal(false)}>
               ×
             </span>
@@ -193,7 +193,7 @@ const AdminPackages = () => {
                 </div>
               </div>
               
-              <div className="modal-actions">
+              <div className="package-modal-actions">
                 <button 
                   className="btn update"
                   onClick={() => {

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import '../css/OrganizerDashboard.css';
 import { API, BASE_URL } from '../services/apiConfig';
 import OrganizerProfileModal from '../component/organizer/OrganizerProfileModal';
+import OrganizerPasswordModal from '../component/organizer/OrganizerPasswordModal';
 
 function OrganizerDashboard() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ function OrganizerDashboard() {
   const [appointments, setAppointments] = useState([]);
   const [clients, setClients] = useState([]);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [eventPhotos, setEventPhotos] = useState([]);
   const [newEventPhotos, setNewEventPhotos] = useState([]);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
@@ -329,6 +331,19 @@ function OrganizerDashboard() {
               }}
             >
               Edit Profile
+            </button>
+            <button
+              onClick={() => setShowPasswordModal(true)}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#FF9800',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer'
+              }}
+            >
+              Change Password
             </button>
             <button
               onClick={() => {
@@ -771,6 +786,12 @@ function OrganizerDashboard() {
           isOpen={showProfileModal}
           onClose={() => setShowProfileModal(false)}
           onUpdate={handleProfileUpdate}
+        />
+        
+        {/* Password Modal */}
+        <OrganizerPasswordModal 
+          isOpen={showPasswordModal}
+          onClose={() => setShowPasswordModal(false)}
         />
       </div>
     </div>

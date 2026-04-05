@@ -366,40 +366,53 @@ const Services = () => {
       {showDetailsModal && selectedService && (
         <div className="service-details-modal-overlay" onClick={closeModal}>
           <div className="service-details-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
+            <div className="service-modal-header">
               <h2>{selectedService.title}</h2>
               <button className="close-modal-btn" onClick={closeModal}>×</button>
             </div>
             
-            <div className="modal-content">
-              {/* Service Image */}
-              <div className="modal-image">
+            <div className="service-modal-content">
+              {/* Service/Package Image */}
+              <div className="service-modal-image">
                 {selectedService.image ? (
                   <img 
                     src={selectedService.image} 
-                    alt={selectedService.title}
+                    alt={selectedService.title || selectedService.package_name}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'block';
+                    }}
+                  />
+                ) : selectedService.images && selectedService.images.length > 0 ? (
+                  <img 
+                    src={selectedService.images[0]} 
+                    alt={selectedService.package_name}
                     onError={(e) => {
                       e.target.style.display = 'none';
                       e.target.nextSibling.style.display = 'block';
                     }}
                   />
                 ) : null}
-                <div className="modal-icon" style={{ display: selectedService.image ? 'none' : 'block' }}>
-                  <i className={`fas ${getCategoryIcon(selectedService.title)}`}></i>
+                <div className="modal-icon" style={{ display: 
+                  (selectedService.image || (selectedService.images && selectedService.images.length > 0)) ? 'none' : 'block' 
+                }}>
+                  <i className={`fas ${
+                    selectedService.title ? getCategoryIcon(selectedService.title) : getPackageIcon(selectedService.package_name)
+                  }`}></i>
                 </div>
               </div>
 
               {/* Description */}
-              <div className="modal-section">
+              <div className="service-modal-section">
                 <h3>About This Service</h3>
                 <p>{selectedService.description || 'Professional event management services for your special occasion.'}</p>
               </div>
 
               {/* Pricing Information */}
               {selectedService.priceRange && (selectedService.priceRange.min > 0 || selectedService.priceRange.max > 0) && (
-                <div className="modal-section">
+                <div className="service-modal-section">
                   <h3>Pricing Information</h3>
-                  <div className="modal-price">
+                  <div className="service-modal-price">
                     {selectedService.priceRange.min > 0 && selectedService.priceRange.max > 0 
                       ? `₹${selectedService.priceRange.min} - ₹${selectedService.priceRange.max}`
                       : selectedService.priceRange.min > 0 
@@ -414,15 +427,15 @@ const Services = () => {
 
               {/* Event Details */}
               {(selectedService.duration || (selectedService.capacity && (selectedService.capacity.min > 0 || selectedService.capacity.max > 0))) && (
-                <div className="modal-section">
+                <div className="service-modal-section">
                   <h3>Event Details</h3>
                   {selectedService.duration && (
-                    <div className="modal-detail-item">
+                    <div className="service-modal-detail-item">
                       <strong>Duration:</strong> {selectedService.duration}
                     </div>
                   )}
                   {selectedService.capacity && (selectedService.capacity.min > 0 || selectedService.capacity.max > 0) && (
-                    <div className="modal-detail-item">
+                    <div className="service-modal-detail-item">
                       <strong>Capacity:</strong> 
                       {selectedService.capacity.min > 0 && selectedService.capacity.max > 0 
                         ? `${selectedService.capacity.min} - ${selectedService.capacity.max} guests`
@@ -439,9 +452,9 @@ const Services = () => {
 
               {/* Features */}
               {selectedService.features && selectedService.features.length > 0 && (
-                <div className="modal-section">
+                <div className="service-modal-section">
                   <h3>Features</h3>
-                  <ul className="modal-features">
+                  <ul className="service-modal-features">
                     {selectedService.features.map((feature, index) => (
                       <li key={index}>{feature}</li>
                     ))}
@@ -451,9 +464,9 @@ const Services = () => {
 
               {/* Included Services */}
               {selectedService.includedServices && selectedService.includedServices.length > 0 && (
-                <div className="modal-section">
+                <div className="service-modal-section">
                   <h3>Included Services</h3>
-                  <ul className="modal-services">
+                  <ul className="service-modal-services">
                     {selectedService.includedServices.map((service, index) => (
                       <li key={index}>{service}</li>
                     ))}
@@ -463,18 +476,18 @@ const Services = () => {
 
               {/* Additional Information */}
               {selectedService.additionalInfo && (
-                <div className="modal-section">
+                <div className="service-modal-section">
                   <h3>Additional Information</h3>
                   <p>{selectedService.additionalInfo}</p>
                 </div>
               )}
 
               {/* Call to Action */}
-              <div className="modal-actions">
-                <button className="modal-quote-btn" onClick={() => window.location.href = '/contact'}>
+              <div className="service-modal-actions">
+                <button className="service-modal-quote-btn" onClick={() => window.location.href = '/contact'}>
                   Get Quote
                 </button>
-                <button className="modal-close-btn" onClick={closeModal}>
+                <button className="service-modal-close-btn" onClick={closeModal}>
                   Close
                 </button>
               </div>

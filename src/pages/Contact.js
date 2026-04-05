@@ -113,7 +113,7 @@ const Contact = () => {
             <h2>Contact Us</h2>
             <p>Get in touch with us for any inquiries or questions</p>
 
-            <h4>Contact Information</h4>
+            <h4 className="contact-info-title">Contact Information</h4>
 
             <p><i className="fas fa-map-marker-alt"></i> 123 Event Street, City, State 12345</p>
             <p><i className="fas fa-phone-alt"></i> +1 (234) 567-890</p>

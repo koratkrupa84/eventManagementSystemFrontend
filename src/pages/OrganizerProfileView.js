@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { API, BASE_URL } from '../services/apiConfig';
 import '../css/OrganizerProfileView.css';
+import Header from '../component/Header';
+import Footer from '../component/Footer';
 
 function OrganizerProfileView() {
   const { id } = useParams();
@@ -30,16 +32,6 @@ function OrganizerProfileView() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getStatusBadge = () => {
-    if (!organizer?.isActive) {
-      return <span className="status-badge inactive">Inactive</span>;
-    }
-    if (organizer?.isVerified) {
-      return <span className="status-badge verified">Verified</span>;
-    }
-    return <span className="status-badge active">Active</span>;
   };
 
   const handlePhotoClick = (index) => {
@@ -88,9 +80,11 @@ function OrganizerProfileView() {
   }
 
   return (
+    <>
+    <Header />
     <div className="profile-container">
       {/* Header */}
-      <div className="profile-header">
+      <div className="org-profile-header">
         <button onClick={() => navigate('/team')} className="back-btn">
           ← Back
         </button>
@@ -98,59 +92,60 @@ function OrganizerProfileView() {
       </div>
 
       {/* Main Content */}
-      <div className="profile-content">
+      <div className="org-profile-content">
         {/* Left Column - Basic Info */}
-        <div className="profile-left">
-          <div className="profile-card">
-            <div className="profile-image-section">
+        <div className="org-profile-left">
+          <div className="org-profile-card">
+            <div className="org-profile-image-section">
               <img
                 src={organizer.profileImage || 'https://via.placeholder.com/300x300?text=Organizer'}
                 alt={organizer.name}
-                className="profile-image"
+                className="org-profile-image"
                 onError={(e) => {
                   e.target.src = 'https://via.placeholder.com/300x300?text=Organizer';
                 }}
               />
-              {getStatusBadge()}
             </div>
 
-            <div className="profile-info">
-              <h2>{organizer.name}</h2>
-              {organizer.company && (
-                <p className="company">{organizer.company}</p>
-              )}
+            <div className="org-profile-info">
+              <div className="org-profile-info-header">
+                <h2>{organizer.name}</h2>
+                {organizer.company && (
+                  <p className="company">{organizer.company}</p>
+                )}
+              </div>
               
-              <div className="profile-details">
+              <div className="org-profile-details">
                 {organizer.specialization && organizer.specialization !== 'other' && (
-                  <div className="detail-item">
+                  <div className="org-detail-item">
                     <span className="label">Specialization:</span>
                     <span className="value">{organizer.specialization}</span>
                   </div>
                 )}
                 
                 {organizer.experience && (
-                  <div className="detail-item">
+                  <div className="org-detail-item">
                     <span className="label">Experience:</span>
                     <span className="value">{organizer.experience} years</span>
                   </div>
                 )}
                 
                 {organizer.phone && (
-                  <div className="detail-item">
+                  <div className="org-detail-item">
                     <span className="label">Phone:</span>
                     <span className="value">{organizer.phone}</span>
                   </div>
                 )}
                 
                 {organizer.email && (
-                  <div className="detail-item">
+                  <div className="org-detail-item">
                     <span className="label">Email:</span>
                     <span className="value">{organizer.email}</span>
                   </div>
                 )}
                 
                 {organizer.website && (
-                  <div className="detail-item">
+                  <div className="org-detail-item">
                     <span className="label">Website:</span>
                     <a 
                       href={organizer.website} 
@@ -164,7 +159,7 @@ function OrganizerProfileView() {
                 )}
                 
                 {organizer.licenseNumber && (
-                  <div className="detail-item">
+                  <div className="org-detail-item">
                     <span className="label">License:</span>
                     <span className="value">{organizer.licenseNumber}</span>
                   </div>
@@ -274,6 +269,8 @@ function OrganizerProfileView() {
         </div>
       )}
     </div>
+    <Footer />
+    </>
   );
 }
 

@@ -516,7 +516,7 @@ const ClientDashboard = () => {
             )}
 
             {activeTab === "profile" && (
-              <div className="profile-content">
+              <div className="client-profile-content">
                 <h2>My Profile</h2>
                 <div className="client-profile-card">
                   <div className="client-profile-header">

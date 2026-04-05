@@ -745,7 +745,7 @@
   flex-direction: column;
 }
 
-.modal-header {
+.service-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -754,14 +754,14 @@
   background: linear-gradient(135deg, var(--creamLight), var(--cream));
 }
 
-.modal-header h2 {
+.service-modal-header h2 {
   color: var(--brown);
   font-size: 28px;
   font-weight: 700;
   margin: 0;
 }
 
-.close-modal-btn {
+.service-modal-close-btn {
   background: none;
   border: none;
   font-size: 32px;
@@ -777,33 +777,33 @@
   transition: all 0.3s ease;
 }
 
-.close-modal-btn:hover {
+.service-modal-close-btn:hover {
   background: var(--cream);
   transform: rotate(90deg);
 }
 
-.modal-content {
+.service-modal-content {
   padding: 30px;
   overflow-y: auto;
   flex: 1;
 }
 
-.modal-content::-webkit-scrollbar {
+.service-modal-content::-webkit-scrollbar {
   width: 6px;
 }
 
-.modal-content::-webkit-scrollbar-track {
+.service-modal-content::-webkit-scrollbar-track {
   background: var(--creamLight);
   border-radius: 3px;
 }
 
-.modal-content::-webkit-scrollbar-thumb {
+.service-modal-content::-webkit-scrollbar-thumb {
   background: var(--brown);
   border-radius: 3px;
 }
 
 /* Modal Image */
-.modal-image {
+.service-modal-image {
   width: 100%;
   height: 300px;
   border-radius: 15px;
@@ -816,24 +816,24 @@
   margin-bottom: 30px;
 }
 
-.modal-image img {
+.service-modal-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 15px;
 }
 
-.modal-icon {
+.service-modal-icon {
   font-size: 80px;
   opacity: 0.5;
 }
 
 /* Modal Sections */
-.modal-section {
+.service-modal-section {
   margin-bottom: 30px;
 }
 
-.modal-section h3 {
+.service-modal-section h3 {
   color: var(--brown);
   font-size: 20px;
   font-weight: 600;
@@ -843,7 +843,7 @@
   gap: 10px;
 }
 
-.modal-section h3::before {
+.service-modal-section h3::before {
   content: '';
   width: 4px;
   height: 20px;
@@ -851,14 +851,14 @@
   border-radius: 2px;
 }
 
-.modal-section p {
+.service-modal-section p {
   color: var(--brown);
   font-size: 16px;
   line-height: 1.6;
   margin: 0;
 }
 
-.modal-price {
+.service-modal-price {
   font-size: 24px;
   font-weight: 700;
   color: var(--brown);
@@ -869,7 +869,7 @@
   border-left: 4px solid var(--brown);
 }
 
-.modal-detail-item {
+.service-modal-detail-item {
   display: flex;
   align-items: center;
   gap: 15px;
@@ -879,21 +879,21 @@
   border-radius: 8px;
 }
 
-.modal-detail-item strong {
+.service-modal-detail-item strong {
   color: var(--brown);
   font-weight: 600;
   min-width: 100px;
 }
 
-.modal-features,
-.modal-services {
+.service-modal-features,
+.service-modal-services {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.modal-features li,
-.modal-services li {
+.service-modal-features li,
+.service-modal-services li {
   color: var(--brown);
   font-size: 15px;
   padding: 10px 0;
@@ -903,7 +903,7 @@
   line-height: 1.5;
 }
 
-.modal-features li::before {
+.service-modal-features li::before {
   content: '✓';
   position: absolute;
   left: 0;
@@ -912,7 +912,7 @@
   font-size: 16px;
 }
 
-.modal-services li::before {
+.service-modal-services li::before {
   content: '•';
   position: absolute;
   left: 0;
@@ -921,13 +921,13 @@
   font-size: 18px;
 }
 
-.modal-features li:last-child,
-.modal-services li:last-child {
+.service-modal-features li:last-child,
+.service-modal-services li:last-child {
   border-bottom: none;
 }
 
 /* Modal Actions */
-.modal-actions {
+.service-modal-actions {
   display: flex;
   gap: 15px;
   justify-content: center;
@@ -936,8 +936,8 @@
   margin-top: 30px;
 }
 
-.modal-quote-btn,
-.modal-close-btn {
+.service-modal-quote-btn,
+.service-modal-close-btn {
   padding: 12px 30px;
   border-radius: 25px;
   font-size: 16px;
@@ -949,24 +949,25 @@
   display: inline-block;
 }
 
-.modal-quote-btn {
+.service-modal-quote-btn {
   background: linear-gradient(135deg, var(--brown), var(--brownLight));
   color: white;
   box-shadow: 0 4px 15px rgba(127,85,57,0.3);
 }
 
-.modal-quote-btn:hover {
+.service-modal-quote-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(127,85,57,0.4);
 }
 
-.modal-close-btn {
+.service-modal-close-btn {
   background: var(--creamLight);
   color: var(--brown);
   border: 2px solid var(--cream);
+  width: auto;
 }
 
-.modal-close-btn:hover {
+.service-modal-close-btn:hover {
   background: var(--cream);
   transform: translateY(-2px);
 }

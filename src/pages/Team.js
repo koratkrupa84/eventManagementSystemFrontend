@@ -36,16 +36,6 @@ function Team() {
     navigate(`/organizer/${organizerId}`);
   };
 
-  const getStatusBadge = (organizer) => {
-    if (!organizer.isActive) {
-      return <span className="status-badge inactive">Inactive</span>;
-    }
-    if (organizer.isVerified) {
-      return <span className="status-badge verified">Verified</span>;
-    }
-    return <span className="status-badge active">Active</span>;
-  };
-
   if (loading) {
     return (
       <div className="team-loading">
@@ -93,7 +83,6 @@ function Team() {
                       e.target.src = 'https://via.placeholder.com/200x200?text=Organizer';
                     }}
                   />
-                  {getStatusBadge(organizer)}
                 </div>
 
                 <div className="organizer-info">
