@@ -81,6 +81,7 @@ export const API = {
   DELETE_PUBLIC_EVENT: `${BASE_URL}/publicEvents/{id}`,
   // Add missing endpoint for updating public events
   UPDATE_PUBLIC_EVENT_STATUS: `${BASE_URL}/publicEvents/{id}/status`,
+  JOIN_PUBLIC_EVENT: `${BASE_URL}/publicEvents/join`,
   
   // Event Registrations
   REGISTER_FOR_EVENT: `${BASE_URL}/registrations`,

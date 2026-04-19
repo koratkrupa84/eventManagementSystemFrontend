@@ -20,7 +20,8 @@ const AdminPublicEvents = () => {
     event_date: "",
     location: "",
     status: "upcoming",
-    image: ""
+    image: "",
+    price: ""
   });
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -92,9 +93,9 @@ const AdminPublicEvents = () => {
         description: "",
         event_date: "",
         location: "",
-        category: "",
         status: "upcoming",
-        image: ""
+        image: "",
+        price: ""
       });
       setSelectedImage(null);
       fetchEvents();
@@ -137,7 +138,8 @@ const AdminPublicEvents = () => {
       event_date: new Date(event.event_date).toISOString().slice(0, 16),
       location: event.location,
       status: event.status,
-      image: event.image || ""
+      image: event.image || "",
+      price: event.price || ""
     });
     setSelectedEvent(event);
     setShowEditForm(true);
@@ -159,7 +161,8 @@ const AdminPublicEvents = () => {
         description: formData.description,
         event_date: formData.event_date,
         location: formData.location,
-        status: formData.status
+        status: formData.status,
+        price: parseFloat(formData.price) || 0
       };
 
       // Add image if selected
@@ -197,9 +200,9 @@ const AdminPublicEvents = () => {
         description: "",
         event_date: "",
         location: "",
-        category: "",
         status: "upcoming",
-        image: ""
+        image: "",
+        price: ""
       });
       setSelectedImage(null);
       fetchEvents();
@@ -274,6 +277,7 @@ const AdminPublicEvents = () => {
               <div className="event-info">
                 <p><strong>Date:</strong> {new Date(event.event_date).toLocaleDateString()}</p>
                 <p><strong>Location:</strong> {event.location}</p>
+                <p><strong>Price:</strong> ₹{event.price || 0}</p>
                 <p><strong>Status:</strong> <span className={`status ${event.status}`}>{event.status}</span></p>
                 <p><strong>Created:</strong> {new Date(event.createdAt).toLocaleDateString()}</p>
               </div>
@@ -360,6 +364,20 @@ const AdminPublicEvents = () => {
                   required
                   maxLength="150"
                   className="form-input"
+                />
+              </div>
+              <div className="form-group">
+                <label>Price *</label>
+                <input
+                  type="number"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleInputChange}
+                  required
+                  min="0"
+                  step="0.01"
+                  className="form-input"
+                  placeholder="Enter event price"
                 />
               </div>
               <div className="form-group">
@@ -473,6 +491,15 @@ const AdminPublicEvents = () => {
                   </div>
                   <div className="info-item">
                     <div className="info-icon-wrapper">
+                      <i className="fas fa-rupee-sign"></i>
+                    </div>
+                    <div className="info-content">
+                      <h4>Price</h4>
+                      <p>₹{selectedEvent.price || 0}</p>
+                    </div>
+                  </div>
+                  <div className="info-item">
+                    <div className="info-icon-wrapper">
                       <i className="fas fa-calendar-plus"></i>
                     </div>
                     <div className="info-content">
@@ -557,6 +584,20 @@ const AdminPublicEvents = () => {
                   onChange={handleInputChange}
                   required
                   maxLength="150"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Price *</label>
+                <input
+                  type="number"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleInputChange}
+                  required
+                  min="0"
+                  step="0.01"
+                  placeholder="Enter event price"
                 />
               </div>
 

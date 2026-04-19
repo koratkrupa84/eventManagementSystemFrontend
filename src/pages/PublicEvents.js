@@ -234,6 +234,10 @@ const PublicEvents = () => {
                       <FontAwesomeIcon icon={faMapMarkerAlt} className="detail-icon" />
                       <span>{event.location}</span>
                     </div>
+                    <div className="detail-item price-item">
+                      <FontAwesomeIcon icon={faUsers} className="detail-icon" />
+                      <span className="price">₹{event.price || 0}</span>
+                    </div>
                   </div>
 
                   <div className="event-actions">
@@ -294,6 +298,9 @@ const PublicEvents = () => {
                     <p className="event-location">
                       <FontAwesomeIcon icon={faMapMarkerAlt} /> {selectedEvent.location}
                     </p>
+                    <p className="event-price">
+                      <FontAwesomeIcon icon={faUsers} /> Price: ₹{selectedEvent.price || 0}
+                    </p>
                   </div>
                 </div>
 
@@ -326,6 +333,8 @@ const PublicEvents = () => {
                       <li>You'll receive confirmation details</li>
                       <li>Registration ID will be provided for tracking</li>
                       <li>Maximum 10 persons per registration allowed</li>
+                      <li className="price-highlight">Price per person: ₹{selectedEvent.price || 0}</li>
+                      <li className="price-highlight">Total price: ₹{(selectedEvent.price || 0) * appointmentData.total_persons}</li>
                     </ul>
                   </div>
 
