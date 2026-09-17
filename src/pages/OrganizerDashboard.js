@@ -260,6 +260,7 @@ function OrganizerDashboard() {
     };
     
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
 
   if (loading) {
@@ -757,7 +758,7 @@ function OrganizerDashboard() {
                             <div className="photo-container">
                                 <img
                                     src={fullImageUrl}
-                                    alt={`Event photo ${index + 1}`}
+                                    alt={`Event ${index + 1}`}
                                     onError={(e) => {
                                         e.target.src = 'https://via.placeholder.com/200x200?text=Photo+Not+Available';
                                     }}

@@ -30,7 +30,7 @@ const AdminGallery = () => {
   useEffect(() => {
     fetchGallery();
     fetchEvents();
-  }, []);
+  }, [fetchEvents]);
 
   // Debug viewMode changes
   useEffect(() => {
@@ -266,7 +266,7 @@ const AdminGallery = () => {
         throw new Error(errorText || "Failed to delete image");
       }
       
-      const data = await res.json();
+      await res.json();
 
       fetchGallery();
     } catch (err) {
@@ -326,7 +326,7 @@ const AdminGallery = () => {
       }
       
       try {
-        const data = await res.json();
+        await res.json();
         setShowEditModal(false);
         setSelectedImage(null);
         setEditFormData({ event_type: "", event_id: "" });
@@ -549,7 +549,8 @@ const AdminGallery = () => {
               
               <div className="view-image-container">
                 <img
-                  src={`http://localhost:5000/${selectedImage.image_path}`}
+                  // src={`http://localhost:5000/${selectedImage.image_path}`}
+                  src={`https://event-management-system-backend-ashen.vercel.app/${selectedImage.image_path}`}
                   alt="Gallery"
                   className="view-image"
                 />
@@ -602,7 +603,8 @@ const AdminGallery = () => {
               
               <div className="edit-image-preview">
                 <img
-                  src={`http://localhost:5000/${selectedImage.image_path}`}
+                  // src={`http://localhost:5000/${selectedImage.image_path}`}
+                  src={`https://event-management-system-backend-ashen.vercel.app/${selectedImage.image_path}`}
                   alt="Gallery"
                   className="edit-preview-image"
                 />
@@ -688,7 +690,8 @@ const AdminGallery = () => {
             filteredImages.map((img) => (
               <div className="gallery-card" key={img._id}>
                 <img
-                  src={`http://localhost:5000/${img.image_path}`}
+                  // src={`http://localhost:5000/${img.image_path}`}
+                  src={`https://event-management-system-backend-ashen.vercel.app/${img.image_path}`}
                   alt="Gallery"
                 />
                 <div className="gallery-card-actions">
@@ -740,7 +743,8 @@ const AdminGallery = () => {
                   {eventGroup.images.map((img) => (
                     <div className="gallery-card" key={img._id}>
                       <img
-                        src={`http://localhost:5000/${img.image_path}`}
+                        // src={`http://localhost:5000/${img.image_path}`}
+                        src={`https://event-management-system-backend-ashen.vercel.app/${img.image_path}`}
                         alt="Gallery"
                       />
                       <div className="gallery-card-actions">

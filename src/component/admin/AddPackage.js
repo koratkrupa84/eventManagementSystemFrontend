@@ -214,7 +214,8 @@ function AddPackage({ onSuccess = () => { }, onClose = () => { }, editData = nul
                                                   .map((img, index) => (
                                                        <div key={index} className="image-wrapper">
                                                             <img
-                                                                 src={`http://localhost:5000/${img}`}
+                                                                 // src={`http://localhost:5000/${img}`}
+                                                                 src={`https://event-management-system-backend-ashen.vercel.app/${img}`}
                                                                  alt="existing"
                                                                  className="preview-img"
                                                             />

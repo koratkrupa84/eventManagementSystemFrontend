@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { API, BASE_URL } from '../services/apiConfig';
+import { API } from '../services/apiConfig';
 import Header from '../component/Header'
 import Footer from '../component/Footer'
 import '../css/Team.css';

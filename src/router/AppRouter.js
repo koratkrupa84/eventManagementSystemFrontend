@@ -40,7 +40,7 @@ const AppRouter = () => {
      return (
           <BrowserRouter>
                <Routes>
-                    // User routes
+                    {/* User routes */}
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegistrationPage />} />
@@ -52,9 +52,8 @@ const AppRouter = () => {
                     <Route path="/public-events" element={<PublicEvents />} />
                     <Route path="/team" element={<Team />} />
                     <Route path="/organizer/:id" element={<OrganizerProfileView />} />
-                    <Route path="/contact" element={<Contact />} />
 
-                    // Admin route
+                    {/* Admin routes */}
                     <Route path="/admin/login" element={<AdminLogin />} />
                     <Route path="/admin" element={<AdminLayout />}>
                          <Route path="dashboard" element={<AdminDashboard />} />
@@ -71,10 +70,10 @@ const AppRouter = () => {
                          <Route path="event-registrations" element={<AdminEventRegistrations />} />
                     </Route>
 
-                    // Client route
+                    {/* Client route */}
                     <Route path="/client/dashboard" element={<ClientDashboard />} />
 
-                    // Organizer routes
+                    {/* Organizer routes */}
                     <Route path="/organizer/login" element={<OrganizerLogin />} />
                     <Route path="/organizer/register" element={<OrganizerRegister />} />
                     <Route path="/organizer/profile" element={<OrganizerProfile />} />

@@ -47,69 +47,69 @@ const AlphanumericCaptcha = ({ onCaptchaChange, reset }) => {
 
     // Draw text with distortions
     const charWidth = width / (text.length + 1);
-    
+
     for (let i = 0; i < text.length; i++) {
       ctx.save();
-      
+
       const x = charWidth * (i + 0.8);
       const y = height / 2;
-      
+
       // Random rotation and position
       const rotation = (Math.random() - 0.5) * 0.4;
       const yOffset = (Math.random() - 0.5) * 10;
-      
+
       ctx.translate(x, y + yOffset);
       ctx.rotate(rotation);
-      
+
       // Random font properties
       const fontSize = 20 + Math.random() * 8;
       const fontWeight = Math.random() > 0.5 ? 'bold' : 'normal';
       const fontFamily = ['Arial', 'Georgia', 'Courier New'][Math.floor(Math.random() * 3)];
-      
+
       ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
       ctx.fillStyle = `rgb(${Math.random() * 100}, ${Math.random() * 100}, ${Math.random() * 100})`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      
+
       // Add shadow
       ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
       ctx.shadowBlur = 2;
       ctx.shadowOffsetX = 1;
       ctx.shadowOffsetY = 1;
-      
+
       ctx.fillText(text[i], 0, 0);
       ctx.restore();
     }
   };
 
-  const generateNewCaptcha = () => {
+  const generateNewCaptcha = React.useCallback(() => {
     const newText = generateRandomString();
     setCaptchaText(newText);
     setUserInput('');
     drawCaptcha(newText);
     onCaptchaChange(false);
     console.log('CAPTCHA Debug - Generated new text:', newText);
-  };
+  }, [onCaptchaChange]);
 
   useEffect(() => {
     generateNewCaptcha();
-  }, []);
+  }, [generateNewCaptcha]);
 
   useEffect(() => {
     if (reset) {
       generateNewCaptcha();
     }
-  }, [reset]);
+  }, [reset, generateNewCaptcha]);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
     setUserInput(value);
-    
+
     // Check if input is complete (same length as captcha)
     if (value.length === captchaText.length) {
       const isValid = value === captchaText;
       onCaptchaChange(isValid);
-      
+
       if (!isValid) {
         setError('CAPTCHA incorrect! Generating new one...');
         setTimeout(() => {
@@ -119,7 +119,7 @@ const AlphanumericCaptcha = ({ onCaptchaChange, reset }) => {
       } else {
         setError('');
       }
-      
+
       console.log('CAPTCHA Debug - Text:', captchaText, 'Input:', value, 'Valid:', isValid);
     } else {
       onCaptchaChange(false);
@@ -157,9 +157,9 @@ const AlphanumericCaptcha = ({ onCaptchaChange, reset }) => {
         className="captcha-input"
       />
       {error && (
-        <div className="captcha-error" style={{ 
-          color: '#d32f2f', 
-          fontSize: '12px', 
+        <div className="captcha-error" style={{
+          color: '#d32f2f',
+          fontSize: '12px',
           marginTop: '4px',
           fontWeight: '500'
         }}>

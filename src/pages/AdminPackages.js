@@ -44,12 +44,6 @@ const AdminPackages = () => {
     setFilteredPackages(filtered);
   }, [packages, searchTerm]);
 
-  // ---------- AFTER ADD SUCCESS ----------
-  const handlePackageAdded = () => {
-    setShowAddForm(false);
-    fetchPackages(); // refresh list
-  };
-
   // ---------- VIEW PACKAGE ----------
   const handleView = (pkg) => {
     console.log("Package data:", pkg); // Debug: Log package data
@@ -129,7 +123,8 @@ const AdminPackages = () => {
             <img
               src={
                 item.images && item.images.length > 0
-                  ? `http://localhost:5000/${item.images[0]}`
+                  // ? `http://localhost:5000/${item.images[0]}`
+                  ? `https://event-management-system-backend-ashen.vercel.app/${item.images[0]}`
                   : "https://via.placeholder.com/300"
               }
               alt={item.package_name}
@@ -165,7 +160,8 @@ const AdminPackages = () => {
                   {selectedPackage.images.map((image, index) => (
                     <img
                       key={index}
-                      src={`http://localhost:5000/${image}`}
+                      // src={`http://localhost:5000/${image}`}
+                      src={`https://event-management-system-backend-ashen.vercel.app/${image}`}
                       alt={`${selectedPackage.package_name} ${index + 1}`}
                       style={{ 
                         width: "100%", 

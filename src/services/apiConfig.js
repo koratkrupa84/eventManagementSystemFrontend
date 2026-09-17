@@ -1,6 +1,7 @@
 // Central place to store all backend API URLs
 
-export const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+export const BASE_URL = process.env.BACKEND_URL;
+console.log("Backend Base URL:", BASE_URL);
 
 export const API = {
   REGISTER: `${BASE_URL}/auth/register`,

@@ -17,6 +17,7 @@ const Gallery = () => {
 
   useEffect(() => {
     fetchGalleryData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -227,8 +228,9 @@ const Gallery = () => {
               <div className="photo-card" key={`photo-${photo._id || index}`} onClick={() => handleImageClick(photo)}>
                 <div className="photo-image-container">
                   <img 
-                    src={photo.image_path ? `http://localhost:5000/${photo.image_path}` : "https://via.placeholder.com/300x200"} 
-                    alt={`${photo.event_type || 'Event'} photo ${index + 1}`}
+                    // src={photo.image_path ? `http://localhost:5000/${photo.image_path}` : "https://via.placeholder.com/300x200"} 
+                    src={photo.image_path ? `https://event-management-system-backend-ashen.vercel.app/${photo.image_path}` : "https://via.placeholder.com/300x200"} 
+                    alt={`${photo.event_type || 'Event'} ${index + 1}`}
                     onError={(e) => {
                       e.target.src = "https://via.placeholder.com/300x200";
                     }}
@@ -293,8 +295,9 @@ const Gallery = () => {
               
               <div className="image-display">
                 <img 
-                  src={selectedImage.image_path ? `http://localhost:5000/${selectedImage.image_path}` : "https://via.placeholder.com/400x300"} 
-                  alt={`${selectedImage.event_type} event photo`}
+                  // src={selectedImage.image_path ? `http://localhost:5000/${selectedImage.image_path}` : "https://via.placeholder.com/400x300"} 
+                  src={selectedImage.image_path ? `https://event-management-system-backend-ashen.vercel.app/${selectedImage.image_path}` : "https://via.placeholder.com/400x300"} 
+                  alt={`${selectedImage.event_type || 'Event'} detail`}
                   onError={(e) => {
                     e.target.src = "https://via.placeholder.com/400x300";
                   }}
@@ -333,8 +336,9 @@ const Gallery = () => {
                         onClick={() => setSelectedImage(photo)}
                       >
                         <img 
-                          src={photo.image_path ? `http://localhost:5000/${photo.image_path}` : "https://via.placeholder.com/100x100"} 
-                          alt={`Related photo ${index + 1}`}
+                          // src={photo.image_path ? `http://localhost:5000/${photo.image_path}` : "https://via.placeholder.com/100x100"} 
+                          src={photo.image_path ? `https://event-management-system-backend-ashen.vercel.app/${photo.image_path}` : "https://via.placeholder.com/100x100"} 
+                          alt={`Related ${index + 1}`}
                           onError={(e) => {
                             e.target.src = "https://via.placeholder.com/100x100";
                           }}

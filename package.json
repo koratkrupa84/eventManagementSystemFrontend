@@ -28,7 +28,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "https://event-management-system-backend-ashen.vercel.app/",
   "eslintConfig": {
     "extends": [
       "react-app",

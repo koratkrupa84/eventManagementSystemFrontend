@@ -12,8 +12,8 @@ function AdminLogin() {
   });
 
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('')
+  const [, setMessage] = useState('');
+  const [, setError] = useState('');
   const [captchaValid, setCaptchaValid] = useState(false);
   const [captchaReset, setCaptchaReset] = useState(false);
   
