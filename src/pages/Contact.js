@@ -59,7 +59,7 @@ const Contact = () => {
     setMessage("");
 
     try {
-      const res = await axios.post(API.CREATE_INQUIRY, formData);
+      await axios.post(API.CREATE_INQUIRY, formData);
       setMessage("Your message has been sent successfully!");
       setMessageType("success");
       setFormData({ name: "", email: "", message: "" });

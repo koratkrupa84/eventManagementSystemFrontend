@@ -15,6 +15,7 @@ function OrganizerProfileView() {
 
   useEffect(() => {
     fetchOrganizerDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const fetchOrganizerDetails = async () => {
@@ -219,7 +220,7 @@ function OrganizerProfileView() {
                     >
                       <img
                         src={fullImageUrl}
-                        alt={`Event photo ${index + 1}`}
+                        alt={`Event ${index + 1}`}
                         onError={(e) => {
                           e.target.src = 'https://via.placeholder.com/200x200?text=Photo+Not+Available';
                         }}
@@ -252,7 +253,7 @@ function OrganizerProfileView() {
                         return getImageUrl(imagePath);
                       })()
                 }
-                alt={`Event photo ${selectedPhotoIndex + 1}`}
+                alt={`Event ${selectedPhotoIndex + 1}`}
                 className="viewer-image"
               />
             )}

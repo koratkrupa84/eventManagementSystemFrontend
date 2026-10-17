@@ -13,7 +13,7 @@ const ClientDashboard = () => {
   const [error, setError] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
-  const [showAppointmentForm, setShowAppointmentForm] = useState(false);
+  const [, setShowAppointmentForm] = useState(false);
   const [showAppointmentViewModal, setShowAppointmentViewModal] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [showPublicEventModal, setShowPublicEventModal] = useState(false);
@@ -94,6 +94,7 @@ const ClientDashboard = () => {
     fetchUserData();
     fetchAppointments();
     fetchPublicEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogout = () => {

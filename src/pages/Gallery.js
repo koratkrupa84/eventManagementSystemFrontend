@@ -17,6 +17,7 @@ const Gallery = () => {
 
   useEffect(() => {
     fetchGalleryData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

@@ -29,6 +29,7 @@ function OrganizerProfile() {
 
   useEffect(() => {
     fetchOrganizerProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchOrganizerProfile = async () => {

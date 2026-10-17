@@ -78,7 +78,7 @@ const Reviews = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.post(API.ADD_REVIEW, formData, {
+      await axios.post(API.ADD_REVIEW, formData, {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
 

@@ -30,7 +30,7 @@ const AdminGallery = () => {
   useEffect(() => {
     fetchGallery();
     fetchEvents();
-  }, []);
+  }, [fetchEvents]);
 
   // Debug viewMode changes
   useEffect(() => {
@@ -266,7 +266,7 @@ const AdminGallery = () => {
         throw new Error(errorText || "Failed to delete image");
       }
       
-      const data = await res.json();
+      await res.json();
 
       fetchGallery();
     } catch (err) {
@@ -326,7 +326,7 @@ const AdminGallery = () => {
       }
       
       try {
-        const data = await res.json();
+        await res.json();
         setShowEditModal(false);
         setSelectedImage(null);
         setEditFormData({ event_type: "", event_id: "" });

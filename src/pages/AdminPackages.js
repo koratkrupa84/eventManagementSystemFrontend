@@ -44,12 +44,6 @@ const AdminPackages = () => {
     setFilteredPackages(filtered);
   }, [packages, searchTerm]);
 
-  // ---------- AFTER ADD SUCCESS ----------
-  const handlePackageAdded = () => {
-    setShowAddForm(false);
-    fetchPackages(); // refresh list
-  };
-
   // ---------- VIEW PACKAGE ----------
   const handleView = (pkg) => {
     console.log("Package data:", pkg); // Debug: Log package data
