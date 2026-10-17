@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { API, BASE_URL } from '../services/apiConfig';
+import { API, getImageUrl } from '../services/apiConfig';
 import '../css/OrganizerProfileView.css';
 import Header from '../component/Header';
 import Footer from '../component/Footer';
@@ -98,7 +98,7 @@ function OrganizerProfileView() {
           <div className="org-profile-card">
             <div className="org-profile-image-section">
               <img
-                src={organizer.profileImage || 'https://via.placeholder.com/300x300?text=Organizer'}
+                src={getImageUrl(organizer.profileImage, 'https://via.placeholder.com/300x300?text=Organizer')}
                 alt={organizer.name}
                 className="org-profile-image"
                 onError={(e) => {
@@ -203,12 +203,10 @@ function OrganizerProfileView() {
                   
                   if (typeof photo === 'string') {
                     imagePath = photo;
-                    fullImageUrl = photo.startsWith('http') ? photo : `${BASE_URL}${photo}`;
+                    fullImageUrl = getImageUrl(photo);
                   } else {
                     imagePath = photo.image_path || photo.path || photo.url || photo.photo_url || photo.filename;
-                    fullImageUrl = imagePath && imagePath.startsWith('http') 
-                      ? imagePath 
-                      : imagePath ? `${BASE_URL}${imagePath}` : null;
+                    fullImageUrl = imagePath ? getImageUrl(imagePath) : null;
                   }
                   
                   if (!imagePath) return null;
@@ -247,15 +245,11 @@ function OrganizerProfileView() {
               <img
                 src={
                   typeof organizer.eventPhotos[selectedPhotoIndex] === 'string'
-                    ? (organizer.eventPhotos[selectedPhotoIndex].startsWith('http') 
-                        ? organizer.eventPhotos[selectedPhotoIndex] 
-                        : `${BASE_URL}${organizer.eventPhotos[selectedPhotoIndex]}`)
+                    ? getImageUrl(organizer.eventPhotos[selectedPhotoIndex])
                     : (() => {
                         const photo = organizer.eventPhotos[selectedPhotoIndex];
                         const imagePath = photo.image_path || photo.path || photo.url || photo.photo_url || photo.filename;
-                        return imagePath && imagePath.startsWith('http') 
-                          ? imagePath 
-                          : `${BASE_URL}${imagePath}`;
+                        return getImageUrl(imagePath);
                       })()
                 }
                 alt={`Event photo ${selectedPhotoIndex + 1}`}

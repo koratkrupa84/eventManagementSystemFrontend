@@ -120,48 +120,4 @@ const StatCard = ({ count, label }) => (
     <p>{label}</p>
   </div>
 );
-
-const appointments = [
-  {
-    id: 1,
-    client: "John Smith",
-    event: "Wedding",
-    date: "2023-10-15",
-    decoration: "Classic Wedding Decor",
-    status: "confirmed",
-  },
-  {
-    id: 2,
-    client: "Emma Davis",
-    event: "Birthday",
-    date: "2023-10-10",
-    decoration: "Princess Birthday Theme",
-    status: "pending",
-  },
-  {
-    id: 3,
-    client: "Robert Brown",
-    event: "Corporate",
-    date: "2023-10-20",
-    decoration: "Corporate Gala Decor",
-    status: "completed",
-  },
-  {
-    id: 4,
-    client: "Lisa Wang",
-    event: "Baby Shower",
-    date: "2023-10-05",
-    decoration: "Gender Reveal Package",
-    status: "confirmed",
-  },
-  {
-    id: 5,
-    client: "Thomas Lee",
-    event: "Anniversary",
-    date: "2023-10-25",
-    decoration: "Custom Design",
-    status: "cancelled",
-  },
-];
-
 export default AdminDashboard;

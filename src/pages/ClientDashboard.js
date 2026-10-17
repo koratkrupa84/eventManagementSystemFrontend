@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../css/ClientDashboard.css";
 import Header from "../component/Header";
 import Footer from "../component/Footer";
-import { API } from "../services/apiConfig";
+import { API, BASE_URL } from "../services/apiConfig";
 
 const ClientDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -172,7 +172,7 @@ const ClientDashboard = () => {
       console.log("Testing API connection...");
 
       // Test basic connection to backend
-      const testResponse = await fetch(`${API.BASE_URL}/`, {
+      const testResponse = await fetch(`${BASE_URL}/`, {
         method: 'GET',
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
@@ -180,7 +180,7 @@ const ClientDashboard = () => {
       console.log("Basic API test status:", testResponse.status);
 
       // Test registrations endpoint specifically
-      const regTestResponse = await fetch(`${API.BASE_URL}/registrations`, {
+      const regTestResponse = await fetch(`${BASE_URL}/registrations`, {
         method: 'GET',
         headers: token ? {
           "Content-Type": "application/json",
@@ -263,9 +263,9 @@ const ClientDashboard = () => {
 
       // If main endpoint fails, try alternative endpoints
       const alternativeEndpoints = [
-        `${API.BASE_URL}/registrations/user`,
-        `${API.BASE_URL}/registrations/user/my-registrations`,
-        `${API.BASE_URL}/my-registrations`
+        `${BASE_URL}/registrations/user`,
+        `${BASE_URL}/registrations/user/my-registrations`,
+        `${BASE_URL}/my-registrations`
       ];
 
       for (const endpoint of alternativeEndpoints) {

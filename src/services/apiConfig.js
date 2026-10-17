@@ -1,6 +1,32 @@
 // Central place to store all backend API URLs
 
-export const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+// Fallback so app doesn't break if .env missing
+const rawUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+export const BASE_URL = rawUrl.replace(/\/$/, ""); // remove trailing slash
+
+console.log("=== API CONFIG ===");
+console.log("REACT_APP_BACKEND_URL from env:", process.env.REACT_APP_BACKEND_URL);
+console.log("Final BASE_URL:", BASE_URL);
+console.log("==================");
+
+
+/**
+ * Build full image URL from DB path.
+ * - Cloudinary / full http(s) URLs → return as-is
+ * - Relative paths (uploads/...) → prepend BASE_URL
+ * - Empty / null → placeholder
+ */
+export function getImageUrl(path, placeholder = "https://via.placeholder.com/300x200?text=No+Image") {
+  if (!path) return placeholder;
+  const s = String(path).trim();
+  if (s.startsWith("http://") || s.startsWith("https://") || s.startsWith("data:")) {
+    return s;
+  }
+  // relative path from local uploads era
+  const clean = s.startsWith("/") ? s.slice(1) : s;
+  return `${BASE_URL}/${clean}`;
+}
+
 
 export const API = {
   REGISTER: `${BASE_URL}/auth/register`,
@@ -13,7 +39,7 @@ export const API = {
   // Admin-specific endpoints
   ADMIN_LOGIN: `${BASE_URL}/auth/admin/login`,
   
-  // Home page endpoints
+  // Home page endpoints (PUBLIC - no auth needed)
   HOME_REVIEWS: `${BASE_URL}/reviews`,
   HOME_CATEGORIES: `${BASE_URL}/home/categories`,
   HOME_PACKAGES: `${BASE_URL}/home/packages`,
@@ -66,48 +92,30 @@ export const API = {
   BOOK_PRIVATE_EVENT: `${BASE_URL}/profile/private-event-booking`,
   UPDATE_CLIENT_PROFILE: `${BASE_URL}/profile/update`,
   UPDATE_PROFILE: `${BASE_URL}/profile`,
+
+  // Users / Requests
   GET_USERS: `${BASE_URL}/auth/users`,
-  CREATE_USER: `${BASE_URL}/auth/users`,
-  DELETE_USER: `${BASE_URL}/auth/users`,
-  
-  // Requests
   GET_REQUESTS: `${BASE_URL}/admin/requests`,
-  
+
   // Public Events
   GET_PUBLIC_EVENTS: `${BASE_URL}/publicEvents`,
-  GET_PUBLIC_EVENT: `${BASE_URL}/publicEvents/{id}`,
+  GET_PUBLIC_EVENT: `${BASE_URL}/publicEvents`,
   CREATE_PUBLIC_EVENT: `${BASE_URL}/publicEvents`,
-  UPDATE_PUBLIC_EVENT: `${BASE_URL}/publicEvents/{id}`,
-  DELETE_PUBLIC_EVENT: `${BASE_URL}/publicEvents/{id}`,
-  // Add missing endpoint for updating public events
-  UPDATE_PUBLIC_EVENT_STATUS: `${BASE_URL}/publicEvents/{id}/status`,
+  UPDATE_PUBLIC_EVENT: `${BASE_URL}/publicEvents`,
+  DELETE_PUBLIC_EVENT: `${BASE_URL}/publicEvents`,
+  UPDATE_PUBLIC_EVENT_STATUS: `${BASE_URL}/publicEvents`,
   JOIN_PUBLIC_EVENT: `${BASE_URL}/publicEvents/join`,
-  
-  // Event Registrations
   REGISTER_FOR_EVENT: `${BASE_URL}/registrations`,
+
+  // Registrations
   GET_MY_REGISTRATIONS: `${BASE_URL}/registrations/user/my-registrations`,
   GET_ALL_EVENT_REGISTRATIONS: `${BASE_URL}/registrations/admin/all`,
-  UPDATE_REGISTRATION_STATUS: `${BASE_URL}/registrations/admin/{id}`,
-  DELETE_EVENT_REGISTRATION: `${BASE_URL}/registrations/admin/{id}`,
-  
-  // Blogs
-  GET_BLOGS: `${BASE_URL}/blogs`,
-  GET_BLOG: `${BASE_URL}/blogs/{slug}`,
-  GET_BLOG_BY_SLUG: `${BASE_URL}/blogs/slug/{slug}`,
-  CREATE_BLOG: `${BASE_URL}/admin/blogs`,
-  UPDATE_BLOG: `${BASE_URL}/admin/blogs`,
-  DELETE_BLOG: `${BASE_URL}/admin/blogs`,
-  GET_BLOG_STATS: `${BASE_URL}/blogs/stats`,
-  UPLOAD_BLOG_IMAGE: `${BASE_URL}/upload/blog`,
-  
+
   // Private Events
-  CREATE_PRIVATE_EVENT: `${BASE_URL}/privateEvents/create-event`,
   GET_PRIVATE_EVENTS: `${BASE_URL}/privateEvents/events`,
   GET_PRIVATE_EVENT: `${BASE_URL}/privateEvents/events`,
-  UPDATE_PRIVATE_EVENT: `${BASE_URL}/privateEvents/events`,
-  DELETE_PRIVATE_EVENT: `${BASE_URL}/privateEvents/events`,
-  
-  // Organizer endpoints
+
+  // Organizer
   ORGANIZER_REGISTER: `${BASE_URL}/organizer/register`,
   ORGANIZER_LOGIN: `${BASE_URL}/organizer/login`,
   ORGANIZER_GOOGLE_AUTH: `${BASE_URL}/organizer/google`,
@@ -115,19 +123,15 @@ export const API = {
   ORGANIZER_UPLOAD_PHOTO: `${BASE_URL}/organizer/upload-photo`,
   ORGANIZER_APPOINTMENTS: `${BASE_URL}/organizer/appointments`,
   ORGANIZER_CLIENTS: `${BASE_URL}/organizer/clients`,
-  
-  // Admin Organizer endpoints
+
+  // Admin Organizers / Clients
   ADMIN_GET_ORGANIZERS: `${BASE_URL}/admin/organizers`,
   ADMIN_DELETE_ORGANIZER: `${BASE_URL}/admin/organizers`,
   ADMIN_UPDATE_ORGANIZER_STATUS: `${BASE_URL}/admin/organizers`,
-  
-  // Admin Client endpoints
   ADMIN_GET_CLIENTS: `${BASE_URL}/admin/clients`,
-  ADMIN_CREATE_CLIENT: `${BASE_URL}/admin/clients`,
   ADMIN_DELETE_CLIENT: `${BASE_URL}/admin/clients`,
-  ADMIN_UPDATE_CLIENT_STATUS: `${BASE_URL}/admin/clients`,
+  ADMIN_CREATE_CLIENT: `${BASE_URL}/admin/clients`,
 
-  // Public Organizers endpoints
-  GET_PUBLIC_ORGANIZERS: `${BASE_URL}/api/organizers`
+  // Public organizers (Team page)
+  GET_PUBLIC_ORGANIZERS: `${BASE_URL}/api/organizers`,
 };
-

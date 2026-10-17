@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/RegistrationPage.css';
-import { API } from '../services/apiConfig';
+import { API, getImageUrl } from '../services/apiConfig';
 
 function OrganizerProfile() {
   const navigate = useNavigate();
@@ -235,7 +235,7 @@ function OrganizerProfile() {
                 backgroundColor: '#f5f5f5'
               }}>
                 <img
-                  src={previewImage || profileImage || 'https://via.placeholder.com/100'}
+                  src={getImageUrl(previewImage || profileImage, 'https://via.placeholder.com/100')}
                   alt="Profile"
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />

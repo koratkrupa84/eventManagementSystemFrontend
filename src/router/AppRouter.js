@@ -37,51 +37,50 @@ import Team from "../pages/Team";
 import OrganizerProfileView from "../pages/OrganizerProfileView";
 
 const AppRouter = () => {
-     return (
-          <BrowserRouter>
-               <Routes>
-                    // User routes
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegistrationPage />} />
-                    <Route path="/book-private-event" element={<BookPrivateEventAppointment />} />
-                    <Route path="/gallery" element={<Gallery />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/reviews" element={<Reviews />} />
-                    <Route path="/services" element={<Services />} />
-                    <Route path="/public-events" element={<PublicEvents />} />
-                    <Route path="/team" element={<Team />} />
-                    <Route path="/organizer/:id" element={<OrganizerProfileView />} />
-                    <Route path="/contact" element={<Contact />} />
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* User routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegistrationPage />} />
+        <Route path="/book-private-event" element={<BookPrivateEventAppointment />} />
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/reviews" element={<Reviews />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/public-events" element={<PublicEvents />} />
+        <Route path="/team" element={<Team />} />
+        <Route path="/organizer/:id" element={<OrganizerProfileView />} />
 
-                    // Admin route
-                    <Route path="/admin/login" element={<AdminLogin />} />
-                    <Route path="/admin" element={<AdminLayout />}>
-                         <Route path="dashboard" element={<AdminDashboard />} />
-                         <Route path="categories" element={<AdminCategories />} />
-                         <Route path="packages" element={<AdminPackages />} />
-                         <Route path="gallery" element={<AdminGallery />} />
-                         <Route path="review" element={<AdminReview />} />
-                         <Route path="appointments" element={<AdminAppointments />} />
-                         <Route path="private-events" element={<AdminPrivateEvents />} />
-                         <Route path="inquiries" element={<AdminInquiries />} />
-                         <Route path="clients" element={<AdminClients />} />
-                         <Route path="organizers" element={<AdminOrganizers />} />
-                         <Route path="public-events" element={<AdminPublicEvents />} />
-                         <Route path="event-registrations" element={<AdminEventRegistrations />} />
-                    </Route>
+        {/* Admin routes */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="categories" element={<AdminCategories />} />
+          <Route path="packages" element={<AdminPackages />} />
+          <Route path="gallery" element={<AdminGallery />} />
+          <Route path="review" element={<AdminReview />} />
+          <Route path="appointments" element={<AdminAppointments />} />
+          <Route path="private-events" element={<AdminPrivateEvents />} />
+          <Route path="inquiries" element={<AdminInquiries />} />
+          <Route path="clients" element={<AdminClients />} />
+          <Route path="organizers" element={<AdminOrganizers />} />
+          <Route path="public-events" element={<AdminPublicEvents />} />
+          <Route path="event-registrations" element={<AdminEventRegistrations />} />
+        </Route>
 
-                    // Client route
-                    <Route path="/client/dashboard" element={<ClientDashboard />} />
+        {/* Client route */}
+        <Route path="/client/dashboard" element={<ClientDashboard />} />
 
-                    // Organizer routes
-                    <Route path="/organizer/login" element={<OrganizerLogin />} />
-                    <Route path="/organizer/register" element={<OrganizerRegister />} />
-                    <Route path="/organizer/profile" element={<OrganizerProfile />} />
-                    <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
-               </Routes>
-          </BrowserRouter>
-     );
+        {/* Organizer routes */}
+        <Route path="/organizer/login" element={<OrganizerLogin />} />
+        <Route path="/organizer/register" element={<OrganizerRegister />} />
+        <Route path="/organizer/profile" element={<OrganizerProfile />} />
+        <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
+      </Routes>
+    </BrowserRouter>
+  );
 };
 
 export default AppRouter;

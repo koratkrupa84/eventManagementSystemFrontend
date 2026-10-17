@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { API, BASE_URL } from '../services/apiConfig';
+import { API, getImageUrl } from '../services/apiConfig';
 import Header from '../component/Header'
 import Footer from '../component/Footer'
 import '../css/Team.css';
@@ -77,7 +77,7 @@ function Team() {
               <div key={organizer._id} className="organizer-card">
                 <div className="organizer-image">
                   <img
-                    src={organizer.profileImage || 'https://via.placeholder.com/200x200?text=Organizer'}
+                    src={getImageUrl(organizer.profileImage, 'https://via.placeholder.com/200x200?text=Organizer')}
                     alt={organizer.name}
                     onError={(e) => {
                       e.target.src = 'https://via.placeholder.com/200x200?text=Organizer';

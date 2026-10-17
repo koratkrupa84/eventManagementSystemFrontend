@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../css/RegistrationPage.css';
-import { API } from '../../services/apiConfig';
+import { API, getImageUrl } from '../../services/apiConfig';
 
 function OrganizerProfileModal({ isOpen, onClose, onUpdate }) {
   const [loading, setLoading] = useState(false);
@@ -301,7 +301,7 @@ function OrganizerProfileModal({ isOpen, onClose, onUpdate }) {
                 backgroundColor: '#f5f5f5'
               }}>
                 <img
-                  src={previewImage || profileImage || 'https://via.placeholder.com/80'}
+                  src={getImageUrl(previewImage || profileImage, 'https://via.placeholder.com/80')}
                   alt="Profile"
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />

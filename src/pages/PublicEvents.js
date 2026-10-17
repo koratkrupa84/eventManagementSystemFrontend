@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../css/PublicEvents.css";
 import "../css/variables.css";
-import { API } from "../services/apiConfig";
+import { API, getImageUrl } from "../services/apiConfig";
 import Header from "../component/Header";
 import Footer from "../component/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -212,7 +212,7 @@ const PublicEvents = () => {
               <div key={event._id} className={`event-card ${isPast ? 'past-event' : ''}`}>
                 {event.image && (
                   <div className="event-image">
-                    <img src={event.image} alt={event.title} />
+                    <img src={getImageUrl(event.image)} alt={event.title} />
                     <div className="event-status-badge">
                       <span className={`status ${event.status}`}>
                         {event.status}
@@ -288,7 +288,7 @@ const PublicEvents = () => {
               <div className="event-modal-content">
                 <div className="event-summary">
                   {selectedEvent.image && (
-                    <img src={selectedEvent.image} alt={selectedEvent.title} />
+                    <img src={getImageUrl(selectedEvent.image)} alt={selectedEvent.title} />
                   )}
                   <div className="event-info">
                     <h3>{selectedEvent.title}</h3>

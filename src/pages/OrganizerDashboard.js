@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/OrganizerDashboard.css';
-import { API, BASE_URL } from '../services/apiConfig';
+import { API, getImageUrl } from '../services/apiConfig';
 import OrganizerProfileModal from '../component/organizer/OrganizerProfileModal';
 import OrganizerPasswordModal from '../component/organizer/OrganizerPasswordModal';
 
@@ -740,12 +740,10 @@ function OrganizerDashboard() {
                     
                     if (typeof photo === 'string') {
                         imagePath = photo;
-                        fullImageUrl = photo.startsWith('http') ? photo : `${BASE_URL}${photo}`;
+                        fullImageUrl = getImageUrl(photo);
                     } else {
                         imagePath = photo.image_path || photo.path || photo.url || photo.photo_url || photo.filename;
-                        fullImageUrl = imagePath && imagePath.startsWith('http') 
-                            ? imagePath 
-                            : imagePath ? `${BASE_URL}${imagePath}` : null;
+                        fullImageUrl = imagePath ? getImageUrl(imagePath) : null;
                     }
                     
                     if (!imagePath) {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../css/AdminPackages.css";
-import { API } from "../services/apiConfig";
+import { API, getImageUrl } from '../services/apiConfig';
 import AddPackage from "../component/admin/AddPackage";
 
 const AdminPackages = () => {
@@ -129,7 +129,8 @@ const AdminPackages = () => {
             <img
               src={
                 item.images && item.images.length > 0
-                  ? `http://localhost:5000/${item.images[0]}`
+                  // ? getImageUrl(item.images[0])
+                  ? getImageUrl(item.images[0])
                   : "https://via.placeholder.com/300"
               }
               alt={item.package_name}
@@ -165,7 +166,8 @@ const AdminPackages = () => {
                   {selectedPackage.images.map((image, index) => (
                     <img
                       key={index}
-                      src={`http://localhost:5000/${image}`}
+                      // src={getImageUrl(image)}
+                      src={getImageUrl(image)}
                       alt={`${selectedPackage.package_name} ${index + 1}`}
                       style={{ 
                         width: "100%", 

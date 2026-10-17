@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../css/AdminCategories.css";
 import "../css/AdminCommon.css";
-import { API } from "../services/apiConfig";
+import { API, getImageUrl } from '../services/apiConfig';
 
 const AdminCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -459,7 +459,8 @@ const AdminCategories = () => {
                     <label className="photo-label">Current Photo:</label>
                     <div className="current-photo">
                       <img
-                        src={`http://localhost:5000/${selectedCategory.image}`}
+                        // src={getImageUrl(selectedCategory.image)}
+                        src={getImageUrl(selectedCategory.image)}
                         alt={selectedCategory.title}
                       />
                     </div>
@@ -717,7 +718,8 @@ const AdminCategories = () => {
               <img
                 src={
                   cat.image
-                    ? `http://localhost:5000/${cat.image}`
+                    // ? getImageUrl(cat.image)
+                    ? getImageUrl(cat.image)
                     : "https://via.placeholder.com/300"
                 }
                 alt={cat.title}

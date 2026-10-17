@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../css/Gallery.css";
 import Header from "../component/Header";
 import Footer from "../component/Footer";
-import { API } from "../services/apiConfig";
+import { API, getImageUrl } from '../services/apiConfig';
 
 const Gallery = () => {
   const [galleryItems, setGalleryItems] = useState([]);
@@ -227,7 +227,8 @@ const Gallery = () => {
               <div className="photo-card" key={`photo-${photo._id || index}`} onClick={() => handleImageClick(photo)}>
                 <div className="photo-image-container">
                   <img 
-                    src={photo.image_path ? `http://localhost:5000/${photo.image_path}` : "https://via.placeholder.com/300x200"} 
+                    // src={photo.image_path ? getImageUrl(photo.image_path) : "https://via.placeholder.com/300x200"} 
+                    src={photo.image_path ? getImageUrl(photo.image_path) : "https://via.placeholder.com/300x200"} 
                     alt={`${photo.event_type || 'Event'} photo ${index + 1}`}
                     onError={(e) => {
                       e.target.src = "https://via.placeholder.com/300x200";
@@ -293,7 +294,8 @@ const Gallery = () => {
               
               <div className="image-display">
                 <img 
-                  src={selectedImage.image_path ? `http://localhost:5000/${selectedImage.image_path}` : "https://via.placeholder.com/400x300"} 
+                  // src={selectedImage.image_path ? getImageUrl(selectedImage.image_path) : "https://via.placeholder.com/400x300"} 
+                  src={selectedImage.image_path ? getImageUrl(selectedImage.image_path) : "https://via.placeholder.com/400x300"} 
                   alt={`${selectedImage.event_type} event photo`}
                   onError={(e) => {
                     e.target.src = "https://via.placeholder.com/400x300";
@@ -333,7 +335,8 @@ const Gallery = () => {
                         onClick={() => setSelectedImage(photo)}
                       >
                         <img 
-                          src={photo.image_path ? `http://localhost:5000/${photo.image_path}` : "https://via.placeholder.com/100x100"} 
+                          // src={photo.image_path ? getImageUrl(photo.image_path) : "https://via.placeholder.com/100x100"} 
+                          src={photo.image_path ? getImageUrl(photo.image_path) : "https://via.placeholder.com/100x100"} 
                           alt={`Related photo ${index + 1}`}
                           onError={(e) => {
                             e.target.src = "https://via.placeholder.com/100x100";

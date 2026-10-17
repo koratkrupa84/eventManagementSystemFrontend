@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { API } from "../../services/apiConfig.js";
+import { API, getImageUrl } from "../../services/apiConfig";
 import "./AddPackage.css";
 
 function AddPackage({ onSuccess = () => { }, onClose = () => { }, editData = null }) {
@@ -214,7 +214,8 @@ function AddPackage({ onSuccess = () => { }, onClose = () => { }, editData = nul
                                                   .map((img, index) => (
                                                        <div key={index} className="image-wrapper">
                                                             <img
-                                                                 src={`http://localhost:5000/${img}`}
+                                                                 // src={getImageUrl(img)}
+                                                                 src={getImageUrl(img)}
                                                                  alt="existing"
                                                                  className="preview-img"
                                                             />

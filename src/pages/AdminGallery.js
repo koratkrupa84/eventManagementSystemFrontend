@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import "../css/AdminGallery.css";
 import "../css/AdminCommon.css";
-import { API } from "../services/apiConfig";
+import { API, getImageUrl } from '../services/apiConfig';
 
 const AdminGallery = () => {
   const [images, setImages] = useState([]);
@@ -549,7 +549,8 @@ const AdminGallery = () => {
               
               <div className="view-image-container">
                 <img
-                  src={`http://localhost:5000/${selectedImage.image_path}`}
+                  // src={getImageUrl(selectedImage.image_path)}
+                  src={getImageUrl(selectedImage.image_path)}
                   alt="Gallery"
                   className="view-image"
                 />
@@ -602,7 +603,8 @@ const AdminGallery = () => {
               
               <div className="edit-image-preview">
                 <img
-                  src={`http://localhost:5000/${selectedImage.image_path}`}
+                  // src={getImageUrl(selectedImage.image_path)}
+                  src={getImageUrl(selectedImage.image_path)}
                   alt="Gallery"
                   className="edit-preview-image"
                 />
@@ -688,7 +690,8 @@ const AdminGallery = () => {
             filteredImages.map((img) => (
               <div className="gallery-card" key={img._id}>
                 <img
-                  src={`http://localhost:5000/${img.image_path}`}
+                  // src={getImageUrl(img.image_path)}
+                  src={getImageUrl(img.image_path)}
                   alt="Gallery"
                 />
                 <div className="gallery-card-actions">
@@ -740,7 +743,8 @@ const AdminGallery = () => {
                   {eventGroup.images.map((img) => (
                     <div className="gallery-card" key={img._id}>
                       <img
-                        src={`http://localhost:5000/${img.image_path}`}
+                        // src={getImageUrl(img.image_path)}
+                        src={getImageUrl(img.image_path)}
                         alt="Gallery"
                       />
                       <div className="gallery-card-actions">

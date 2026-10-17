@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../css/Services.css';
 import Header from '../component/Header';
 import Footer from '../component/Footer';
-import { API } from '../services/apiConfig';
+import { API, getImageUrl } from '../services/apiConfig';
 
 const Services = () => {
   const [categories, setCategories] = useState([]);
@@ -21,7 +21,7 @@ const Services = () => {
   const fetchCategories = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(API.GET_CATEGORIES, {
+      const res = await fetch(API.HOME_CATEGORIES, {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
 
@@ -44,7 +44,7 @@ const Services = () => {
 
   const fetchPackages = async () => {
     try {
-      const res = await fetch(API.GET_PACKAGES);
+      const res = await fetch(API.HOME_PACKAGES);
       const result = await res.json();
       
       if (res.ok && result?.success) {
@@ -190,7 +190,7 @@ const Services = () => {
                     <div className="service-image">
                       {category.image ? (
                         <img 
-                          src={category.image} 
+                          src={getImageUrl(category.image)} 
                           alt={category.title}
                           onError={(e) => {
                             e.target.style.display = 'none';
@@ -270,7 +270,7 @@ const Services = () => {
                     <div className="service-image">
                       {pkg.images && pkg.images.length > 0 ? (
                         <img 
-                          src={pkg.images[0]} 
+                          src={getImageUrl(pkg.images[0])} 
                           alt={pkg.package_name}
                           onError={(e) => {
                             e.target.style.display = 'none';
@@ -376,7 +376,7 @@ const Services = () => {
               <div className="service-modal-image">
                 {selectedService.image ? (
                   <img 
-                    src={selectedService.image} 
+                    src={getImageUrl(selectedService.image)} 
                     alt={selectedService.title || selectedService.package_name}
                     onError={(e) => {
                       e.target.style.display = 'none';
@@ -385,7 +385,7 @@ const Services = () => {
                   />
                 ) : selectedService.images && selectedService.images.length > 0 ? (
                   <img 
-                    src={selectedService.images[0]} 
+                    src={getImageUrl(selectedService.images[0])} 
                     alt={selectedService.package_name}
                     onError={(e) => {
                       e.target.style.display = 'none';

@@ -242,35 +242,6 @@
   font-weight: 600;
 }
 
-.organizer-details {
-  background: var(--creamLight);
-  border-radius: 12px;
-  padding: 20px;
-  margin: 20px 0;
-  border-left: 4px solid var(--brown);
-}
-
-.organizer-details h4 {
-  color: var(--brown);
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0 0 15px 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.organizer-details h4::before {
-  content: '👤';
-  font-size: 18px;
-}
-
-.organizer-details p {
-  margin: 8px 0;
-  color: var(--brown);
-  font-size: 13px;
-}
-
 .appointment-actions {
   display: flex;
   justify-content: flex-end;
@@ -857,48 +828,6 @@ textarea:focus {
   letter-spacing: 0.5px;
 }
 
-.organizer-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.organizer-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--brown);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.organizer-details {
-  flex: 1;
-}
-
-.organizer-name {
-  margin: 0;
-  font-weight: 600;
-  color: #333;
-  font-size: 14px;
-}
-
-.organizer-company {
-  margin: 2px 0;
-  color: #666;
-  font-size: 12px;
-}
-
-.organizer-specialization {
-  margin: 2px 0;
-  color: #888;
-  font-size: 11px;
-  font-style: italic;
-}
 
 .event-actions {
   display: flex;
@@ -1046,49 +975,6 @@ textarea:focus {
   margin: 0;
   color: #666;
   line-height: 1.5;
-}
-
-.organizer-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
-}
-
-.organizer-avatar-large {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: var(--brown);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
-.organizer-details-large h5 {
-  margin: 0 0 8px 0;
-  color: #333;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.organizer-email,
-.organizer-phone,
-.organizer-company {
-  margin: 4px 0;
-  color: #666;
-  font-size: 14px;
-}
-
-.organizer-specialization,
-.organizer-experience {
-  margin: 8px 0 0 0;
-  color: #555;
-  font-size: 13px;
-  line-height: 1.4;
 }
 
 .event-meta {
@@ -1331,55 +1217,6 @@ textarea:focus {
   margin: 0;
   color: #5a6c7d;
   line-height: 1.5;
-}
-
-/* Organizer Card */
-.organizer-card {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  padding: 20px;
-  background: white;
-  border-radius: 15px;
-  border: 1px solid rgba(127, 85, 57, 0.1);
-}
-
-.organizer-avatar-large {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--brown), var(--brownDark));
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: 700;
-  flex-shrink: 0;
-  box-shadow: 0 8px 20px rgba(127, 85, 57, 0.3);
-}
-
-.organizer-details-large h5 {
-  margin: 0 0 8px 0;
-  color: var(--brownDark);
-  font-size: 1.3rem;
-  font-weight: 700;
-}
-
-.organizer-email,
-.organizer-phone,
-.organizer-company,
-.organizer-specialization,
-.organizer-experience {
-  margin: 4px 0;
-  color: #5a6c7d;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.organizer-email {
-  color: var(--brown);
-  font-weight: 500;
 }
 
 /* Registration Details */
