@@ -24,11 +24,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "CI=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "https://event-management-system-backend-ashen.vercel.app/",
+  "proxy": "http://localhost:5000",
   "eslintConfig": {
     "extends": [
       "react-app",

@@ -17,7 +17,6 @@ const Gallery = () => {
 
   useEffect(() => {
     fetchGalleryData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -230,7 +229,7 @@ const Gallery = () => {
                   <img 
                     // src={photo.image_path ? getImageUrl(photo.image_path) : "https://via.placeholder.com/300x200"} 
                     src={photo.image_path ? getImageUrl(photo.image_path) : "https://via.placeholder.com/300x200"} 
-                    alt={`${photo.event_type || 'Event'} photo ${index + 1}`}
+                    alt={`${photo.event_type || "Event"} ${index + 1}`}
                     onError={(e) => {
                       e.target.src = "https://via.placeholder.com/300x200";
                     }}
@@ -297,7 +296,7 @@ const Gallery = () => {
                 <img 
                   // src={selectedImage.image_path ? getImageUrl(selectedImage.image_path) : "https://via.placeholder.com/400x300"} 
                   src={selectedImage.image_path ? getImageUrl(selectedImage.image_path) : "https://via.placeholder.com/400x300"} 
-                  alt={`${selectedImage.event_type} event photo`}
+                  alt={`${selectedImage.event_type || "Event"} gallery`}
                   onError={(e) => {
                     e.target.src = "https://via.placeholder.com/400x300";
                   }}
@@ -338,7 +337,7 @@ const Gallery = () => {
                         <img 
                           // src={photo.image_path ? getImageUrl(photo.image_path) : "https://via.placeholder.com/100x100"} 
                           src={photo.image_path ? getImageUrl(photo.image_path) : "https://via.placeholder.com/100x100"} 
-                          alt={`Related photo ${index + 1}`}
+                          alt={`Related ${index + 1}`}
                           onError={(e) => {
                             e.target.src = "https://via.placeholder.com/100x100";
                           }}

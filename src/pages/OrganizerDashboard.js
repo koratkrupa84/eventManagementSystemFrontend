@@ -260,7 +260,6 @@ function OrganizerDashboard() {
     };
     
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
 
   if (loading) {

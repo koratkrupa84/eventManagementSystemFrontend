@@ -27,11 +27,6 @@ const AdminGallery = () => {
     event_id: ""
   });
 
-  useEffect(() => {
-    fetchGallery();
-    fetchEvents();
-  }, [fetchEvents]);
-
   // Debug viewMode changes
   useEffect(() => {
     console.log('viewMode changed to:', viewMode);
@@ -173,6 +168,13 @@ const AdminGallery = () => {
     }
   };
 
+  useEffect(() => {
+    fetchGallery();
+    fetchEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+
   const handleUpload = async (e) => {
     e.preventDefault();
     console.log('Upload button clicked');
@@ -266,7 +268,7 @@ const AdminGallery = () => {
         throw new Error(errorText || "Failed to delete image");
       }
       
-      await res.json();
+      const data = await res.json();
 
       fetchGallery();
     } catch (err) {
@@ -326,7 +328,7 @@ const AdminGallery = () => {
       }
       
       try {
-        await res.json();
+        const data = await res.json();
         setShowEditModal(false);
         setSelectedImage(null);
         setEditFormData({ event_type: "", event_id: "" });
